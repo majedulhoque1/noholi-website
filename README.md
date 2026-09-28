@@ -1,43 +1,27 @@
-# Noholi Library & Press — website
+# Noholi Library — website + Noholi OS
 
-React + Vite build of the Noholi Figma design (file `ypNuhn7wG5u1P1J8kLhsAV`).
-Desktop (1280px) matches the Figma frames pixel-for-pixel within ~0.4–3.3% (the remainder is
-Bengali glyphs Figma could not draw and text anti-aliasing). Below 1280px the layout adapts for
-tablets and phones (320px and up) — the Figma file is desktop-only, so that part is derived.
-
-## Run
-
-```bash
-npm install
-npm run dev      # http://localhost:5173 (or the port Vite prints)
-npm run build    # static site in dist/
-```
-
-Login is a **demo**: any membership number / email plus any password signs in (state in
-`localStorage`), which switches the header and unlocks the member pages. There is no backend yet —
-forms validate and show a confirmation but send nothing.
-
-## Structure
+One repo, one database.
 
 | Path | What |
 |---|---|
-| `src/App.jsx` | Public routes (pages load lazily, with their CSS) |
-| `src/routes/memberRoutes.jsx` | Member-only routes, wrapped in `RequireMember` (→ /login when logged out) |
-| `src/components/SiteHeader.*` | Header: dropdowns, account menu, guest/member state, mobile menu (< 1180px) |
-| `src/components/SiteFooter.*` | Shared footer |
-| `src/pages/*.jsx/.css` | 31 pages, generated from Figma then hand-wired (links, forms, state) — **edit by hand, don't regenerate** |
-| `src/styles/tokens.css` | Colours and font stacks |
-| `src/styles/responsive/<page>.css` | **Generated** small-screen rules, one file per page (see tools) |
-| `src/styles/responsive.overrides.css` | Hand-written small-screen fixes the generator can't infer |
-| `src/fitBoxes.js` | Scales fixed Figma artwork (book covers, illustrations) to fit narrow screens |
-| `src/auth.jsx` | Demo session |
-| `design-export/` | Figma export: `design-tree.json`, SVGs, images, 1x renders (the ground truth) |
-| `figma-export-plugin/` | Read-only Figma dev plugin that produced `design-export/` |
-| `tools/` | Generators and checkers — see `tools/README.md` |
+| `web/` | Public website + member area (React 19 + Vite, JS). Built from the Figma file — see `web/README.md`. Run tools from inside `web/`. |
+| `admin/` | **Noholi OS** — staff console (React + TS + Tailwind + shadcn). Originally built in Lovable, now detached and maintained here. |
+| `supabase/` | The backend: versioned migrations, RPCs, edge functions, seed/import, `CONTRACT.md` (the API contract). |
+| `ops/` | Backup workflow, pre-deploy dump script, deploy notes. |
 
-## Known content gaps (need real material)
+## Local development
 
-- "Download … PDF" links (Audio Book Details, Creative Writings, Book Reviews) — no PDFs yet; shown as "available soon".
-- Blogs pagination pages 2–4 / Next — only one page of posts exists.
-- Member form dropdown options (category, genre, cadence, format…) are placeholders; Figma shows one value each.
-- Placeholder copy from the design stays as is ("Author Name", "[Hours — to confirm]", "[Member Name]"…).
+Development never touches production. Both apps point at a **local Supabase in Docker** via `.env.development`.
+
+```bash
+npx supabase@2.118 start          # from repo root; needs Docker Desktop running
+npx supabase@2.118 db reset       # rebuild schema from migrations + seed
+cd web   && npm install && npm run dev
+cd admin && npm install && npm run dev   # http://localhost:8080
+```
+
+Production keys live only in Cloudflare Pages environment variables.
+
+## Deploy
+
+Two Cloudflare Pages projects from this repo: root directory `web` and root directory `admin`, build `npm run build`, output `dist`. SPA fallback via `public/_redirects`.

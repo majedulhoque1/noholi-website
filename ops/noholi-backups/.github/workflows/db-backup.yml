@@ -1,0 +1,96 @@
+# Daily encrypted backup of the Noholi Supabase database to Cloudflare R2.
+# Lives in the PRIVATE noholi-backups repo (Noholi GitHub org). See README.md.
+# A failed run sends GitHub's standard "workflow failed" email to the repo admins.
+name: db-backup
+
+on:
+  schedule:
+    - cron: "0 21 * * *" # 21:00 UTC = 03:00 Asia/Dhaka
+  workflow_dispatch:
+    inputs:
+      write_status:
+        description: "Update status/latest.json (the OS Backup screen)"
+        type: boolean
+        default: true
+
+permissions:
+  contents: read
+
+concurrency:
+  group: db-backup
+  cancel-in-progress: false
+
+jobs:
+  backup:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    env:
+      SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+      SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_ANON_KEY }}
+    steps:
+      # (a) Keep-alive. Free projects pause after 7 days without API activity; a real
+      # REST request counts. A connection failure or 5xx fails the run (paused/broken
+      # project => email). A 4xx still reached PostgREST, so it only warns.
+      - name: Keep-alive REST request
+        run: |
+          set -euo pipefail
+          : "${SUPABASE_URL:?secret SUPABASE_URL missing}"
+          : "${SUPABASE_ANON_KEY:?secret SUPABASE_ANON_KEY missing}"
+          code="$(curl -sS -o /tmp/keepalive.json -w '%{http_code}' --max-time 30 --retry 3 --retry-delay 10 \
+            -H "apikey: ${SUPABASE_ANON_KEY}" \
+            -H "Authorization: Bearer ${SUPABASE_ANON_KEY}" \
+            "${SUPABASE_URL%/}/rest/v1/books?select=id&limit=1" || true)"
+          echo "Keep-alive HTTP ${code}"
+          case "$code" in
+            2??) ;;
+            4??) echo "::warning::Keep-alive got HTTP ${code} (did the books grants change?). Request still reached the API." ;;
+            *)   echo "::error::Keep-alive failed with HTTP ${code}. Is the project paused?"; exit 1 ;;
+          esac
+
+      - uses: actions/checkout@v4
+
+      # (b) The runner's preinstalled client is older than the server (Postgres 17).
+      - name: Install postgresql-client-17 (PGDG) and age
+        run: |
+          set -euo pipefail
+          sudo install -d /usr/share/postgresql-common/pgdg
+          sudo curl -fsSL -o /usr/share/postgresql-common/pgdg/apt.postgresql.org.asc \
+            https://www.postgresql.org/media/keys/ACCC4CF8.asc
+          echo "deb [signed-by=/usr/share/postgresql-common/pgdg/apt.postgresql.org.asc] https://apt.postgresql.org/pub/repos/apt $(lsb_release -cs)-pgdg main" \
+            | sudo tee /etc/apt/sources.list.d/pgdg.list >/dev/null
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq postgresql-client-17 age
+          /usr/lib/postgresql/17/bin/pg_dump --version
+          age --version
+          aws --version
+
+      # (c) pg_dump via the Supavisor SESSION pooler (direct host is IPv6-only; runners are IPv4)
+      # (d) streamed straight into age: no plaintext dump ever lands on disk
+      # (e) upload to R2  db/YYYY-MM-DD/noholi-<timestamp>.dump.age
+      # (f) status/latest.json
+      - name: Dump, encrypt, upload
+        id: backup
+        env:
+          SUPABASE_DB_POOLER_URL: ${{ secrets.SUPABASE_DB_POOLER_URL }}
+          AGE_RECIPIENT: ${{ secrets.AGE_RECIPIENT }}
+          R2_ACCOUNT_ID: ${{ secrets.R2_ACCOUNT_ID }}
+          R2_ACCESS_KEY_ID: ${{ secrets.R2_ACCESS_KEY_ID }}
+          R2_SECRET_ACCESS_KEY: ${{ secrets.R2_SECRET_ACCESS_KEY }}
+          R2_BUCKET: ${{ secrets.R2_BUCKET }}
+          PG_DUMP: /usr/lib/postgresql/17/bin/pg_dump
+          BACKUP_PREFIX: db
+          WRITE_STATUS: ${{ github.event_name == 'schedule' && '1' || (inputs.write_status && '1' || '0') }}
+        run: bash scripts/backup.sh
+
+      - name: Summary
+        if: success()
+        run: |
+          {
+            echo "### Backup OK"
+            echo "- object: \`${{ steps.backup.outputs.object_key }}\`"
+            echo "- size: ${{ steps.backup.outputs.size_bytes }} bytes (encrypted)"
+          } >> "$GITHUB_STEP_SUMMARY"
+
+# No heartbeat commit: GitHub only auto-disables scheduled workflows after 60 days
+# without activity in PUBLIC repositories. This repo must stay PRIVATE (see README),
+# so the schedule does not expire. If it is ever made public, add a heartbeat job.

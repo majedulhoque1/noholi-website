@@ -1,12 +1,21 @@
 node_modules
 dist
 .vercel
+.env
+.env.*
+!.env.example
+!.env.development.example
 
-# generated check output (screenshots, diffs)
-tools/out
-tools/vite.log
+# web: generated check output (screenshots, diffs)
+web/tools/out
+web/tools/vite.log
 
-# large / scratch design artefacts
-design-export/raw-export.json
-design-export/locofy-samples
-noholi-design-export.json
+# web: large / scratch design artefacts
+web/design-export/raw-export.json
+web/design-export/locofy-samples
+web/noholi-design-export.json
+
+# supabase local
+supabase/.branches
+supabase/.temp
+supabase/seed/out

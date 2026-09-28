@@ -1,0 +1,93 @@
+/* Book cover box (2:3). Deliberately not position:relative + absolute children, so fitBoxes.js
+   never mistakes it for fixed Figma artwork and zooms it. Sizes come from the parent/className. */
+.bookcover {
+  display: block;
+  width: 100%;
+  aspect-ratio: 2 / 3;
+  overflow: hidden;
+  container-type: inline-size;
+  background-color: var(--bc-bg);
+  color: var(--bc-fg);
+  --bc-bg: var(--oxblood);
+  --bc-fg: var(--paper);
+  --bc-frame: rgba(247, 243, 234, 0.45);
+}
+.bookcover--oxblood { --bc-bg: var(--oxblood); --bc-fg: var(--paper); }
+.bookcover--green { --bc-bg: var(--green); --bc-fg: var(--paper); }
+.bookcover--umber { --bc-bg: var(--ink-soft); --bc-fg: var(--paper-bright); }
+.bookcover--rose { --bc-bg: var(--oxblood-soft); --bc-fg: var(--paper-bright); }
+.bookcover--paper { --bc-bg: var(--paper-dim); --bc-fg: var(--ink); --bc-frame: var(--parchment-line); }
+
+.bookcover-img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+}
+/* landscape/square scans: show the whole image on the mat */
+.bookcover-img--whole { object-fit: contain; }
+/* low-res: never enlarge beyond the image's own size */
+.bookcover-img--small { object-fit: scale-down; }
+
+.bookcover-type {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 5cqi;
+  padding: 16cqi 11cqi 9cqi;
+  text-align: center;
+  outline: 1px solid var(--bc-frame);
+  outline-offset: -5cqi;
+}
+.bookcover-title {
+  margin-top: auto;
+  max-width: 100%;
+  font-family: var(--font-serif);
+  font-size: 10.5cqi;
+  font-weight: 600;
+  line-height: 1.25;
+  overflow-wrap: anywhere;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 5;
+  line-clamp: 5;
+  overflow: hidden;
+}
+.bookcover[data-lang='bn'] .bookcover-title,
+.bookcover[data-lang='bn'] .bookcover-author {
+  font-family: var(--font-bengali);
+  line-height: 1.45;
+}
+.bookcover-rule {
+  flex-shrink: 0;
+  width: 18cqi;
+  height: 1px;
+  background-color: currentColor;
+  opacity: 0.6;
+}
+.bookcover-author {
+  max-width: 100%;
+  font-family: var(--font-sans);
+  font-size: 6.5cqi;
+  line-height: 1.35;
+  opacity: 0.9;
+  overflow-wrap: anywhere;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  overflow: hidden;
+}
+.bookcover-imprint {
+  margin-top: auto;
+  font-family: var(--font-sans);
+  font-size: 4.6cqi;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  opacity: 0.8;
+  white-space: nowrap;
+}

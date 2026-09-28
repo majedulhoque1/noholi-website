@@ -1,0 +1,265 @@
+/*
+ * Hand-written adjustments for the generated member pages. Kept out of the generated
+ * <Page>.css files so `python tools/gen_member.py <frame> <Page> <prefix> --css-only`
+ * can refresh those without losing anything. Each rule is scoped by the page root class.
+ */
+
+/* Change password: the visibility icon is a button now (positioned by its generated class) */
+.mpass .mpass-toggle-password-visibility img {
+  display: block;
+}
+
+/* Borrow request: Figma renders this pre-filled value in the sans UI face, not the Bengali serif */
+.borrow .borrow-input {
+  font-family: var(--font-sans);
+}
+
+/* Borrow request: inline result of submitting (not part of the static design) */
+.borrow .borrow-status {
+  font-family: var(--font-sans);
+  font-size: 13px;
+  line-height: 20px;
+  color: var(--oxblood);
+}
+
+.borrow .borrow-status--ok {
+  color: var(--green);
+}
+
+/* Creative writing: the design draws the declaration box ticked in black */
+.swriting .swriting-input-6.studio-check {
+  accent-color: var(--black);
+}
+
+/* Books wishlist: this frame's header is 82px (115 - 33 review strip) against the site's 81px */
+.wlbooks {
+  padding-top: 1px;
+}
+
+/* Borrow request: real titles vary in length, so the title/Bangla pair flows instead of
+   sitting at the design's fixed offsets (same positions for the design's own title). */
+.borrow .borrow-heading-2 {
+  height: auto;
+  min-height: 30px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  column-gap: 8px;
+  overflow: visible;
+}
+
+.borrow .borrow-heading-2-text,
+.borrow .borrow-heading-2-text-2 {
+  position: static;
+  white-space: normal;
+  overflow-wrap: anywhere;
+}
+
+.borrow .borrow-cover-plate-thumbnail-box-box-text {
+  display: -webkit-box;
+  -webkit-line-clamp: 4;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  max-width: 62px;
+  white-space: normal;
+  overflow-wrap: anywhere;
+}
+
+.borrow .borrow-cover-plate-thumbnail-box-box-text-2,
+.borrow .borrow-horizontalborder-2-box-text {
+  max-width: 62px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Borrow request: guarantor consent tick (links the privacy notice) */
+.borrow .borrow-consent {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  font-family: var(--font-sans);
+  font-size: 12px;
+  line-height: 18px;
+  color: var(--ink-soft);
+  cursor: pointer;
+}
+
+.borrow .borrow-consent-check {
+  flex-shrink: 0;
+  margin: 2px 0 0;
+  width: 14px;
+  height: 14px;
+  accent-color: var(--oxblood);
+}
+
+.borrow .borrow-consent a,
+.borrow .borrow-status a {
+  color: var(--oxblood);
+  text-decoration: underline;
+}
+
+.borrow .borrow-submit-button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* Member dashboard: real lists vary in length. The grid keeps the design's height as a
+   minimum, count labels stay right-aligned (same x as the design's own labels), and
+   long titles wrap instead of pushing the badge out of the card. */
+.mdash .mdash-layout-grid-main-content-sidebar {
+  height: auto;
+  min-height: 1108px;
+}
+
+.mdash .mdash-right-4-cols-section-2-notice {
+  padding-bottom: 0;
+}
+
+/* when the grid stacks on small screens, keep the design's section spacing between the columns */
+.mdash .mdash-layout-grid-main-content-sidebar {
+  row-gap: 48px;
+}
+
+.mdash .mdash-horizontalborder-text,
+.mdash .mdash-horizontalborder-text-2,
+.mdash .mdash-horizontalborder-text-3 {
+  left: auto;
+  right: 0;
+}
+
+.mdash .mdash-live-left {
+  flex-shrink: 1;
+  min-width: 0;
+}
+
+.mdash .mdash-live-left .mdash-heading-3 {
+  white-space: normal;
+  overflow-wrap: anywhere;
+}
+
+.mdash .mdash-heading-3 a:hover,
+.mdash .mdash-live-link {
+  text-decoration: underline;
+}
+
+.mdash .mdash-live-link {
+  color: var(--oxblood);
+}
+
+.mdash .mdash-live-wrap {
+  white-space: normal;
+}
+
+.mdash .mdash-live-mono {
+  font-family: var(--font-mono);
+  font-size: 12px;
+}
+
+.mdash .mdash-live-muted {
+  font-family: var(--font-sans);
+  font-size: 12px;
+  line-height: 16px;
+  color: var(--ink-soft);
+  white-space: nowrap;
+}
+
+.mdash .mdash-live-notice {
+  display: block;
+  margin-top: 4px;
+  font-family: var(--font-sans);
+  font-size: 12px;
+  line-height: 18px;
+  color: var(--oxblood);
+  white-space: normal;
+}
+
+.mdash .mdash-live-notice.is-ok {
+  color: var(--green);
+}
+
+.mdash [class^='mdash-book-'] > [class$='-box-3'] {
+  flex-shrink: 0;
+  margin-left: 16px;
+}
+
+.mdash button:disabled {
+  opacity: 0.6;
+  cursor: progress;
+}
+
+@media (max-width: 767px) {
+  .mdash .mdash-layout-grid-main-content-sidebar {
+    min-height: 0;
+  }
+  .mdash [class^='mdash-book-'],
+  .mdash .mdash-background-border-2 {
+    flex-wrap: wrap;
+    row-gap: 12px;
+  }
+  .mdash [class^='mdash-book-'] > [class$='-box-3'] {
+    margin-left: 0;
+  }
+}
+
+/* Borrow request on phones: one field per row so pre-filled values and real titles stay
+   readable (the design is desktop-only). `main` raises specificity above the generated
+   responsive rules, which load after this file. */
+@media (max-width: 600px) {
+  main .borrow .borrow-compact-book-summary-block {
+    flex-wrap: wrap;
+    align-items: flex-start;
+    gap: 16px;
+    padding: 20px 16px;
+  }
+  main .borrow .borrow-book-info-metadata-box,
+  main .borrow .borrow-book-info-metadata-box-3 {
+    flex-wrap: wrap;
+    row-gap: 4px;
+    column-gap: 8px;
+  }
+  main .borrow .borrow-book-info-metadata-box-3-box {
+    flex-shrink: 1;
+    min-width: 0;
+  }
+  main .borrow .borrow-book-info-metadata-box-3-box > span {
+    white-space: normal;
+  }
+  main .borrow .borrow-borrow-request-form-card-confirm {
+    padding: 32px 16px 24px;
+  }
+  main .borrow .borrow-name-email,
+  main .borrow .borrow-phone-numbers,
+  main .borrow .borrow-guarantor-name-relationship,
+  main .borrow .borrow-guarantor-phone-numbers {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  main .borrow .borrow-address-breakdown-box,
+  main .borrow .borrow-guarantor-address-breakdown-box {
+    grid-template-columns: minmax(0, 1fr);
+    height: auto;
+    row-gap: 8px;
+  }
+}
+
+/* Member profile on phones: real emails are longer than the design's placeholder, so the
+   photo sits above the details and long values wrap. */
+@media (max-width: 600px) {
+  main .mprofile .mprofile-horizontalborder {
+    flex-direction: column;
+    align-items: stretch;
+    height: auto;
+  }
+  main .mprofile .mprofile-horizontalborder-box-2 {
+    flex: none;
+    width: auto;
+    min-width: 0;
+    height: auto;
+    grid-template-columns: minmax(0, 1fr);
+    row-gap: 16px;
+  }
+  main .mprofile .mprofile-horizontalborder-box-2 span {
+    white-space: normal;
+    overflow-wrap: anywhere;
+  }
+}

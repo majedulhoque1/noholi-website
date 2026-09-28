@@ -1,0 +1,154 @@
+{
+  "_readme": [
+    "Normalisation rules for import-books.mjs. Edit this file, not the script.",
+    "Lookups in 'category.map' and 'condition.map' ignore case and extra whitespace, so 'Adults', ' Adults' and 'adults' are the same key.",
+    "A value in the sheet that is not in a map stops the import with an error listing it, so nothing is silently guessed.",
+    "The raw sheet value is always kept in category_raw / condition_raw / genre_raw."
+  ],
+  "nullTokens": [
+    "",
+    "-",
+    "--",
+    "—",
+    "n/a",
+    "N/A"
+  ],
+  "copies": {
+    "_rule": "A blank 'Total Copies' cell becomes this many copies and the row is flagged in the report.",
+    "blankDefault": 1
+  },
+  "category": {
+    "_rule": "category holds AUDIENCE only. Ranges map to their LOWEST audience (the youngest reader it is suitable for): 'Young Adults & Adults' -> 'Young Adults', 'Kids & Teens' -> 'Children'. Ranges spanning children to adults -> 'All Ages'. Genre-like values (Fiction, Translation, Education...) carry no audience information -> 'General'.",
+    "allowed": [
+      "Children",
+      "Young Adults",
+      "Adults",
+      "All Ages",
+      "General"
+    ],
+    "blank": "General",
+    "map": {
+      "Adults": "Adults",
+      "Adult": "Adults",
+      "Academic Books for Adults": "Adults",
+      "Young Adults": "Young Adults",
+      "Young Adult": "Young Adults",
+      "Young Adults & Adults": "Young Adults",
+      "Teens & Adults": "Young Adults",
+      "Children": "Children",
+      "Kids & Teens": "Children",
+      "Children, Young Adults": "Children",
+      "Children/Young Adults": "Children",
+      "Comics Children": "Children",
+      "All Ages": "All Ages",
+      "Kids & Adults": "All Ages",
+      "Children, Adults": "All Ages",
+      "Family": "All Ages",
+      "General": "General",
+      "Fiction": "General",
+      "Non Fiction": "General",
+      "Translation": "General",
+      "Education": "General",
+      "Educational": "General",
+      "Academic": "General",
+      "Collection": "General",
+      "Reference": "General",
+      "Dictionary": "General",
+      "Religious": "General",
+      "Biography": "General",
+      "Adaptation": "General",
+      "Students": "General"
+    }
+  },
+  "condition": {
+    "_rule": "Good | Fair | Needs Repair | Poor. 'Medium' = Fair. Any note asking for repair or binding = Needs Repair (an action staff can take). 'Bad' with no repair note, or missing pages = Poor. Blank, or a value that is clearly not a condition (a publisher name typed into the column), = Good and the row is flagged.",
+    "allowed": [
+      "Good",
+      "Fair",
+      "Needs Repair",
+      "Poor"
+    ],
+    "blank": "Good",
+    "flagAsSuspect": [
+      "Aronno Prokashoni"
+    ],
+    "map": {
+      "Good": "Good",
+      "Medium": "Fair",
+      "Medium(Need to repair)": "Needs Repair",
+      "Medium (Need to repair)": "Needs Repair",
+      "Medium(Need to repair pages)": "Needs Repair",
+      "Medium (Need to repair pages)": "Needs Repair",
+      "Medium repair needed": "Needs Repair",
+      "Bad Binding Needed": "Needs Repair",
+      "Bad(Need to repair)": "Needs Repair",
+      "Bad": "Poor",
+      "Medium (Page Missing)": "Poor",
+      "Medium (Pages Missing)": "Poor",
+      "Aronno Prokashoni": "Good"
+    }
+  },
+  "price": {
+    "_rule": "The column is Taka. Plain numbers are kept. A 'BDT'/'Tk'/'৳' prefix is stripped. A foreign-currency price (P = GBP, RS, RM, CAD, USD, $, £) is NOT converted: price becomes null (fines then fall back to the ৳200 default) and the row is listed in the report.",
+    "bdtPrefixes": [
+      "BDT",
+      "Tk",
+      "Tk.",
+      "Taka",
+      "৳"
+    ],
+    "foreignPrefixes": [
+      "P",
+      "RS",
+      "Rs",
+      "RM",
+      "CAD",
+      "AUD",
+      "USD",
+      "US$",
+      "$",
+      "£",
+      "GBP",
+      "INR"
+    ]
+  },
+  "coverLowResHosts": [
+    "^encrypted-tbn\\d+\\.gstatic\\.com$",
+    "^th\\.bing\\.com$"
+  ],
+  "coverUrlRewrites": {
+    "_rule": "Tried BEFORE the original URL when 'match' fits (regex, JS replace syntax). ds.rokomari.store resets every connection from here; rokbucket.rokomari.io serves the same files. cover_source_url always keeps the sheet's URL.",
+    "rules": [
+      {
+        "match": "^https?://ds\\.rokomari\\.store/rokomari110/(.*)$",
+        "replace": "https://rokbucket.rokomari.io/$1"
+      }
+    ]
+  },
+  "rowFixes": {
+    "_rule": "Per-row corrections, keyed by book id. 'expect' (normalised values) or 'expectRaw' (sheet columns, as written) guards the fix: it is applied only if the sheet still holds those exact values, otherwise the import stops so the fix can be reviewed.",
+    "BK-1776": {
+      "why": "Bangla title and Bangla author are swapped in the sheet (English columns say 'Dune Messiah' / 'Frank Herbert').",
+      "expect": {
+        "title_bangla": "ফ্র্যাঙ্ক হার্বার্ট",
+        "author_bangla": "ডিউন মেসাইয়া"
+      },
+      "set": {
+        "title_bangla": "ডিউন মেসাইয়া",
+        "author_bangla": "ফ্র্যাঙ্ক হার্বার্ট"
+      }
+    },
+    "BK-2918": {
+      "why": "Price typed as '48o' (letter o for zero).",
+      "expectRaw": {
+        "৳ Price": "48o"
+      },
+      "set": {
+        "price": 480
+      }
+    }
+  },
+  "coverBlocklistSha256": [
+    "707b5c41069b6f24d90964dc1f112fd3946f3f7ae3a73a03758127b684bfb667"
+  ]
+}

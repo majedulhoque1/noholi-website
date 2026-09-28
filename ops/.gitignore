@@ -1,0 +1,9 @@
+# The root .gitignore ignores .env.* ; the example must stay tracked, the real file must not.
+.env.ops
+!.env.ops.example
+
+# decrypted dumps / keys that a restore might leave behind
+*.dump
+*.dump.age
+*key*.txt
+restore-work/
