@@ -1,0 +1,11 @@
+126:2	MemberDashboard	mdash	/member/dashboard	member-dashboard
+49:2	MemberProfile	mprofile	/member/profile	member-profile
+126:943	MemberEdit	medit	/member/edit	edit-personal-information
+49:290	ChangePassword	mpass	/member/password	change-password
+126:473	BorrowRequest	borrow	/borrow/the-river-path	borrow-request-the-river-path
+126:1886	StudioBlog	sblog	/studio/blog	member-writing-studio-compose-a-blog
+126:3268	StudioWriting	swriting	/studio/creative-writing	member-writing-studio-submit-creative-writing
+126:4820	StudioReview	sreview	/studio/book-review	member-writing-studio-submit-book-review
+126:5346	WishlistBooks	wlbooks	/wishlist/books	book-wishlist-shelf-requests
+126:5669	WishlistEBooks	wlebooks	/wishlist/e-books	e-books-wishlist-digital-stacks
+126:6298	WishlistAudio	wlaudio	/wishlist/audio-books	audio-books-wishlist-studio

@@ -1,0 +1,603 @@
+.nbooks {
+  display: flex;
+  flex-direction: column;
+  background: linear-gradient(var(--paper), var(--paper));
+}
+
+.nbooks-main-content-section {
+  width: 100%;
+  min-height: 1757.25px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 64px;
+  padding: 0 0 64px 0;
+}
+
+.nbooks-page-header-intro {
+  flex-shrink: 0;
+  align-self: stretch;
+  max-width: 1280px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: 64px 48px 32px 48px;
+  border-bottom: 1px solid var(--parchment-line);
+}
+
+.nbooks-page-header-intro-box {
+  flex-shrink: 0;
+  align-self: stretch;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 8px;
+}
+
+.nbooks-page-header-intro-box-box {
+  flex-shrink: 0;
+  align-self: stretch;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.nbooks-publications {
+  flex-shrink: 0;
+  align-self: stretch;
+  font-family: var(--font-sans);
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 16px;
+  letter-spacing: 1.2px;
+  text-transform: uppercase;
+  color: var(--oxblood);
+  min-height: 16px;
+}
+
+.nbooks-heading-1 {
+  flex-shrink: 0;
+  align-self: stretch;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  font-family: var(--font-serif);
+  font-size: 48px;
+  font-weight: 600;
+  line-height: 48px;
+  letter-spacing: -1.2px;
+  color: var(--ink);
+  min-height: 48px;
+}
+
+.nbooks-page-header-intro-box-box-2 {
+  flex-shrink: 0;
+  align-self: stretch;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: 8px 0 0 0;
+}
+
+.nbooks-page-header-intro-box-box-2-box {
+  flex-shrink: 0;
+  align-self: stretch;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.nbooks-original-titles-published-by-noh {
+  flex-shrink: 0;
+  align-self: stretch;
+  font-family: var(--font-sans);
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 24px;
+  color: var(--ink-soft);
+  min-height: 24px;
+}
+
+.nbooks-published-titles-grid {
+  flex-shrink: 0;
+  width: 1184px;
+  display: grid;
+  grid-template-columns: minmax(0, 373.33fr) 31.67px minmax(0, 373.33fr) 32.67px minmax(0, 373.33fr);
+  row-gap: 31.67px;
+}
+
+.nbooks-card-1 {
+  grid-column: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding: 24px;
+  background-color: var(--paper);
+  border: 1px solid var(--parchment-line);
+}
+
+.nbooks-card-1-box {
+  flex-shrink: 0;
+  align-self: stretch;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 16px;
+}
+
+.nbooks-cover-placeholder {
+  flex-shrink: 0;
+  align-self: stretch;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 189.17px 24px 189.17px 24px;
+  background-color: var(--paper);
+  border: 1px solid var(--parchment-line);
+}
+
+.nbooks-cover-placeholder-box {
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.nbooks-cover-placeholder-box-text {
+  flex-shrink: 0;
+  font-family: var(--font-serif);
+  font-size: 18px;
+  font-weight: 600;
+  line-height: 24.75px;
+  color: var(--ink);
+  text-align: center;
+  white-space: nowrap;
+  min-height: 25px;
+}
+
+.nbooks-cover-placeholder-box-2 {
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: 6px 0 0 0;
+}
+
+.nbooks-cover-placeholder-box-2-box {
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.nbooks-cover-placeholder-box-2-box-text {
+  flex-shrink: 0;
+  font-family: var(--font-bengali);
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 20px;
+  color: var(--ink-soft);
+  text-align: center;
+  white-space: nowrap;
+  min-height: 20px;
+}
+
+.nbooks-card-details {
+  flex-shrink: 0;
+  align-self: stretch;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 4px;
+  padding: 8px 0 0 0;
+}
+
+.nbooks-heading-2 {
+  flex-shrink: 0;
+  align-self: stretch;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  font-family: var(--font-serif);
+  font-size: 20px;
+  font-weight: 600;
+  line-height: 25px;
+  color: var(--ink);
+  min-height: 25px;
+}
+
+.nbooks-card-details-box {
+  flex-shrink: 0;
+  align-self: stretch;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.nbooks-card-details-box-text {
+  flex-shrink: 0;
+  align-self: stretch;
+  font-family: var(--font-bengali);
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 20px;
+  color: var(--ink-soft);
+  min-height: 20px;
+}
+
+.nbooks-card-details-box-2 {
+  flex-shrink: 0;
+  align-self: stretch;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: 4px 0 0 0;
+}
+
+.nbooks-by-author-name {
+  flex-shrink: 0;
+  align-self: stretch;
+  font-family: var(--font-sans);
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 20px;
+  color: var(--ink-soft);
+  min-height: 20px;
+}
+
+.nbooks-metadata-genre-only {
+  flex-shrink: 0;
+  align-self: stretch;
+  display: flex;
+  align-items: flex-start;
+  padding: 8px 0 0 0;
+  border-top: 1px solid rgba(201, 191, 168, 0.6);
+}
+
+.nbooks-background-border {
+  flex-shrink: 0;
+  align-self: stretch;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: 4px 10px 4px 10px;
+  background-color: var(--paper);
+  border: 1px solid var(--parchment-line);
+}
+
+.nbooks-background-border-text {
+  flex-shrink: 0;
+  font-family: var(--font-sans);
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 16px;
+  color: var(--ink);
+  white-space: nowrap;
+  min-height: 16px;
+}
+
+.nbooks-availability-note {
+  flex-shrink: 0;
+  align-self: stretch;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: 24px 0 0 0;
+}
+
+.nbooks-availability-note-2 {
+  flex-shrink: 0;
+  align-self: stretch;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 0 0 0;
+  border-top: 1px solid var(--parchment-line);
+}
+
+.nbooks-availability-note-2-box {
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.nbooks-availability-note-2-box-text {
+  flex-shrink: 0;
+  font-family: var(--font-sans);
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 20px;
+  color: var(--ink-soft);
+  white-space: nowrap;
+  min-height: 20px;
+}
+
+.nbooks-availability-note-2-box-2 {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.nbooks-availability-note-2-box-2-box {
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.nbooks-availability-note-2-box-2-box-text {
+  flex-shrink: 0;
+  font-family: var(--font-sans);
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 16px;
+  color: var(--ink);
+  white-space: nowrap;
+  min-height: 16px;
+}
+
+.nbooks-availability-note-2-box-2-box-2 {
+  flex-shrink: 0;
+  display: block;
+  width: 8px;
+  height: 4px;
+  margin: -0.48px -0.15px;
+}
+
+.nbooks-card-2 {
+  grid-column: 3;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding: 24px;
+  background-color: var(--paper);
+  border: 1px solid var(--parchment-line);
+}
+
+.nbooks-card-2-box {
+  flex-shrink: 0;
+  align-self: stretch;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 16px;
+}
+
+.nbooks-card-3 {
+  grid-column: 5;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding: 24px;
+  background-color: var(--paper);
+  border: 1px solid var(--parchment-line);
+}
+
+.nbooks-card-3-box {
+  flex-shrink: 0;
+  align-self: stretch;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 16px;
+}
+
+.nbooks-cover-placeholder-2 {
+  flex-shrink: 0;
+  align-self: stretch;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 189.19px 24px 189.19px 24px;
+  background-color: var(--paper);
+  border: 1px solid var(--parchment-line);
+}
+
+.nbooks-cover-placeholder-2-box {
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.nbooks-cover-placeholder-2-box-text {
+  flex-shrink: 0;
+  font-family: var(--font-serif);
+  font-size: 18px;
+  font-weight: 600;
+  line-height: 24.75px;
+  color: var(--ink);
+  text-align: center;
+  white-space: nowrap;
+  min-height: 25px;
+}
+
+.nbooks-cover-placeholder-2-box-2 {
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: 6px 0 0 0;
+}
+
+.nbooks-cover-placeholder-2-box-2-box {
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.nbooks-cover-placeholder-2-box-2-box-text {
+  flex-shrink: 0;
+  font-family: var(--font-bengali);
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 20px;
+  color: var(--ink-soft);
+  text-align: center;
+  white-space: nowrap;
+  min-height: 20px;
+}
+
+.nbooks-card-4 {
+  grid-column: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding: 24px;
+  background-color: var(--paper);
+  border: 1px solid var(--parchment-line);
+}
+
+.nbooks-card-4-box {
+  flex-shrink: 0;
+  align-self: stretch;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 16px;
+}
+
+.nbooks-card-5 {
+  grid-column: 3;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding: 24px;
+  background-color: var(--paper);
+  border: 1px solid var(--parchment-line);
+}
+
+.nbooks-card-5-box {
+  flex-shrink: 0;
+  align-self: stretch;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 16px;
+}
+
+.nbooks-card-6 {
+  grid-column: 5;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding: 24px;
+  background-color: var(--paper);
+  border: 1px solid var(--parchment-line);
+}
+
+.nbooks-card-6-box {
+  flex-shrink: 0;
+  align-self: stretch;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 16px;
+}
+
+.nbooks-cover-placeholder-3 {
+  flex-shrink: 0;
+  align-self: stretch;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 189.18px 24px 189.2px 24px;
+  background-color: var(--paper);
+  border: 1px solid var(--parchment-line);
+}
+
+.nbooks-cover-placeholder-3-box {
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.nbooks-cover-placeholder-3-box-text {
+  flex-shrink: 0;
+  font-family: var(--font-serif);
+  font-size: 18px;
+  font-weight: 600;
+  line-height: 24.75px;
+  color: var(--ink);
+  text-align: center;
+  white-space: nowrap;
+  min-height: 25px;
+}
+
+.nbooks-cover-placeholder-3-box-2 {
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: 6px 0 0 0;
+}
+
+.nbooks-cover-placeholder-3-box-2-box {
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.nbooks-cover-placeholder-3-box-2-box-text {
+  flex-shrink: 0;
+  font-family: var(--font-bengali);
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 20px;
+  color: var(--ink-soft);
+  text-align: center;
+  white-space: nowrap;
+  min-height: 20px;
+}
+
+.nbooks-card-details-2 {
+  flex-shrink: 0;
+  align-self: stretch;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 4px;
+  padding: 7.99px 0 0 0;
+}
+
+.nbooks-card-details-2-box {
+  flex-shrink: 0;
+  align-self: stretch;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.nbooks-card-details-2-box-text {
+  flex-shrink: 0;
+  align-self: stretch;
+  font-family: var(--font-bengali);
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 20px;
+  color: var(--ink-soft);
+  min-height: 20px;
+}
+
+.nbooks-card-details-2-box-2 {
+  flex-shrink: 0;
+  align-self: stretch;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: 4px 0 0 0;
+}

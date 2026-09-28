@@ -1,0 +1,174 @@
+/* ---------------------------------------------------------------------------
+   Below 1180px the Figma design (desktop only) has no answer, so the nav and
+   account actions collapse into a full-width menu panel in the same style.
+   --------------------------------------------------------------------------- */
+.header-burger,
+.mobile-menu {
+  display: none;
+}
+
+@media (max-width: 1179px) {
+  .site-header-inner {
+    height: 64px;
+    padding: 0 20px;
+  }
+
+  .header-logo img {
+    width: 49px;
+    height: 32px;
+  }
+
+  .header-nav,
+  .header-login,
+  .header-cta,
+  .header-utility .nav-dropdown {
+    display: none;
+  }
+
+  .header-theme,
+  .is-member .header-theme {
+    margin-left: 8px;
+  }
+
+  .header-burger {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    margin-left: 8px;
+    margin-right: -8px;
+  }
+
+  .header-burger-lines,
+  .header-burger-lines::before,
+  .header-burger-lines::after {
+    display: block;
+    width: 20px;
+    height: 1.5px;
+    background-color: var(--ink);
+    transition: transform 0.2s ease, background-color 0.2s ease;
+  }
+
+  .header-burger-lines {
+    position: relative;
+  }
+
+  .header-burger-lines::before,
+  .header-burger-lines::after {
+    content: '';
+    position: absolute;
+    left: 0;
+  }
+
+  .header-burger-lines::before { top: -6px; }
+  .header-burger-lines::after { top: 6px; }
+  .header-burger-lines.is-open { background-color: transparent; }
+  .header-burger-lines.is-open::before { transform: translateY(6px) rotate(45deg); }
+  .header-burger-lines.is-open::after { transform: translateY(-6px) rotate(-45deg); }
+
+  .mobile-menu {
+    display: block;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    max-height: calc(100vh - 65px);
+    overflow-y: auto;
+    padding: 8px 20px 24px;
+    background-color: var(--paper-bright);
+    border-bottom: 1px solid var(--parchment-line);
+    box-shadow: 0 16px 36px -6px rgba(40, 32, 20, 0.16);
+  }
+
+  .mobile-menu-nav,
+  .mobile-menu-group,
+  .mobile-menu-account {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .mobile-menu-link {
+    display: block;
+    padding: 12px 0;
+    border-bottom: 1px solid rgba(201, 191, 168, 0.6);
+    font-family: var(--font-sans);
+    font-size: 16px;
+    font-weight: 500;
+    line-height: 20px;
+    letter-spacing: 0.35px;
+    color: var(--ink);
+  }
+
+  .mobile-menu-link--sub {
+    padding-left: 12px;
+    font-size: 15px;
+    font-weight: 400;
+  }
+
+  .mobile-menu-label,
+  .mobile-menu-member {
+    padding: 20px 0 6px;
+    font-family: var(--font-sans);
+    font-size: 12px;
+    font-weight: 600;
+    line-height: 16px;
+    letter-spacing: 1.2px;
+    text-transform: uppercase;
+    color: var(--oxblood);
+  }
+
+  .mobile-menu-member {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 8px;
+    letter-spacing: 0.6px;
+    color: var(--ink);
+  }
+
+  .mobile-menu-member span {
+    font-family: var(--font-mono);
+    font-weight: 400;
+    color: var(--ink-soft);
+  }
+
+  .mobile-menu-account {
+    margin-top: 8px;
+  }
+
+  .mobile-menu-logout {
+    margin-top: 16px;
+  }
+
+  .mobile-menu-actions {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    margin-top: 24px;
+  }
+
+  .mobile-menu-login {
+    font-family: var(--font-sans);
+    font-size: 12px;
+    font-weight: 600;
+    line-height: 16px;
+    letter-spacing: 0.6px;
+    text-transform: uppercase;
+    color: var(--ink);
+  }
+
+  .mobile-menu .mobile-menu-cta {
+    display: block;
+    margin-left: 0;
+    flex: 1;
+    text-align: center;
+  }
+}
+
+@media (max-width: 380px) {
+  .header-lang {
+    padding: 4px 8px;
+  }
+}

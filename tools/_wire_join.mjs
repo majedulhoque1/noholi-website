@@ -1,0 +1,11 @@
+import { chromium } from 'playwright';
+const b = await chromium.launch(); const p = await b.newPage({ viewport: { width: 1280, height: 900 } });
+const errs = []; p.on('pageerror', e => errs.push(e.message)); p.on('console', m => m.type() === 'error' && errs.push(m.text()));
+await p.goto('http://localhost:5191/become-a-member', { waitUntil: 'networkidle' });
+await p.click('text=SUBMIT APPLICATION'); console.log('empty:', await p.textContent('.join-form-status'));
+for (const [id, v] of [['name', 'Rahim Uddin'], ['email', 'rahim@example.com'], ['phone', '+8801711000000'], ['street', 'House 1'], ['city', 'Dhaka'], ['district', 'Dhaka'], ['postal', '1205']]) await p.fill('#join-' + id, v);
+await p.click('text=SUBMIT APPLICATION'); console.log('no photo:', await p.textContent('.join-form-status'));
+await p.setInputFiles('#join-photo', 'tools/out/test-photo.png'); console.log('photo label:', await p.textContent('.join-background-border-2-box-box-box-text'));
+await p.click('text=SUBMIT APPLICATION'); console.log('ok:', await p.textContent('.join-form-status'));
+console.log('labels bound:', await p.$$eval('label[for^="join-"]', l => l.filter(x => document.getElementById(x.htmlFor)).length), 'of', await p.$$eval('label[for^="join-"]', l => l.length));
+console.log('errors:', errs.length ? errs : 'none'); await b.close();

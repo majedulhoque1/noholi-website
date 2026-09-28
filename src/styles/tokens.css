@@ -1,0 +1,32 @@
+/* Noholi design tokens — values taken verbatim from the Figma export. */
+:root {
+  /* ink */
+  --ink: #1a1815;
+  --ink-deep: #1c1c16;
+  --ink-soft: #4a4438;
+  --ink-muted: #4b463f;
+  --ink-faint: #7c766e;
+  --black: #000000;
+  --white: #ffffff;
+
+  /* paper */
+  --paper: #f7f3ea;
+  --paper-bright: #fdf9f0;
+  --paper-dim: #f1eee5;
+  --parchment-line: #c9bfa8;
+  --stone: #cdc5bc;
+
+  /* accents */
+  --oxblood: #7a2e27;
+  --oxblood-soft: #98453c;
+  --green: #065f46;
+
+  /* type */
+  --font-sans: 'Source Sans 3', 'Source Sans Pro', Arial, sans-serif;
+  --font-serif: 'Noto Serif', Georgia, serif;
+  --font-newsreader: 'Newsreader', Georgia, serif;
+  --font-garamond: 'EB Garamond', Garamond, Georgia, serif;
+  --font-work: 'Work Sans', Arial, sans-serif;
+  --font-bengali: 'Noto Serif Bengali', serif;
+  --font-mono: 'JetBrains Mono', 'Courier New', monospace;
+}

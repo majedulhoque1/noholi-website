@@ -1,0 +1,614 @@
+.ebooks {
+  display: flex;
+  flex-direction: column;
+  background: linear-gradient(var(--paper), var(--paper));
+  padding-bottom: 156px;
+  position: relative;
+}
+
+.ebooks-breadcrumb {
+  width: 100%;
+  min-height: 41px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: 12px max(48px, calc((100% - 1184px) / 2)) 12px;
+  background-color: var(--paper);
+  border-bottom: 1px solid rgba(201, 191, 168, 0.6);
+  height: 41px;
+}
+
+.ebooks-ebooks-box {
+  position: absolute;
+  left: 48px;
+  top: 12px;
+  width: 205.46px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.ebooks-ebooks-box-box {
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  font-family: var(--font-sans);
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 16px;
+  letter-spacing: 1.2px;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+  white-space: nowrap;
+  min-height: 16px;
+}
+
+.ebooks-ebooks-box-box-2 {
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.ebooks-ebooks-box-box-2-text {
+  flex-shrink: 0;
+  font-family: var(--font-sans);
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 16px;
+  letter-spacing: 1.2px;
+  text-transform: uppercase;
+  color: var(--parchment-line);
+  white-space: nowrap;
+  min-height: 16px;
+}
+
+.ebooks-resources {
+  flex-shrink: 0;
+  font-family: var(--font-sans);
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 16px;
+  letter-spacing: 1.2px;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+  white-space: nowrap;
+  min-height: 16px;
+}
+
+.ebooks-e-books {
+  flex-shrink: 0;
+  font-family: var(--font-sans);
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 16px;
+  letter-spacing: 1.2px;
+  text-transform: uppercase;
+  color: var(--oxblood);
+  white-space: nowrap;
+  min-height: 16px;
+}
+
+.ebooks-main-content {
+  width: 100%;
+  min-height: 607px;
+  max-width: 1280px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 48px;
+  padding: 64px max(48px, calc((100% - 1184px) / 2)) 64px;
+}
+
+.ebooks-header-section {
+  flex-shrink: 0;
+  align-self: stretch;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 8px;
+}
+
+.ebooks-header-section-box {
+  flex-shrink: 0;
+  align-self: stretch;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.ebooks-digital-library {
+  flex-shrink: 0;
+  align-self: stretch;
+  font-family: var(--font-sans);
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 16px;
+  letter-spacing: 1.2px;
+  text-transform: uppercase;
+  color: var(--oxblood);
+  min-height: 16px;
+}
+
+.ebooks-heading-1 {
+  flex-shrink: 0;
+  align-self: stretch;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  font-family: var(--font-serif);
+  font-size: 48px;
+  font-weight: 400;
+  line-height: 48px;
+  letter-spacing: -1.2px;
+  color: var(--ink);
+  min-height: 48px;
+}
+
+.ebooks-header-section-box-2 {
+  flex-shrink: 0;
+  width: 672px;
+  max-width: 672px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: 4px 0 0 0;
+}
+
+.ebooks-header-section-box-2-text {
+  flex-shrink: 0;
+  font-family: var(--font-sans);
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 26px;
+  color: var(--ink-soft);
+  white-space: nowrap;
+  min-height: 26px;
+}
+
+.ebooks-e-books-grid {
+  flex-shrink: 0;
+  align-self: stretch;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  gap: 32px;
+}
+
+.ebooks-book-1 {
+  flex: 1 1 0;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: 20px;
+  background-color: var(--paper);
+  border: 1px solid var(--parchment-line);
+}
+
+.ebooks-book-1-box {
+  flex-shrink: 0;
+  align-self: stretch;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 16px;
+  padding: 0 0 16px 0;
+}
+
+.ebooks-background-border {
+  flex-shrink: 0;
+  align-self: stretch;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding: 23px 24px 24px 24px;
+  background-color: #efe9dc;
+  border: 1px solid var(--parchment-line);
+}
+
+.ebooks-background-border-box {
+  flex-shrink: 0;
+  align-self: stretch;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.ebooks-digital-edition {
+  flex-shrink: 0;
+  align-self: stretch;
+  font-family: var(--font-sans);
+  font-size: 11px;
+  font-weight: 400;
+  line-height: 16.5px;
+  letter-spacing: 1.1px;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+  min-height: 17px;
+}
+
+.ebooks-background-border-box-2 {
+  flex-shrink: 0;
+  align-self: stretch;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 4px;
+}
+
+.ebooks-heading-3 {
+  flex-shrink: 0;
+  align-self: stretch;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  font-family: var(--font-serif);
+  font-size: 18px;
+  font-weight: 600;
+  line-height: 22.5px;
+  color: var(--ink);
+  min-height: 23px;
+}
+
+.ebooks-background-border-box-2-box {
+  flex-shrink: 0;
+  align-self: stretch;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.ebooks-background-border-box-2-box-text {
+  flex-shrink: 0;
+  align-self: stretch;
+  font-family: var(--font-bengali);
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 20px;
+  color: var(--ink-soft);
+  min-height: 20px;
+}
+
+.ebooks-author-name {
+  flex-shrink: 0;
+  align-self: stretch;
+  font-family: var(--font-sans);
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 16px;
+  color: var(--ink-soft);
+  min-height: 16px;
+}
+
+.ebooks-book-1-box-box {
+  flex-shrink: 0;
+  align-self: stretch;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.ebooks-heading-2 {
+  flex-shrink: 0;
+  align-self: stretch;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  font-family: var(--font-serif);
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 24px;
+  color: var(--ink);
+  min-height: 24px;
+}
+
+.ebooks-book-1-box-box-box {
+  flex-shrink: 0;
+  align-self: stretch;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.ebooks-book-1-box-box-box-text {
+  flex-shrink: 0;
+  align-self: stretch;
+  font-family: var(--font-bengali);
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 16px;
+  color: var(--ink-soft);
+  min-height: 16px;
+}
+
+.ebooks-book-1-box-box-box-2 {
+  flex-shrink: 0;
+  align-self: stretch;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: 4px 0 0 0;
+}
+
+.ebooks-by-author-name {
+  flex-shrink: 0;
+  align-self: stretch;
+  font-family: var(--font-sans);
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 16px;
+  color: var(--ink-soft);
+  min-height: 16px;
+}
+
+.ebooks-book-1-box-2 {
+  flex-shrink: 0;
+  align-self: stretch;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 10px 12px 10px 12px;
+  background-color: var(--oxblood);
+  font-family: var(--font-sans);
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 16px;
+  letter-spacing: 0.6px;
+  text-transform: uppercase;
+  color: var(--paper);
+  text-align: center;
+  white-space: nowrap;
+  min-height: 36px;
+}
+
+.ebooks-book-2 {
+  flex: 1 1 0;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding: 20px;
+  background-color: var(--paper);
+  border: 1px solid var(--parchment-line);
+}
+
+.ebooks-book-2-box {
+  flex-shrink: 0;
+  align-self: stretch;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 16px;
+  padding: 0 0 16px 0;
+}
+
+.ebooks-book-2-box-box {
+  flex-shrink: 0;
+  align-self: stretch;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.ebooks-book-2-box-box-box {
+  flex-shrink: 0;
+  align-self: stretch;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.ebooks-book-2-box-box-box-text {
+  flex-shrink: 0;
+  align-self: stretch;
+  font-family: var(--font-bengali);
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 16px;
+  color: var(--ink-soft);
+  min-height: 16px;
+}
+
+.ebooks-book-2-box-box-box-2 {
+  flex-shrink: 0;
+  align-self: stretch;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: 4px 0 0 0;
+}
+
+.ebooks-book-2-box-2 {
+  flex-shrink: 0;
+  align-self: stretch;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 10px 12px 10px 12px;
+  background-color: var(--oxblood);
+  font-family: var(--font-sans);
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 16px;
+  letter-spacing: 0.6px;
+  text-transform: uppercase;
+  color: var(--paper);
+  text-align: center;
+  white-space: nowrap;
+  min-height: 36px;
+}
+
+.ebooks-book-3 {
+  flex: 1 1 0;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding: 20px;
+  background-color: var(--paper);
+  border: 1px solid var(--parchment-line);
+}
+
+.ebooks-book-3-box {
+  flex-shrink: 0;
+  align-self: stretch;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 16px;
+  padding: 0 0 16px 0;
+}
+
+.ebooks-heading-3-2 {
+  flex-shrink: 0;
+  align-self: stretch;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  font-family: var(--font-serif);
+  font-size: 18px;
+  font-weight: 600;
+  line-height: 22.5px;
+  color: var(--ink);
+  white-space: pre;
+  min-height: 45px;
+}
+
+.ebooks-book-3-box-box {
+  flex-shrink: 0;
+  align-self: stretch;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.ebooks-book-3-box-box-box {
+  flex-shrink: 0;
+  align-self: stretch;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.ebooks-book-3-box-box-box-text {
+  flex-shrink: 0;
+  align-self: stretch;
+  font-family: var(--font-bengali);
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 16px;
+  color: var(--ink-soft);
+  min-height: 16px;
+}
+
+.ebooks-book-3-box-box-box-2 {
+  flex-shrink: 0;
+  align-self: stretch;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: 4px 0 0 0;
+}
+
+.ebooks-book-3-box-2 {
+  flex-shrink: 0;
+  align-self: stretch;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 10px 12px 10px 12px;
+  background-color: var(--oxblood);
+  font-family: var(--font-sans);
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 16px;
+  letter-spacing: 0.6px;
+  text-transform: uppercase;
+  color: var(--paper);
+  text-align: center;
+  white-space: nowrap;
+  min-height: 36px;
+}
+
+.ebooks-book-4 {
+  flex: 1 1 0;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding: 20px;
+  background-color: var(--paper);
+  border: 1px solid var(--parchment-line);
+}
+
+.ebooks-book-4-box {
+  flex-shrink: 0;
+  align-self: stretch;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 16px;
+  padding: 0 0 16px 0;
+}
+
+.ebooks-book-4-box-box {
+  flex-shrink: 0;
+  align-self: stretch;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.ebooks-book-4-box-box-box {
+  flex-shrink: 0;
+  align-self: stretch;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.ebooks-book-4-box-box-box-text {
+  flex-shrink: 0;
+  align-self: stretch;
+  font-family: var(--font-bengali);
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 16px;
+  color: var(--ink-soft);
+  min-height: 16px;
+}
+
+.ebooks-book-4-box-box-box-2 {
+  flex-shrink: 0;
+  align-self: stretch;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: 4px 0 0 0;
+}
+
+.ebooks-book-4-box-2 {
+  flex-shrink: 0;
+  align-self: stretch;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 10px 12px 10px 12px;
+  background-color: var(--oxblood);
+  font-family: var(--font-sans);
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 16px;
+  letter-spacing: 0.6px;
+  text-transform: uppercase;
+  color: var(--paper);
+  text-align: center;
+  white-space: nowrap;
+  min-height: 36px;
+}

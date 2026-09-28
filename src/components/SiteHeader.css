@@ -1,0 +1,315 @@
+/* Values from Figma: "Exact Confirmed Before-Login Header" / "Exact Confirmed After-Login Header" */
+.site-header {
+  position: relative;
+  z-index: 50;
+  background-color: var(--paper-bright);
+  border-bottom: 1px solid var(--parchment-line);
+}
+
+.site-header-inner {
+  max-width: 1280px;
+  height: 80px;
+  margin: 0 auto;
+  padding: 0 48px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.header-logo img {
+  width: 61.31px;
+  height: 40px;
+}
+
+/* nav links: 14/20 Source Sans 500, 28px apart, 8px vertical padding */
+.header-nav {
+  display: flex;
+  align-items: center;
+  width: 606.16px;
+}
+
+.header-nav > * + * {
+  margin-left: 28px;
+}
+
+.nav-link {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 0;
+  font-family: var(--font-sans);
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 20px;
+  letter-spacing: 0.35px;
+  color: var(--ink);
+  white-space: nowrap;
+}
+
+.nav-link:hover,
+.nav-dropdown:hover > .nav-trigger {
+  color: var(--oxblood);
+}
+
+.nav-chevron {
+  width: 14px;
+  height: 14px;
+}
+
+.nav-dropdown {
+  position: relative;
+}
+
+/* dropdown panel — "Library Hover" etc.: 146px wide, paper fill, 0 4 4 rgba(0,0,0,.25) */
+.nav-menu {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  width: 146px;
+  display: flex;
+  flex-direction: column;
+  background-color: var(--paper);
+  box-shadow: 0 4px 4px rgba(0, 0, 0, 0.25);
+}
+
+.nav-menu--right {
+  left: auto;
+  right: 0;
+}
+
+.nav-menu-item {
+  display: block;
+  padding: 8px 0 9px;
+  font-family: var(--font-sans);
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 150%;
+  color: var(--ink);
+  white-space: nowrap;
+}
+
+.nav-menu-item:hover {
+  color: var(--oxblood);
+}
+
+/* utility cluster */
+.header-utility {
+  display: flex;
+  align-items: center;
+}
+
+.header-lang {
+  padding: 4px 10px;
+  background-color: var(--paper);
+  border: 1px solid var(--parchment-line);
+  font-family: var(--font-bengali);
+  font-size: 12px;
+  line-height: 16px;
+  color: var(--ink);
+}
+
+.header-theme {
+  display: flex;
+  padding: 8px;
+  margin-left: 16px; /* 24px left pad in Figma includes the 8px icon padding */
+}
+
+.is-member .header-theme {
+  margin-left: 20px;
+}
+
+.header-login {
+  margin-left: 24px;
+  padding: 3.5px 8px 4.5px 0;
+  font-family: var(--font-sans);
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 16px;
+  letter-spacing: 0.6px;
+  text-transform: uppercase;
+  color: var(--ink);
+}
+
+.header-cta {
+  margin-left: 16px;
+  padding: 10px 16px;
+  background-color: var(--oxblood);
+  font-family: var(--font-sans);
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 16px;
+  letter-spacing: 0.6px;
+  text-transform: uppercase;
+  color: var(--paper-bright);
+  white-space: nowrap;
+}
+
+.header-login:hover {
+  color: var(--oxblood);
+}
+
+.header-cta:hover {
+  background-color: var(--oxblood-soft);
+}
+
+/* member state */
+.header-wishlist {
+  margin-left: 20px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px;
+  font-family: var(--font-sans);
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 16px;
+  letter-spacing: 0.6px;
+  text-transform: uppercase;
+  color: var(--ink);
+}
+
+.header-identity {
+  margin-left: 20px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 8px;
+  background-color: var(--paper);
+  border: 1px solid var(--parchment-line);
+  font-family: var(--font-sans);
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 16px;
+  color: var(--ink);
+  white-space: nowrap;
+}
+
+/* account dropdown — "Noholi Patron Account Dropdown" */
+.account-menu {
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  width: 342px;
+  padding-top: 14px;
+  background-color: var(--paper);
+  border: 1px solid var(--parchment-line);
+  box-shadow: 0 4px 12px -2px rgba(40, 32, 20, 0.08), 0 16px 36px -6px rgba(40, 32, 20, 0.16);
+}
+
+.account-menu::before {
+  /* hover bridge across the 8px gap */
+  content: '';
+  position: absolute;
+  top: -9px;
+  left: 0;
+  right: 0;
+  height: 8px;
+}
+
+.account-menu-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding: 0 16px 12px;
+}
+
+.account-menu-name {
+  font-family: Helvetica, Arial, sans-serif;
+  font-size: 19px;
+  font-weight: 700;
+  line-height: 26.13px;
+  color: var(--ink);
+  white-space: nowrap;
+}
+
+.account-menu-meta {
+  display: flex;
+  font-family: var(--font-mono);
+  font-size: 11.5px;
+  line-height: 17.25px;
+  letter-spacing: -0.29px;
+  color: var(--ink-soft);
+}
+
+.account-menu-dot {
+  margin: 0 6px;
+  color: #70685b;
+}
+
+.account-menu-badge {
+  padding: 2px 8px;
+  background-color: var(--oxblood);
+  font-family: var(--font-sans);
+  font-size: 10.5px;
+  font-weight: 700;
+  line-height: 15.75px;
+  letter-spacing: 0.52px;
+  text-transform: uppercase;
+  color: var(--white);
+}
+
+.account-menu-list {
+  padding: 4px 0;
+  border-top: 1px solid #ddd4c4;
+  border-bottom: 1px solid #ddd4c4;
+}
+
+.account-menu-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 16px;
+  font-family: var(--font-sans);
+  font-size: 13.5px;
+  line-height: 20.25px;
+  color: var(--ink);
+}
+
+.account-menu-item:hover {
+  background-color: var(--paper-dim);
+}
+
+.account-menu-hint {
+  font-size: 12px;
+  line-height: 18px;
+  color: #70685b;
+}
+
+.account-menu-hint--due {
+  font-weight: 600;
+  letter-spacing: -0.3px;
+  color: #1b5e4a;
+}
+
+.account-menu-foot {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 16px;
+}
+
+.account-menu-active {
+  font-family: var(--font-mono);
+  font-size: 11.5px;
+  line-height: 16px;
+  color: var(--ink-soft);
+}
+
+.account-menu-active strong {
+  margin-left: 4px;
+  font-weight: 500;
+  color: var(--ink);
+}
+
+.account-menu-logout {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--font-sans);
+  font-size: 12px;
+  font-weight: 700;
+  line-height: 16px;
+  letter-spacing: 0.6px;
+  text-transform: uppercase;
+  color: var(--oxblood);
+}

@@ -1,0 +1,2191 @@
+@font-face {
+  font-family: 'Noholi FreeSans Bengali';
+  font-style: normal;
+  font-weight: 100 900;
+  font-display: swap;
+  src: url('/fonts/FreeSans-bengali.woff2') format('woff2');
+  unicode-range: U+0020, U+00A0, U+0964-0965, U+0980-09FF, U+200C-200D, U+25CC;
+}
+
+@font-face {
+  font-family: 'Noholi FreeSans Bengali';
+  font-style: italic;
+  font-weight: 100 900;
+  font-display: swap;
+  src: url('/fonts/FreeSansOblique-bengali.woff2') format('woff2');
+  unicode-range: U+0020, U+00A0, U+0964-0965, U+0980-09FF, U+200C-200D, U+25CC;
+}
+
+@font-face {
+  font-family: 'Noholi Sans Bengali';
+  font-style: normal;
+  font-weight: 100 900;
+  font-display: swap;
+  src: url('/fonts/NotoSansBengali-bengali.woff2') format('woff2');
+  unicode-range: U+0964-0965, U+0980-09FF, U+200C-200D, U+25CC;
+}
+
+.writings {
+  display: flex;
+  flex-direction: column;
+  background-color: var(--paper-bright);
+}
+
+.writings-main {
+  width: 100%;
+  min-height: 720px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: 80px max(48px, calc((100% - 1184px) / 2)) 0;
+  background-color: var(--paper-bright);
+}
+
+.writings-archival-broadside-shell-contain {
+  flex-shrink: 0;
+  align-self: stretch;
+  max-width: 1200px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 48px;
+  padding: 32px 0 32px 0;
+}
+
+.writings-breadcrumbs-folio-ledger-ribbon {
+  flex-shrink: 0;
+  align-self: stretch;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding: 0 0 12px 0;
+  border-bottom: 1px solid var(--stone);
+}
+
+.writings-nav-folio-breadcrumbs {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.writings-nav-folio-breadcrumbs-box {
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  font-family: var(--font-work);
+  font-size: 11px;
+  font-weight: 600;
+  line-height: 14px;
+  letter-spacing: 0.55px;
+  text-transform: uppercase;
+  color: var(--ink-muted);
+  white-space: nowrap;
+  min-height: 14px;
+}
+
+.writings-nav-folio-breadcrumbs-box-2 {
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.writings-nav-folio-breadcrumbs-box-2-text {
+  flex-shrink: 0;
+  font-family: var(--font-newsreader);
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 14px;
+  letter-spacing: 0.55px;
+  color: var(--stone);
+  white-space: nowrap;
+  min-height: 14px;
+}
+
+.writings-nav-folio-breadcrumbs-box-2-text-2 {
+  flex-shrink: 0;
+  font-family: var(--font-work);
+  font-size: 11px;
+  font-weight: 600;
+  line-height: 14px;
+  letter-spacing: 1.1px;
+  text-transform: uppercase;
+  color: var(--ink-deep);
+  white-space: nowrap;
+  min-height: 14px;
+}
+
+.writings-breadcrumbs-folio-ledger-ribbon-box {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.writings-breadcrumbs-folio-ledger-ribbon-box-box {
+  width: 6px;
+  flex-shrink: 0;
+  height: 6px;
+  background-color: var(--oxblood-soft);
+}
+
+.writings-breadcrumbs-folio-ledger-ribbon-box-box-2 {
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.writings-breadcrumbs-folio-ledger-ribbon-box-box-2-text {
+  flex-shrink: 0;
+  font-family: var(--font-work);
+  font-size: 11px;
+  font-weight: 600;
+  line-height: 14px;
+  letter-spacing: 1.1px;
+  text-transform: uppercase;
+  color: var(--oxblood-soft);
+  white-space: nowrap;
+  min-height: 14px;
+}
+
+.writings-header-title-editorial-prolegome {
+  flex-shrink: 0;
+  align-self: stretch;
+  display: grid;
+  grid-template-columns: minmax(0, 781.33fr) minmax(0, 378.67fr);
+  height: 220px;
+  column-gap: 23.67px;
+  padding: 0 0 48px 0;
+  border-bottom: 1px solid var(--stone);
+}
+
+.writings-header-title-editorial-prolegome-box {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 8px;
+}
+
+.writings-header-title-editorial-prolegome-box-box {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.writings-header-title-editorial-prolegome-box-box-box {
+  flex-shrink: 0;
+  display: block;
+  width: 12px;
+  height: 15px;
+  margin: -0.33px 0;
+}
+
+.writings-header-title-editorial-prolegome-box-box-box-2 {
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.writings-poetry-short-stories-literary-ex {
+  flex-shrink: 0;
+  font-family: 'Work Sans', Arial, 'Noholi Sans Bengali', sans-serif;
+  font-size: 13px;
+  font-weight: 500;
+  line-height: 18px;
+  letter-spacing: 1.3px;
+  text-transform: uppercase;
+  color: var(--oxblood);
+  white-space: nowrap;
+  min-height: 18px;
+}
+
+.writings-header-title-editorial-prolegome-box-box-2 {
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: 4px 0 0 0;
+  font-family: var(--font-garamond);
+  font-size: 56px;
+  font-weight: 600;
+  line-height: 56px;
+  letter-spacing: -1.4px;
+  color: var(--ink-deep);
+  white-space: nowrap;
+  min-height: 60px;
+}
+
+.writings-header-title-editorial-prolegome-box-box-3 {
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: 12px 20.64px 0 0;
+}
+
+.writings-header-title-editorial-prolegome-box-box-3-text {
+  flex-shrink: 0;
+  font-family: var(--font-newsreader);
+  font-size: 20px;
+  font-weight: 400;
+  line-height: 32.5px;
+  color: var(--ink-muted);
+  white-space: nowrap;
+  min-height: 65px;
+}
+
+.writings-marginalia-stamped-ledger-summar {
+  align-self: end;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  align-items: flex-end;
+}
+
+.writings-background-border {
+  flex-shrink: 0;
+  width: 320px;
+  max-width: 320px;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 4px;
+  padding: 16px;
+  background-color: var(--paper);
+  border: 1px solid var(--stone);
+}
+
+.writings-paragraph-horizontalborder {
+  flex-shrink: 0;
+  align-self: stretch;
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  padding: 0 0 4px 0;
+  border-bottom: 1px solid var(--stone);
+}
+
+.writings-paragraph-horizontalborder-text {
+  flex-shrink: 0;
+  font-family: var(--font-work);
+  font-size: 11px;
+  font-weight: 600;
+  line-height: 14px;
+  letter-spacing: 1.32px;
+  text-transform: uppercase;
+  color: var(--ink-muted);
+  white-space: nowrap;
+  min-height: 14px;
+}
+
+.writings-paragraph-horizontalborder-text-2 {
+  flex-shrink: 0;
+  font-family: "Courier New", Courier, monospace;
+  font-size: 11px;
+  font-weight: 600;
+  line-height: 14px;
+  letter-spacing: 1.32px;
+  color: var(--ink-deep);
+  white-space: nowrap;
+  min-height: 14px;
+}
+
+.writings-horizontalborder {
+  flex-shrink: 0;
+  align-self: stretch;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding: 0 0 4px 0;
+  border-bottom: 1px solid var(--stone);
+}
+
+.writings-horizontalborder-box {
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: 0 72.46px 0 0;
+}
+
+.writings-horizontalborder-box-text {
+  flex-shrink: 0;
+  font-family: var(--font-work);
+  font-size: 11px;
+  font-weight: 600;
+  line-height: 14px;
+  letter-spacing: 1.32px;
+  text-transform: uppercase;
+  color: var(--ink-muted);
+  white-space: nowrap;
+  min-height: 28px;
+}
+
+.writings-horizontalborder-box-2 {
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: 0 20.12px 0 0;
+}
+
+.writings-horizontalborder-box-2-text {
+  flex-shrink: 0;
+  font-family: var(--font-work);
+  font-size: 11px;
+  font-weight: 600;
+  line-height: 14px;
+  letter-spacing: 1.32px;
+  color: var(--ink-deep);
+  white-space: nowrap;
+  min-height: 28px;
+}
+
+.writings-paragraph {
+  flex-shrink: 0;
+  align-self: stretch;
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+}
+
+.writings-paragraph-text {
+  flex-shrink: 0;
+  font-family: var(--font-work);
+  font-size: 11px;
+  font-weight: 600;
+  line-height: 14px;
+  letter-spacing: 1.32px;
+  text-transform: uppercase;
+  color: var(--ink-muted);
+  white-space: nowrap;
+  min-height: 14px;
+}
+
+.writings-paragraph-text-2 {
+  flex-shrink: 0;
+  font-family: var(--font-work);
+  font-size: 11px;
+  font-weight: 600;
+  line-height: 14px;
+  letter-spacing: 1.32px;
+  color: var(--oxblood-soft);
+  white-space: nowrap;
+  min-height: 14px;
+}
+
+.writings-background-border-box {
+  position: absolute;
+  left: 16px;
+  top: -10px;
+  width: 150.44px;
+  height: 14px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: 0 4px 0 4px;
+  background-color: var(--paper);
+}
+
+.writings-background-border-box-text {
+  flex-shrink: 0;
+  font-family: var(--font-work);
+  font-size: 11px;
+  font-weight: 600;
+  line-height: 14px;
+  letter-spacing: 1.1px;
+  text-transform: uppercase;
+  color: var(--ink-muted);
+  white-space: nowrap;
+  min-height: 14px;
+}
+
+.writings-prominent-member-cta-card {
+  flex-shrink: 0;
+  align-self: stretch;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: 32px;
+  background-color: var(--paper);
+  border-top: 1px solid var(--stone);
+  border-right: 1px solid var(--stone);
+  border-bottom: 1px solid var(--stone);
+  border-left: 4px solid var(--oxblood-soft);
+}
+
+.writings-inset-decorative-hairline-frame {
+  position: absolute;
+  left: 6px;
+  top: 6px;
+  width: 1167px;
+  height: 277.88px;
+  border: 1px solid rgba(205, 197, 188, 0.6);
+}
+
+.writings-prominent-member-cta-card-box {
+  flex-shrink: 0;
+  align-self: stretch;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.writings-prominent-member-cta-card-box-box {
+  flex: 1 1 0;
+  min-width: 0;
+  max-width: 768px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 8px;
+}
+
+.writings-prominent-member-cta-card-box-box-box {
+  flex-shrink: 0;
+  align-self: stretch;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.writings-prominent-member-cta-card-box-box-box-box {
+  flex-shrink: 0;
+  display: block;
+  width: 12px;
+  height: 11px;
+  margin: -0.17px 0;
+}
+
+.writings-prominent-member-cta-card-box-box-box-box-2 {
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.writings-prominent-member-cta-card-box-box-box-box-2-text {
+  flex-shrink: 0;
+  font-family: var(--font-work);
+  font-size: 11px;
+  font-weight: 600;
+  line-height: 14px;
+  letter-spacing: 1.1px;
+  text-transform: uppercase;
+  color: var(--oxblood-soft);
+  white-space: nowrap;
+  min-height: 14px;
+}
+
+.writings-heading-2 {
+  flex-shrink: 0;
+  align-self: stretch;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  font-family: 'EB Garamond', Garamond, Georgia, 'Noholi Sans Bengali', serif;
+  font-size: 28px;
+  font-weight: 500;
+  line-height: 38.5px;
+  color: var(--ink-deep);
+  white-space: pre;
+  min-height: 77px;
+}
+
+.writings-span {
+  color: var(--stone);
+}
+
+.writings-span-2 {
+  font-family: 'Noholi FreeSans Bengali', Helvetica, Arial, sans-serif;
+  font-style: italic;
+  vertical-align: top;
+}
+
+.writings-prominent-member-cta-card-box-box-box-2 {
+  flex-shrink: 0;
+  align-self: stretch;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.writings-patrons-resident-writers-and-poe {
+  flex-shrink: 0;
+  align-self: stretch;
+  font-family: var(--font-newsreader);
+  font-size: 17px;
+  font-weight: 400;
+  line-height: 27.63px;
+  color: var(--ink-muted);
+  white-space: pre;
+  min-height: 83px;
+}
+
+.writings-prominent-member-cta-card-box-box-box-3 {
+  flex-shrink: 0;
+  align-self: stretch;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 4px 0 0 0;
+}
+
+.writings-prominent-member-cta-card-box-box-box-3-box {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.writings-prominent-member-cta-card-box-box-box-3-box-box {
+  flex-shrink: 0;
+  display: block;
+  width: 11px;
+  height: 14px;
+  margin: -0.33px -0.17px;
+}
+
+.writings-prominent-member-cta-card-box-box-box-3-box-box-2 {
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.writings-prominent-member-cta-card-box-box-box-3-box-box-2-text {
+  flex-shrink: 0;
+  font-family: var(--font-newsreader);
+  font-size: 13px;
+  font-weight: 400;
+  line-height: 18px;
+  color: var(--ink-muted);
+  white-space: nowrap;
+  min-height: 18px;
+}
+
+.writings-prominent-member-cta-card-box-box-box-3-box-2 {
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.writings-prominent-member-cta-card-box-box-box-3-box-2-text {
+  flex-shrink: 0;
+  font-family: Helvetica, Arial, sans-serif;
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 24px;
+  color: var(--stone);
+  white-space: nowrap;
+  min-height: 24px;
+}
+
+.writings-prominent-member-cta-card-box-box-box-3-box-2-text-2 {
+  flex-shrink: 0;
+  font-family: var(--font-newsreader);
+  font-size: 13px;
+  font-weight: 400;
+  font-style: italic;
+  line-height: 18px;
+  color: var(--ink-muted);
+  white-space: nowrap;
+  min-height: 18px;
+}
+
+.writings-prominent-member-cta-card-box-box-2 {
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 8px;
+}
+
+.writings-prominent-member-cta-card-box-box-2-box {
+  flex-shrink: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 24px 12px 24px;
+  background-color: var(--oxblood);
+  border: 1px solid var(--oxblood);
+}
+
+.writings-prominent-member-cta-card-box-box-2-box-box {
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.writings-submit-creative-writing {
+  flex-shrink: 0;
+  font-family: 'Work Sans', Arial, 'Noholi Sans Bengali', sans-serif;
+  font-size: 13px;
+  font-weight: 500;
+  line-height: 18px;
+  letter-spacing: 0.65px;
+  text-transform: uppercase;
+  color: var(--white);
+  white-space: nowrap;
+  min-height: 18px;
+}
+
+.writings-prominent-member-cta-card-box-box-2-box-box-2 {
+  flex-shrink: 0;
+  display: block;
+  width: 12px;
+  height: 12px;
+}
+
+.writings-prominent-member-cta-card-box-box-2-box-2 {
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  font-family: var(--font-work);
+  font-size: 11px;
+  font-weight: 600;
+  line-height: 14px;
+  letter-spacing: 0.55px;
+  text-transform: uppercase;
+  text-decoration: underline;
+  color: var(--ink-muted);
+  white-space: nowrap;
+  min-height: 14px;
+}
+
+.writings-literary-genre-filters-tabs-sort {
+  flex-shrink: 0;
+  align-self: stretch;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 0 16px 0;
+  border-bottom: 1px solid var(--stone);
+}
+
+.writings-tablist-genre-filters {
+  width: 761.41px;
+  flex-shrink: 0;
+  height: 52px;
+  position: relative;
+}
+
+.writings-tab {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 122.55px;
+  height: 24px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 4px 12px 4px 12px;
+  background-color: var(--oxblood-soft);
+  border: 1px solid var(--oxblood-soft);
+}
+
+.writings-tab-text {
+  flex-shrink: 0;
+  font-family: var(--font-work);
+  font-size: 11px;
+  font-weight: 600;
+  line-height: 14px;
+  letter-spacing: 0.55px;
+  text-transform: uppercase;
+  color: var(--white);
+  text-align: center;
+  white-space: nowrap;
+  min-height: 14px;
+}
+
+.writings-tab-2 {
+  position: absolute;
+  left: 126.55px;
+  top: 0;
+  width: 144px;
+  height: 24px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 4px 12px 4px 12px;
+  background-color: var(--paper-bright);
+  border: 1px solid var(--stone);
+}
+
+.writings-poetry {
+  flex-shrink: 0;
+  font-family: 'Work Sans', Arial, 'Noholi Sans Bengali', sans-serif;
+  font-size: 11px;
+  font-weight: 600;
+  line-height: 14px;
+  letter-spacing: 0.55px;
+  text-transform: uppercase;
+  color: var(--ink-muted);
+  text-align: center;
+  white-space: nowrap;
+  min-height: 14px;
+}
+
+.writings-tab-3 {
+  position: absolute;
+  left: 264.03px;
+  top: 0;
+  width: 198px;
+  height: 24px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 4px 12px 4px 12px;
+  background-color: var(--paper-bright);
+  border: 1px solid var(--stone);
+}
+
+.writings-short-stories {
+  flex-shrink: 0;
+  font-family: 'Work Sans', Arial, 'Noholi Sans Bengali', sans-serif;
+  font-size: 11px;
+  font-weight: 600;
+  line-height: 14px;
+  letter-spacing: 0.55px;
+  text-transform: uppercase;
+  color: var(--ink-muted);
+  text-align: center;
+  white-space: nowrap;
+  min-height: 14px;
+}
+
+.writings-tab-4 {
+  position: absolute;
+  left: 454.03px;
+  top: 0;
+  width: 225px;
+  height: 24px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 4px 12px 4px 12px;
+  background-color: var(--paper-bright);
+  border: 1px solid var(--stone);
+}
+
+.writings-literary-excerpts {
+  flex-shrink: 0;
+  font-family: 'Work Sans', Arial, 'Noholi Sans Bengali', sans-serif;
+  font-size: 11px;
+  font-weight: 600;
+  line-height: 14px;
+  letter-spacing: 0.55px;
+  text-transform: uppercase;
+  color: var(--ink-muted);
+  text-align: center;
+  white-space: nowrap;
+  min-height: 14px;
+}
+
+.writings-tab-5 {
+  position: absolute;
+  left: 0;
+  top: 28px;
+  width: 187px;
+  height: 24px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 4px 12px 4px 12px;
+  background-color: var(--paper-bright);
+  border: 1px solid var(--stone);
+}
+
+.writings-translations {
+  flex-shrink: 0;
+  font-family: 'Work Sans', Arial, 'Noholi Sans Bengali', sans-serif;
+  font-size: 11px;
+  font-weight: 600;
+  line-height: 14px;
+  letter-spacing: 0.55px;
+  text-transform: uppercase;
+  color: var(--ink-muted);
+  text-align: center;
+  white-space: nowrap;
+  min-height: 14px;
+}
+
+.writings-secondary-search-sort-controls {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.writings-secondary-search-sort-controls-box {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+}
+
+.writings-label {
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: 0 4px 0 0;
+}
+
+.writings-label-2 {
+  flex-shrink: 0;
+  font-family: var(--font-work);
+  font-size: 11px;
+  font-weight: 600;
+  line-height: 14px;
+  letter-spacing: 0.55px;
+  text-transform: uppercase;
+  color: var(--ink-muted);
+  white-space: nowrap;
+  min-height: 14px;
+}
+
+.writings-secondary-search-sort-controls-box-box {
+  flex-shrink: 0;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: 1px 0 0 0;
+}
+
+.writings-options {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  padding: 4px 24px 4px 8px;
+  background-color: var(--paper);
+  border: 1px solid var(--stone);
+}
+
+.writings-options-box {
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: 0 73.47px 0 0;
+}
+
+.writings-options-box-text {
+  flex-shrink: 0;
+  font-family: var(--font-work);
+  font-size: 11px;
+  font-weight: 600;
+  line-height: 14px;
+  letter-spacing: 0.55px;
+  text-transform: uppercase;
+  color: var(--ink-deep);
+  white-space: nowrap;
+  min-height: 14px;
+}
+
+.writings-secondary-search-sort-controls-box-box-box {
+  position: absolute;
+  left: 221.17px;
+  top: 4.5px;
+  width: 7px;
+  height: 16px;
+  display: block;
+}
+
+.writings-toggle-catalog-grid-density {
+  flex-shrink: 0;
+  display: block;
+  width: 24px;
+  height: 24px;
+  margin: -0.25px -0.25px;
+}
+
+.writings-curated-creative-writings-grid {
+  flex-shrink: 0;
+  align-self: stretch;
+  display: grid;
+  grid-template-columns: minmax(0, 378.67fr) 24.33px minmax(0, 378.67fr) 23.33px minmax(0, 378.67fr);
+  row-gap: 24.33px;
+}
+
+.writings-article-card-1-poetry {
+  grid-column: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding: 24px;
+  background-color: var(--white);
+  border: 1px solid var(--stone);
+}
+
+.writings-article-card-1-poetry-box {
+  flex-shrink: 0;
+  align-self: stretch;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.writings-classification-ribbon {
+  flex-shrink: 0;
+  align-self: stretch;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: 0 0 16px 0;
+}
+
+.writings-classification-ribbon-2 {
+  flex-shrink: 0;
+  align-self: stretch;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 0 4px 0;
+  border-bottom: 1px solid var(--stone);
+}
+
+.writings-classification-ribbon-2-box {
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.writings-poetry-2 {
+  flex-shrink: 0;
+  font-family: 'Work Sans', Arial, 'Noholi Sans Bengali', sans-serif;
+  font-size: 11px;
+  font-weight: 600;
+  line-height: 14px;
+  letter-spacing: 1.1px;
+  text-transform: uppercase;
+  color: var(--oxblood-soft);
+  white-space: nowrap;
+  min-height: 14px;
+}
+
+.writings-classification-ribbon-2-box-text {
+  flex-shrink: 0;
+  font-family: "Courier New", Courier, monospace;
+  font-size: 11px;
+  font-weight: 600;
+  line-height: 14px;
+  letter-spacing: 1.32px;
+  color: var(--ink-muted);
+  white-space: nowrap;
+  min-height: 14px;
+}
+
+.writings-header-byline {
+  flex-shrink: 0;
+  align-self: stretch;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: 0 0 4px 0;
+}
+
+.writings-header-byline-2 {
+  flex-shrink: 0;
+  align-self: stretch;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  font-family: var(--font-garamond);
+  font-size: 22px;
+  font-weight: 600;
+  line-height: 27.5px;
+  color: var(--ink-deep);
+  white-space: pre;
+  min-height: 55px;
+}
+
+.writings-article-card-1-poetry-box-box {
+  flex-shrink: 0;
+  align-self: stretch;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: 0 0 12px 0;
+}
+
+.writings-article-card-1-poetry-box-box-box {
+  flex-shrink: 0;
+  align-self: stretch;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.writings-article-card-1-poetry-box-box-box-text {
+  flex-shrink: 0;
+  align-self: stretch;
+  font-family: 'Noholi FreeSans Bengali', Helvetica, Arial, sans-serif;
+  font-size: 17px;
+  font-weight: 400;
+  font-style: italic;
+  line-height: 28px;
+  color: var(--oxblood-soft);
+  min-height: 28px;
+}
+
+.writings-article-card-1-poetry-box-box-2 {
+  flex-shrink: 0;
+  align-self: stretch;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: 0 0 16px 0;
+}
+
+.writings-verticalborder {
+  flex-shrink: 0;
+  align-self: stretch;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0 0 0 4px;
+  border-left: 2px solid var(--stone);
+}
+
+.writings-verticalborder-box {
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.writings-verticalborder-box-text {
+  flex-shrink: 0;
+  font-family: var(--font-work);
+  font-size: 11px;
+  font-weight: 600;
+  line-height: 14px;
+  letter-spacing: 1.32px;
+  color: var(--ink-deep);
+  white-space: nowrap;
+  min-height: 14px;
+}
+
+.writings-verticalborder-box-text-2 {
+  flex-shrink: 0;
+  font-family: var(--font-work);
+  font-size: 11px;
+  font-weight: 600;
+  line-height: 14px;
+  letter-spacing: 1.32px;
+  color: var(--ink-muted);
+  white-space: nowrap;
+  min-height: 14px;
+}
+
+.writings-verticalborder-box-text-3 {
+  flex-shrink: 0;
+  font-family: var(--font-work);
+  font-size: 11px;
+  font-weight: 600;
+  font-style: italic;
+  line-height: 14px;
+  letter-spacing: 1.32px;
+  color: var(--oxblood-soft);
+  white-space: nowrap;
+  min-height: 14px;
+}
+
+.writings-blockquote-verse-stanza-excerpt {
+  flex-shrink: 0;
+  align-self: stretch;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: 4px 0 4px 0;
+}
+
+.writings-blockquote-verse-stanza-excerpt-2 {
+  flex-shrink: 0;
+  align-self: stretch;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: 1.38px 0 2px 12px;
+  background-color: rgba(247, 243, 234, 0.4);
+  border-left: 1px solid var(--oxblood-soft);
+}
+
+.writings-blockquote-verse-stanza-excerpt-2-box {
+  flex-shrink: 0;
+  align-self: stretch;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.writings-where-the-timber-barges-slumber {
+  flex-shrink: 0;
+  align-self: stretch;
+  font-family: var(--font-newsreader);
+  font-size: 17px;
+  font-weight: 400;
+  font-style: italic;
+  line-height: 27.63px;
+  color: var(--ink-muted);
+  white-space: pre;
+  min-height: 194px;
+}
+
+.writings-card-footer-ledger {
+  flex-shrink: 0;
+  align-self: stretch;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: 24px 0 0 0;
+}
+
+.writings-card-footer-ledger-2 {
+  flex-shrink: 0;
+  align-self: stretch;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 0 0 0;
+  border-top: 1px solid var(--stone);
+}
+
+.writings-card-footer-ledger-2-box {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.writings-card-footer-ledger-2-box-box {
+  flex-shrink: 0;
+  display: block;
+  width: 12px;
+  height: 12px;
+  margin: -0.17px -0.17px;
+}
+
+.writings-card-footer-ledger-2-box-box-2 {
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.writings-card-footer-ledger-2-box-box-2-text {
+  flex-shrink: 0;
+  font-family: var(--font-newsreader);
+  font-size: 13px;
+  font-weight: 400;
+  line-height: 18px;
+  color: var(--ink-muted);
+  white-space: nowrap;
+  min-height: 18px;
+}
+
+.writings-card-footer-ledger-2-box-2 {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  gap: 2px;
+}
+
+.writings-card-footer-ledger-2-box-2-box {
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.writings-card-footer-ledger-2-box-2-box-text {
+  flex-shrink: 0;
+  font-family: var(--font-work);
+  font-size: 11px;
+  font-weight: 600;
+  line-height: 14px;
+  letter-spacing: 0.55px;
+  text-transform: uppercase;
+  color: var(--oxblood-soft);
+  white-space: nowrap;
+  min-height: 14px;
+}
+
+.writings-card-footer-ledger-2-box-2-box-2 {
+  flex-shrink: 0;
+  display: block;
+  width: 10px;
+  height: 7px;
+  margin: 0 -0.33px;
+}
+
+.writings-article-card-2-short-story {
+  grid-column: 3;
+  align-self: start;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding: 24px;
+  background-color: var(--white);
+  border: 1px solid var(--stone);
+}
+
+.writings-article-card-2-short-story-box {
+  flex-shrink: 0;
+  align-self: stretch;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.writings-short-story {
+  flex-shrink: 0;
+  font-family: 'Work Sans', Arial, 'Noholi Sans Bengali', sans-serif;
+  font-size: 11px;
+  font-weight: 600;
+  line-height: 14px;
+  letter-spacing: 1.1px;
+  text-transform: uppercase;
+  color: var(--oxblood-soft);
+  white-space: nowrap;
+  min-height: 14px;
+}
+
+.writings-header-byline-3 {
+  flex-shrink: 0;
+  align-self: stretch;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  font-family: var(--font-garamond);
+  font-size: 22px;
+  font-weight: 600;
+  line-height: 27.5px;
+  color: var(--ink-deep);
+  min-height: 28px;
+}
+
+.writings-article-card-2-short-story-box-box {
+  flex-shrink: 0;
+  align-self: stretch;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: 0 0 12px 0;
+}
+
+.writings-article-card-2-short-story-box-box-box {
+  flex-shrink: 0;
+  align-self: stretch;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.writings-article-card-2-short-story-box-box-box-text {
+  flex-shrink: 0;
+  align-self: stretch;
+  font-family: 'Noholi FreeSans Bengali', Helvetica, Arial, sans-serif;
+  font-size: 17px;
+  font-weight: 400;
+  font-style: italic;
+  line-height: 28px;
+  color: var(--oxblood-soft);
+  min-height: 28px;
+}
+
+.writings-article-card-2-short-story-box-box-2 {
+  flex-shrink: 0;
+  align-self: stretch;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: 0 0 16px 0;
+}
+
+.writings-prose-excerpt {
+  flex-shrink: 0;
+  align-self: stretch;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.writings-behind-a-shutter-painted-the-dul {
+  flex-shrink: 0;
+  align-self: stretch;
+  font-family: var(--font-newsreader);
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 22.75px;
+  color: var(--ink-muted);
+  white-space: pre;
+  min-height: 182px;
+}
+
+.writings-article-card-3-literary-excerpt {
+  grid-column: 5;
+  align-self: start;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding: 24px;
+  background-color: var(--white);
+  border: 1px solid var(--stone);
+}
+
+.writings-article-card-3-literary-excerpt-box {
+  height: 314.5px;
+  flex-shrink: 0;
+  align-self: stretch;
+  position: relative;
+  width: 328.67px;
+}
+
+.writings-classification-ribbon-3 {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 329px;
+  height: 35px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: 0 0 16px 0;
+}
+
+.writings-excerpt {
+  flex-shrink: 0;
+  font-family: 'Work Sans', Arial, 'Noholi Sans Bengali', sans-serif;
+  font-size: 11px;
+  font-weight: 600;
+  line-height: 14px;
+  letter-spacing: 1.1px;
+  text-transform: uppercase;
+  color: var(--oxblood-soft);
+  white-space: nowrap;
+  min-height: 14px;
+}
+
+.writings-header-byline-4 {
+  position: absolute;
+  left: 0;
+  top: 35px;
+  width: 329px;
+  height: 59px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: 0 0 4px 0;
+}
+
+.writings-article-card-3-literary-excerpt-box-box {
+  position: absolute;
+  left: 0;
+  top: 94px;
+  width: 329px;
+  height: 40px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: 0 0 12px 0;
+}
+
+.writings-article-card-3-literary-excerpt-box-box-box {
+  flex-shrink: 0;
+  align-self: stretch;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.writings-article-card-3-literary-excerpt-box-box-box-text {
+  flex-shrink: 0;
+  align-self: stretch;
+  font-family: 'Noholi FreeSans Bengali', Helvetica, Arial, sans-serif;
+  font-size: 17px;
+  font-weight: 400;
+  font-style: italic;
+  line-height: 28px;
+  color: var(--oxblood-soft);
+  min-height: 28px;
+}
+
+.writings-article-card-3-literary-excerpt-box-box-2 {
+  position: absolute;
+  left: 0;
+  top: 134px;
+  width: 329px;
+  height: 44px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: 0 0 16px 0;
+}
+
+.writings-verticalborder-box-2 {
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: 0 24.46px 0 0;
+}
+
+.writings-verticalborder-box-2-text {
+  flex-shrink: 0;
+  font-family: var(--font-work);
+  font-size: 11px;
+  font-weight: 600;
+  line-height: 14px;
+  letter-spacing: 1.32px;
+  color: var(--ink-deep);
+  white-space: nowrap;
+  min-height: 28px;
+}
+
+.writings-verticalborder-box-3 {
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: 0 45.78px 0 0;
+}
+
+.writings-verticalborder-box-3-text {
+  flex-shrink: 0;
+  font-family: var(--font-work);
+  font-size: 11px;
+  font-weight: 600;
+  font-style: italic;
+  line-height: 14px;
+  letter-spacing: 1.32px;
+  color: var(--ink-muted);
+  white-space: nowrap;
+  min-height: 28px;
+}
+
+.writings-excerpt-2 {
+  position: absolute;
+  left: 0;
+  top: 177.38px;
+  width: 329px;
+  height: 137px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.writings-excerpt-2-text {
+  flex-shrink: 0;
+  font-family: var(--font-newsreader);
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 22.75px;
+  color: var(--ink-muted);
+  white-space: nowrap;
+  min-height: 137px;
+}
+
+.writings-card-footer-ledger-2-box-box-3 {
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: 0 32.85px 0 0;
+}
+
+.writings-card-footer-ledger-2-box-box-3-text {
+  flex-shrink: 0;
+  font-family: var(--font-newsreader);
+  font-size: 13px;
+  font-weight: 400;
+  line-height: 18px;
+  color: var(--ink-muted);
+  white-space: nowrap;
+  min-height: 36px;
+}
+
+.writings-card-footer-ledger-2-box-2-box-3 {
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: 0 56.14px 0 0;
+}
+
+.writings-card-footer-ledger-2-box-2-box-3-text {
+  flex-shrink: 0;
+  font-family: var(--font-work);
+  font-size: 11px;
+  font-weight: 600;
+  line-height: 14px;
+  letter-spacing: 0.55px;
+  text-transform: uppercase;
+  color: var(--oxblood-soft);
+  white-space: nowrap;
+  min-height: 28px;
+}
+
+.writings-article-card-4-poetry {
+  grid-column: 1;
+  align-self: start;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding: 24px;
+  background-color: var(--white);
+  border: 1px solid var(--stone);
+}
+
+.writings-article-card-4-poetry-box {
+  flex-shrink: 0;
+  align-self: stretch;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.writings-verse {
+  flex-shrink: 0;
+  font-family: 'Work Sans', Arial, 'Noholi Sans Bengali', sans-serif;
+  font-size: 11px;
+  font-weight: 600;
+  line-height: 14px;
+  letter-spacing: 1.1px;
+  text-transform: uppercase;
+  color: var(--oxblood-soft);
+  white-space: nowrap;
+  min-height: 14px;
+}
+
+.writings-article-card-4-poetry-box-box {
+  flex-shrink: 0;
+  align-self: stretch;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: 0 0 12px 0;
+}
+
+.writings-article-card-4-poetry-box-box-box {
+  flex-shrink: 0;
+  align-self: stretch;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.writings-article-card-4-poetry-box-box-box-text {
+  flex-shrink: 0;
+  align-self: stretch;
+  font-family: 'Noholi FreeSans Bengali', Helvetica, Arial, sans-serif;
+  font-size: 17px;
+  font-weight: 400;
+  font-style: italic;
+  line-height: 28px;
+  color: var(--oxblood-soft);
+  min-height: 28px;
+}
+
+.writings-article-card-4-poetry-box-box-2 {
+  flex-shrink: 0;
+  align-self: stretch;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: 0 0 16px 0;
+}
+
+.writings-blockquote-verse-excerpt {
+  flex-shrink: 0;
+  align-self: stretch;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: 4px 0 4px 0;
+}
+
+.writings-blockquote-verse-excerpt-2 {
+  flex-shrink: 0;
+  align-self: stretch;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: 1.38px 0 2px 12px;
+  background-color: rgba(247, 243, 234, 0.4);
+  border-left: 1px solid var(--oxblood-soft);
+}
+
+.writings-blockquote-verse-excerpt-2-box {
+  flex-shrink: 0;
+  align-self: stretch;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.writings-kerosene-fumes-blend-with-jute-w {
+  flex-shrink: 0;
+  align-self: stretch;
+  font-family: var(--font-newsreader);
+  font-size: 17px;
+  font-weight: 400;
+  font-style: italic;
+  line-height: 27.63px;
+  color: var(--ink-muted);
+  white-space: pre;
+  min-height: 194px;
+}
+
+.writings-article-card-5-historical-fictio {
+  grid-column: 3;
+  align-self: start;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding: 24px;
+  background-color: var(--white);
+  border: 1px solid var(--stone);
+}
+
+.writings-article-card-5-historical-fictio-box {
+  flex-shrink: 0;
+  align-self: stretch;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.writings-historical-fiction {
+  flex-shrink: 0;
+  font-family: 'Work Sans', Arial, 'Noholi Sans Bengali', sans-serif;
+  font-size: 11px;
+  font-weight: 600;
+  line-height: 14px;
+  letter-spacing: 1.1px;
+  text-transform: uppercase;
+  color: var(--oxblood-soft);
+  white-space: nowrap;
+  min-height: 14px;
+}
+
+.writings-article-card-5-historical-fictio-box-box {
+  flex-shrink: 0;
+  align-self: stretch;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: 0 0 12px 0;
+}
+
+.writings-article-card-5-historical-fictio-box-box-box {
+  flex-shrink: 0;
+  align-self: stretch;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.writings-article-card-5-historical-fictio-box-box-box-text {
+  flex-shrink: 0;
+  align-self: stretch;
+  font-family: 'Noholi FreeSans Bengali', Helvetica, Arial, sans-serif;
+  font-size: 17px;
+  font-weight: 400;
+  font-style: italic;
+  line-height: 28px;
+  color: var(--oxblood-soft);
+  min-height: 28px;
+}
+
+.writings-article-card-5-historical-fictio-box-box-2 {
+  flex-shrink: 0;
+  align-self: stretch;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: 0 0 16px 0;
+}
+
+.writings-excerpt-3 {
+  flex-shrink: 0;
+  align-self: stretch;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.writings-the-slate-inkstone-had-traveled {
+  flex-shrink: 0;
+  align-self: stretch;
+  font-family: var(--font-newsreader);
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 22.75px;
+  color: var(--ink-muted);
+  white-space: pre;
+  min-height: 182px;
+}
+
+.writings-article-card-6-translation {
+  grid-column: 5;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding: 24px;
+  background-color: var(--white);
+  border: 1px solid var(--stone);
+}
+
+.writings-article-card-6-translation-box {
+  flex-shrink: 0;
+  align-self: stretch;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.writings-translation {
+  flex-shrink: 0;
+  font-family: 'Work Sans', Arial, 'Noholi Sans Bengali', sans-serif;
+  font-size: 11px;
+  font-weight: 600;
+  line-height: 14px;
+  letter-spacing: 1.1px;
+  text-transform: uppercase;
+  color: var(--oxblood-soft);
+  white-space: nowrap;
+  min-height: 14px;
+}
+
+.writings-article-card-6-translation-box-box {
+  flex-shrink: 0;
+  align-self: stretch;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: 0 0 12px 0;
+}
+
+.writings-article-card-6-translation-box-box-box {
+  flex-shrink: 0;
+  align-self: stretch;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.writings-article-card-6-translation-box-box-box-text {
+  flex-shrink: 0;
+  align-self: stretch;
+  font-family: 'Noholi FreeSans Bengali', Helvetica, Arial, sans-serif;
+  font-size: 17px;
+  font-weight: 400;
+  font-style: italic;
+  line-height: 28px;
+  color: var(--oxblood-soft);
+  min-height: 28px;
+}
+
+.writings-article-card-6-translation-box-box-2 {
+  flex-shrink: 0;
+  align-self: stretch;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: 0 0 16px 0;
+}
+
+.writings-verticalborder-box-4 {
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: 0 33.35px 0 0;
+}
+
+.writings-verticalborder-box-4-text {
+  flex-shrink: 0;
+  font-family: var(--font-work);
+  font-size: 11px;
+  font-weight: 600;
+  line-height: 14px;
+  letter-spacing: 1.32px;
+  color: var(--ink-deep);
+  white-space: nowrap;
+  min-height: 28px;
+}
+
+.writings-verticalborder-box-5 {
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: 0 49.77px 0 0;
+}
+
+.writings-verticalborder-box-5-text {
+  flex-shrink: 0;
+  font-family: var(--font-work);
+  font-size: 11px;
+  font-weight: 600;
+  font-style: italic;
+  line-height: 14px;
+  letter-spacing: 1.32px;
+  color: var(--ink-muted);
+  white-space: nowrap;
+  min-height: 28px;
+}
+
+.writings-blockquote-verse-excerpt-3 {
+  flex-shrink: 0;
+  align-self: stretch;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: 2px 0 2px 12px;
+  background-color: rgba(247, 243, 234, 0.4);
+  border-left: 1px solid var(--oxblood-soft);
+}
+
+.writings-blockquote-verse-excerpt-3-box {
+  flex-shrink: 0;
+  align-self: stretch;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.writings-all-birds-come-home-all-the-rive {
+  flex-shrink: 0;
+  align-self: stretch;
+  font-family: var(--font-newsreader);
+  font-size: 17px;
+  font-weight: 400;
+  font-style: italic;
+  line-height: 27.63px;
+  color: var(--ink-muted);
+  white-space: pre;
+  min-height: 166px;
+}
+
+.writings-card-footer-ledger-2-box-box-4 {
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: 0 18.46px 0 0;
+}
+
+.writings-card-footer-ledger-2-box-box-4-text {
+  flex-shrink: 0;
+  font-family: var(--font-newsreader);
+  font-size: 13px;
+  font-weight: 400;
+  line-height: 18px;
+  color: var(--ink-muted);
+  white-space: nowrap;
+  min-height: 36px;
+}
+
+.writings-card-footer-ledger-2-box-2-box-4 {
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: 0 53.5px 0 0;
+}
+
+.writings-card-footer-ledger-2-box-2-box-4-text {
+  flex-shrink: 0;
+  font-family: var(--font-work);
+  font-size: 11px;
+  font-weight: 600;
+  line-height: 14px;
+  letter-spacing: 0.55px;
+  text-transform: uppercase;
+  color: var(--oxblood-soft);
+  white-space: nowrap;
+  min-height: 28px;
+}
+
+.writings-archival-pagination-editorial-co {
+  flex-shrink: 0;
+  align-self: stretch;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 32px;
+  padding: 32px 0 0 0;
+  border-top: 1px solid var(--stone);
+}
+
+.writings-pagination-controls {
+  flex-shrink: 0;
+  align-self: stretch;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.writings-pagination-controls-box {
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.writings-pagination-controls-box-text {
+  flex-shrink: 0;
+  font-family: var(--font-work);
+  font-size: 11px;
+  font-weight: 600;
+  line-height: 14px;
+  letter-spacing: 0.55px;
+  text-transform: uppercase;
+  color: var(--ink-muted);
+  white-space: nowrap;
+  min-height: 14px;
+}
+
+.writings-span-3 {
+  color: var(--ink-deep);
+}
+
+.writings-folio-pagination {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.writings-folio-pagination-box {
+  width: 36px;
+  flex-shrink: 0;
+  height: 36px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 10.5px 0 11.5px 0;
+  background-color: var(--black);
+  font-family: var(--font-work);
+  font-size: 11px;
+  font-weight: 600;
+  line-height: 14px;
+  letter-spacing: 1.32px;
+  color: var(--white);
+  text-align: center;
+  white-space: nowrap;
+}
+
+.writings-folio-pagination-box-2 {
+  width: 36px;
+  flex-shrink: 0;
+  height: 36px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 9.5px 0 10.5px 0;
+  background-color: var(--paper-bright);
+  border: 1px solid var(--stone);
+  font-family: var(--font-work);
+  font-size: 11px;
+  font-weight: 600;
+  line-height: 14px;
+  letter-spacing: 1.32px;
+  color: var(--ink-deep);
+  text-align: center;
+  white-space: nowrap;
+}
+
+.writings-folio-pagination-box-3 {
+  flex-shrink: 0;
+  height: 36px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1.99px;
+  padding: 0 12px 0 12px;
+  background-color: var(--paper-bright);
+  border: 1px solid var(--stone);
+}
+
+.writings-folio-pagination-box-3-box {
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.writings-folio-pagination-box-3-box-text {
+  flex-shrink: 0;
+  font-family: var(--font-work);
+  font-size: 11px;
+  font-weight: 600;
+  line-height: 14px;
+  letter-spacing: 0.55px;
+  text-transform: uppercase;
+  color: var(--ink-deep);
+  text-align: center;
+  white-space: nowrap;
+  min-height: 14px;
+}
+
+.writings-folio-pagination-box-3-box-2 {
+  flex-shrink: 0;
+  display: block;
+  width: 10px;
+  height: 10px;
+  margin: -0.33px -0.33px;
+}
+
+.writings-double-hairline-archival-colopho {
+  flex-shrink: 0;
+  align-self: stretch;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: 4px;
+  background-color: var(--paper);
+  border: 1px solid var(--stone);
+}
+
+.writings-border {
+  flex-shrink: 0;
+  align-self: stretch;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px;
+  border: 1px solid var(--stone);
+}
+
+.writings-border-box {
+  flex-shrink: 0;
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+.writings-border-box-box {
+  flex-shrink: 0;
+  display: block;
+  width: 20px;
+  height: 18px;
+  margin: 0 -0.25px;
+}
+
+.writings-border-box-box-2 {
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: -0.75px;
+}
+
+.writings-border-box-box-2-box {
+  flex-shrink: 0;
+  align-self: stretch;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.writings-border-box-box-2-box-text {
+  flex-shrink: 0;
+  font-family: var(--font-work);
+  font-size: 11px;
+  font-weight: 600;
+  line-height: 14px;
+  letter-spacing: 1.1px;
+  text-transform: uppercase;
+  color: var(--ink-deep);
+  white-space: nowrap;
+  min-height: 14px;
+}
+
+.writings-border-box-box-2-box-text-2 {
+  flex-shrink: 0;
+  font-family: var(--font-newsreader);
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 22.75px;
+  color: var(--ink-muted);
+  white-space: nowrap;
+  min-height: 69px;
+}
+
+.writings-border-box-2 {
+  flex-shrink: 0;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 16px;
+}
+
+.writings-border-box-2-box {
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.writings-border-box-2-box-text {
+  flex-shrink: 0;
+  font-family: "Courier New", Courier, monospace;
+  font-size: 11px;
+  font-weight: 600;
+  line-height: 14px;
+  letter-spacing: 1.32px;
+  color: var(--oxblood-soft);
+  white-space: nowrap;
+  min-height: 14px;
+}
+
+.writings-border-box-2-box-text-2 {
+  flex-shrink: 0;
+  font-family: Helvetica, Arial, sans-serif;
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 24px;
+  color: var(--stone);
+  white-space: nowrap;
+  min-height: 24px;
+}
+
+.writings-border-box-2-box-text-3 {
+  flex-shrink: 0;
+  font-family: var(--font-work);
+  font-size: 11px;
+  font-weight: 600;
+  line-height: 14px;
+  letter-spacing: 0.55px;
+  text-transform: uppercase;
+  color: var(--ink-deep);
+  white-space: nowrap;
+  min-height: 14px;
+}

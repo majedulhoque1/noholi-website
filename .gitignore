@@ -1,0 +1,12 @@
+node_modules
+dist
+.vercel
+
+# generated check output (screenshots, diffs)
+tools/out
+tools/vite.log
+
+# large / scratch design artefacts
+design-export/raw-export.json
+design-export/locofy-samples
+noholi-design-export.json

@@ -1,0 +1,29 @@
+<div style="font-family: Inter, system-ui, sans-serif; font-size: 13px; padding: 16px;">
+  <p style="margin: 0 0 12px;">Exports every frame on <b>this page</b> to one JSON file. Read-only.</p>
+  <button id="go" style="padding: 8px 14px; font-size: 13px; cursor: pointer;">Export design data</button>
+  <p id="status" style="margin-top: 12px; color: #555; word-break: break-word;"></p>
+</div>
+<script>
+  const status = document.getElementById('status');
+  document.getElementById('go').onclick = () => {
+    status.textContent = 'Starting…';
+    parent.postMessage({ pluginMessage: { type: 'export' } }, '*');
+  };
+  onmessage = e => {
+    const m = e.data.pluginMessage;
+    if (!m) return;
+    if (m.type === 'progress') status.textContent = m.text;
+    if (m.type === 'error') status.textContent = 'Error: ' + m.text;
+    if (m.type === 'done') {
+      const json = JSON.stringify(m.data);
+      const blob = new Blob([json], { type: 'application/json' });
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = 'noholi-design-export.json';
+      document.body.appendChild(a);
+      a.click();
+      status.textContent = 'Done — ' + m.data.frames.length + ' frames, ' + m.data.nodeCount + ' layers, ' +
+        (json.length / 1048576).toFixed(1) + ' MB. Save the file into the "Noholi web system" folder.';
+    }
+  };
+</script>

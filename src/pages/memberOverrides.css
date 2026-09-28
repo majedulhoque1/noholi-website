@@ -1,0 +1,37 @@
+/*
+ * Hand-written adjustments for the generated member pages. Kept out of the generated
+ * <Page>.css files so `python tools/gen_member.py <frame> <Page> <prefix> --css-only`
+ * can refresh those without losing anything. Each rule is scoped by the page root class.
+ */
+
+/* Change password: the visibility icon is a button now (positioned by its generated class) */
+.mpass .mpass-toggle-password-visibility img {
+  display: block;
+}
+
+/* Borrow request: Figma renders this pre-filled value in the sans UI face, not the Bengali serif */
+.borrow .borrow-input {
+  font-family: var(--font-sans);
+}
+
+/* Borrow request: inline result of submitting (not part of the static design) */
+.borrow .borrow-status {
+  font-family: var(--font-sans);
+  font-size: 13px;
+  line-height: 20px;
+  color: var(--oxblood);
+}
+
+.borrow .borrow-status--ok {
+  color: var(--green);
+}
+
+/* Creative writing: the design draws the declaration box ticked in black */
+.swriting .swriting-input-6.studio-check {
+  accent-color: var(--black);
+}
+
+/* Books wishlist: this frame's header is 82px (115 - 33 review strip) against the site's 81px */
+.wlbooks {
+  padding-top: 1px;
+}

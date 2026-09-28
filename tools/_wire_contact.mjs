@@ -1,0 +1,13 @@
+import { chromium } from 'playwright';
+const b = await chromium.launch(); const p = await b.newPage({ viewport: { width: 1280, height: 900 } });
+const errs = []; p.on('pageerror', e => errs.push(e.message)); p.on('console', m => m.type() === 'error' && errs.push(m.text()));
+await p.goto('http://localhost:5191/contact', { waitUntil: 'networkidle' });
+await p.click('text=SEND INQUIRY'); console.log('empty:', await p.textContent('.contact-form-status'));
+await p.fill('#contact-name', 'Rahim'); await p.fill('#contact-email', 'bad'); await p.fill('#contact-message', 'Hello');
+await p.click('text=SEND INQUIRY'); console.log('bad email:', await p.textContent('.contact-form-status'));
+await p.selectOption('#contact-subject', { index: 2 }); console.log('subject shown:', await p.textContent('.contact-general-inquiry'));
+await p.fill('#contact-email', 'rahim@example.com'); await p.click('text=SEND INQUIRY');
+console.log('ok:', await p.textContent('.contact-form-status'), '| name cleared:', (await p.inputValue('#contact-name')) === '');
+await p.click('text=WRITE MAIL'); console.log('focus after write mail:', await p.evaluate(() => document.activeElement.id));
+await p.click('.contact-item-email-box-3-box-2'); console.log('copy label:', await p.textContent('.contact-item-email-box-3-box-2'));
+console.log('errors:', errs.length ? errs : 'none'); await b.close();

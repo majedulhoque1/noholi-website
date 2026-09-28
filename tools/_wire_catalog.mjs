@@ -1,0 +1,16 @@
+import { chromium } from 'playwright';
+const base = 'http://localhost:5191';
+const b = await chromium.launch(); const p = await b.newPage({ viewport: { width: 1280, height: 900 } });
+const errs = []; p.on('pageerror', e => errs.push(e.message)); p.on('console', m => m.type() === 'error' && errs.push(m.text()));
+const count = async () => p.$$eval('article', a => a.filter(x => x.offsetParent !== null).map(x => x.querySelector('h2').textContent).join(' | '));
+await p.goto(base + '/catalog?q=river', { waitUntil: 'networkidle' }); console.log('q=river ->', await count());
+await p.goto(base + '/catalog?genre=fiction', { waitUntil: 'networkidle' }); console.log('genre=fiction ->', await count());
+await p.goto(base + '/catalog?genre=children', { waitUntil: 'networkidle' }); console.log('genre=children ->', await count(), '|', await p.textContent('.catalog-active-scope-box-text'));
+await p.goto(base + '/catalog?genre=romance', { waitUntil: 'networkidle' }); console.log('genre=romance ->', await count(), '| empty:', await p.isVisible('.catalog-empty'));
+await p.goto(base + '/catalog', { waitUntil: 'networkidle' });
+await p.selectOption('#catalog-language', 'Bangla'); console.log('lang=Bangla ->', await count(), p.url());
+await p.selectOption('#catalog-category', 'Children'); console.log('+cat=Children ->', await count(), '| label:', await p.textContent('.catalog-all-categories'));
+await p.click('text=RESET FILTERS'); console.log('reset ->', (await count()).split('|').length, 'cards');
+await p.click('article >> nth=1 >> text=VIEW DETAILS'); await p.waitForURL('**/books/**'); console.log('view details ->', p.url());
+console.log('errors:', errs.length ? errs : 'none');
+await b.close();
