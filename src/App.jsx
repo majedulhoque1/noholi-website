@@ -31,8 +31,17 @@ const BookReviews = lazyPage(() => import('./pages/BookReviews.jsx'), 'reviews')
 const Critique = lazyPage(() => import('./pages/Critique.jsx'), 'critique');
 
 function ScrollToTop() {
-  const { pathname } = useLocation();
-  useEffect(() => { window.scrollTo(0, 0); }, [pathname]);
+  const { pathname, hash } = useLocation();
+  useEffect(() => {
+    if (!hash) { window.scrollTo(0, 0); return undefined; }
+    // pages load lazily, so the #anchor may not exist yet — retry for a moment
+    let tries = 0;
+    const id = setInterval(() => {
+      const el = document.getElementById(decodeURIComponent(hash.slice(1)));
+      if (el || ++tries > 40) { clearInterval(id); el?.scrollIntoView({ block: 'start' }); }
+    }, 50);
+    return () => clearInterval(id);
+  }, [pathname, hash]);
   return null;
 }
 

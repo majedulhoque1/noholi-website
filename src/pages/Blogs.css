@@ -42,7 +42,7 @@
 }
 
 .blogs-page-envelope-broadsheet-boundar {
-  height: 2054.88px;
+  height: calc(2054.88px + var(--blogs-shift, 0px));
   flex-shrink: 0;
   align-self: stretch;
   max-width: 1200px;
@@ -540,9 +540,11 @@
   left: 0;
   top: 642.94px;
   width: 1184px;
-  height: 1092.63px;
+  height: var(--blogs-grid-h, 1092.63px);
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-auto-rows: 342.88px;
+  align-content: start;
   column-gap: 32px;
   row-gap: 32px;
 }
@@ -1001,7 +1003,7 @@
 .blogs-archival-register-footnote-aster {
   position: absolute;
   left: 48px;
-  top: 1767.88px;
+  top: calc(1767.88px + var(--blogs-shift, 0px));
   width: 1088px;
   height: 18px;
   display: flex;
@@ -1040,7 +1042,7 @@
 .blogs-footer-archival-pagination-ledge {
   position: absolute;
   left: 0;
-  top: 1817.94px;
+  top: calc(1817.94px + var(--blogs-shift, 0px));
   width: 1184px;
   height: 77px;
   display: flex;
@@ -1192,7 +1194,7 @@
 .blogs-colophon-inset-block {
   position: absolute;
   left: 235px;
-  top: 1918.94px;
+  top: calc(1918.94px + var(--blogs-shift, 0px));
   width: 656px;
   height: 88px;
   max-width: 672px;
@@ -1224,3 +1226,18 @@
   white-space: nowrap;
   min-height: 54px;
 }
+
+/* interactive controls: tabs, sort toggle and pagination are real buttons */
+.blogs-sort-toggle, .blogs-nav-folio-pages-box, .blogs-nav-folio-pages-box-2 {
+  background: none; border: 0; padding: 0; margin: 0; font: inherit; color: inherit; cursor: pointer;
+}
+.blogs-active-tab, .blogs-nav-chronicle-categories-box-box { cursor: pointer; }
+.blogs-nav-chronicle-categories-box-box:hover { color: var(--black); background-color: var(--paper-bright); }
+.blogs-sort-toggle:hover .blogs-sorting-index-identifier-box-text-2 { color: var(--oxblood); }
+.blogs-nav-folio-pages-box:hover .blogs-nav-folio-pages-box-box,
+.blogs-nav-folio-pages-box-2:not(:disabled):hover .blogs-nav-folio-pages-box-2-box { border-color: var(--black); }
+.blogs-nav-folio-pages-box:hover .blogs-nav-folio-pages-box-box-text,
+.blogs-nav-folio-pages-box-2:not(:disabled):hover .blogs-nav-folio-pages-box-2-box-text { color: var(--black); }
+.blogs-nav-folio-pages-box-2:disabled { cursor: not-allowed; opacity: 0.45; }
+.blogs-active-tab:focus-visible, .blogs-nav-chronicle-categories-box-box:focus-visible,
+.blogs-sort-toggle:focus-visible, .blogs-nav-folio-pages button:focus-visible { outline: 2px solid var(--oxblood); outline-offset: 2px; }

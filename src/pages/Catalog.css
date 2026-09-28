@@ -1486,3 +1486,4 @@
 }
 .catalog-empty button { color: var(--oxblood); text-decoration: underline; font-weight: 600; }
 .catalog [hidden] { display: none !important; }
+.catalog-nav-catalog-pagination-box-2:disabled { color: var(--parchment-line); cursor: default; }

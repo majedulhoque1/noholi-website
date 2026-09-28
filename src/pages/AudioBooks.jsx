@@ -1,8 +1,60 @@
+import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import './AudioBooks.css';
 
+// The six catalogue plates drawn in the design (order = card order below); minutes drive "Under 3 hours" and sorting.
+const TITLES = [
+  { title: 'The River Path', bn: 'নদীর পথ', author: 'K. M. Sirajul Islam', narrator: 'Anisur Rahman', minutes: 258, tags: ['novels'] },
+  { title: 'Songs of the Delta', bn: 'বদ্বীপের গান', author: 'Begum Rokeya Sakhawat', narrator: 'Sharmin Sultana', minutes: 165, tags: ['classics', 'poetry'] },
+  { title: 'Echoes of the Green Shore', bn: 'সবুজ তীরের প্রতিধ্বনি', author: 'Dr. Niaz Zaman', narrator: 'Farhan Ahmed', minutes: 330, tags: [] },
+  { title: 'Quiet Horizons', bn: 'শান্ত দিগন্ত', author: 'Syed Shamsul Haq', narrator: 'Rezwana Chowdhury', minutes: 192, tags: ['classics'] },
+  { title: 'Shadows of the Delta', bn: 'বদ্বীপের ছায়া', author: 'Selina Hossain', narrator: 'Tariqul Islam', minutes: 365, tags: ['classics', 'novels'] },
+  { title: 'Studies in Regional Craft', bn: 'আঞ্চলিক শিল্পের সমীক্ষা', author: 'Shilpacharya Zainul Abedin Institute', narrator: 'Nusrat Jahan', minutes: 130, tags: [] },
+];
+const FILTERS = [
+  { id: 'all', label: 'ALL NARRATIONS', test: () => true },
+  { id: 'classics', label: 'BENGALI CLASSICS', test: (t) => t.tags.includes('classics') },
+  { id: 'novels', label: 'NOVELS & FOLIOS', test: (t) => t.tags.includes('novels') },
+  { id: 'poetry', label: 'POETRY READINGS', test: (t) => t.tags.includes('poetry') },
+  { id: 'short', label: 'UNDER 3 HOURS', test: (t) => t.minutes < 180 },
+];
+const SORTS = {
+  recent: { label: 'Recently Cataloged', by: (a, b) => a.i - b.i }, // the design's own shelf order
+  title: { label: 'Title (A–Z)', by: (a, b) => a.title.localeCompare(b.title) },
+  shortest: { label: 'Shortest First', by: (a, b) => a.minutes - b.minutes },
+  longest: { label: 'Longest First', by: (a, b) => b.minutes - a.minutes },
+};
+const SPEEDS = [1, 1.25, 1.5];
+const TOTAL_SECONDS = 4 * 3600 + 18 * 60 + 22;
+const clock = (sec) => [Math.floor(sec / 3600), Math.floor((sec % 3600) / 60), Math.floor(sec % 60)].map((n) => String(n).padStart(2, '0')).join(':');
+const norm = (v) => v.toString().trim().toLowerCase();
+
 // Generated from Figma frame "Noholi Library — Audio Books (Before Login)" (71:2) by tools/gen.py, then hand-edited.
 export default function AudioBooks() {
+  const [filter, setFilter] = useState('all');
+  const [query, setQuery] = useState('');
+  const [sort, setSort] = useState('recent');
+  // featured player — no audio file ships with the prototype, so it runs the clock as a preview
+  const [playing, setPlaying] = useState(true);
+  const [speed, setSpeed] = useState(1);
+  const [elapsed, setElapsed] = useState(1 * 3600 + 12 * 60 + 44);
+  useEffect(() => {
+    if (!playing) return undefined;
+    const id = setInterval(() => setElapsed((e) => Math.min(TOTAL_SECONDS, e + speed)), 1000);
+    return () => clearInterval(id);
+  }, [playing, speed]);
+  useEffect(() => { if (elapsed >= TOTAL_SECONDS) setPlaying(false); }, [elapsed]);
+  const skip = (d) => setElapsed((e) => Math.max(0, Math.min(TOTAL_SECONDS, e + d)));
+  const togglePlay = () => { if (elapsed >= TOTAL_SECONDS) setElapsed(0); setPlaying((p) => !p); };
+
+  const q = norm(query);
+  const test = FILTERS.find((f) => f.id === filter).test;
+  const ranked = TITLES.map((t, i) => ({ ...t, i }))
+    .filter((t) => test(t) && (!q || [t.title, t.bn, t.author, t.narrator].some((v) => norm(v).includes(q))))
+    .sort(SORTS[sort].by);
+  const orderOf = (i) => ranked.findIndex((t) => t.i === i);
+  const card = (i) => ({ hidden: orderOf(i) < 0, style: { order: orderOf(i) } });
+
   return (
     <div className="audio">
       <div className="audio-breadcrumb" />
@@ -149,18 +201,18 @@ export default function AudioBooks() {
                         <div className="audio-horizontalborder-box-box-2">
                           <span className="audio-horizontalborder-box-box-2-text-2">Speed:</span>
                         </div>
-                        <button type="button" className="audio-horizontalborder-box-box-3">1.0x</button>
-                        <button type="button" className="audio-horizontalborder-box-box-3">1.25x</button>
-                        <button type="button" className="audio-horizontalborder-box-box-3">1.5x</button>
+                        {SPEEDS.map((sp) => (
+                          <button key={sp} type="button" className={`audio-horizontalborder-box-box-3${speed === sp ? ' is-active' : ''}`} aria-pressed={speed === sp} onClick={() => setSpeed(sp)}>{sp === 1 ? '1.0' : sp}x</button>
+                        ))}
                       </div>
                     </div>
                     <div className="audio-progress-bar-timestamps">
                       <div className="audio-progress-bar-timestamps-box">
-                        <div className="audio-progress-bar-timestamps-box-box" />
+                        <div className="audio-progress-bar-timestamps-box-box" style={{ width: `${(elapsed / TOTAL_SECONDS) * 100}%` }} />
                       </div>
                       <div className="audio-progress-bar-timestamps-box-2">
                         <div className="audio-progress-bar-timestamps-box-2-box">
-                          <span className="audio-progress-bar-timestamps-box-2-box-text">01:12:44</span>
+                          <span className="audio-progress-bar-timestamps-box-2-box-text">{clock(elapsed)}</span>
                         </div>
                         <div className="audio-progress-bar-timestamps-box-2-box">
                           <span className="audio-progress-bar-timestamps-box-2-box-text">04:18:22</span>
@@ -169,21 +221,21 @@ export default function AudioBooks() {
                     </div>
                     <div className="audio-transport-buttons">
                       <div className="audio-transport-buttons-box">
-                        <img className="audio-transport-buttons-box-box" src="/svg/button-1ygboxk.svg" alt="" width="36" height="36" />
-                        <button type="button" className="audio-transport-buttons-box-box-2">
-                          <img className="audio-transport-buttons-box-box-2-box" src="/svg/container-y6wbzs.svg" alt="" width="10" height="10" />
+                        <button type="button" className="audio-transport-skip" onClick={() => skip(-15)} aria-label="Back 15 seconds"><img className="audio-transport-buttons-box-box" src="/svg/button-1ygboxk.svg" alt="" width="36" height="36" /></button>
+                        <button type="button" className="audio-transport-buttons-box-box-2" aria-pressed={playing} onClick={togglePlay}>
+                          {playing ? <img className="audio-transport-buttons-box-box-2-box" src="/svg/container-y6wbzs.svg" alt="" width="10" height="10" /> : <span className="audio-play-glyph" aria-hidden="true">▶</span>}
                           <div className="audio-transport-buttons-box-box-2-box-2">
-                            <span className="audio-transport-buttons-box-box-2-box-2-text">PAUSE PLAYBACK</span>
+                            <span className="audio-transport-buttons-box-box-2-box-2-text">{playing ? 'PAUSE PLAYBACK' : 'RESUME PLAYBACK'}</span>
                           </div>
                         </button>
-                        <img className="audio-transport-buttons-box-box" src="/svg/button-3vmd3u.svg" alt="" width="36" height="36" />
+                        <button type="button" className="audio-transport-skip" onClick={() => skip(30)} aria-label="Forward 30 seconds"><img className="audio-transport-buttons-box-box" src="/svg/button-3vmd3u.svg" alt="" width="36" height="36" /></button>
                       </div>
-                      <button type="button" className="audio-transport-buttons-box-2">
+                      <Link to="/audio-books/the-river-path#chapters" className="audio-transport-buttons-box-2">
                         <img className="audio-transport-buttons-box-2-box" src="/svg/container-1kedpog.svg" alt="" width="11" height="14" />
                         <div className="audio-transport-buttons-box-2-box-2">
                           <span className="audio-transport-buttons-box-2-box-2-text">Index</span>
                         </div>
-                      </button>
+                      </Link>
                     </div>
                   </div>
                 </div>
@@ -194,15 +246,13 @@ export default function AudioBooks() {
             <div className="audio-functional-filter-search-bar-2">
               <div className="audio-functional-filter-search-bar-2-box">
                 <div className="audio-search-input">
-                  <input className="audio-input" placeholder="Search narrators, authors, or titles..." />
+                  <input className="audio-input" type="search" aria-label="Search audio books" placeholder="Search narrators, authors, or titles..." value={query} onChange={(e) => setQuery(e.target.value)} />
                   <img className="audio-search-input-box" src="/svg/container-kxns67.svg" alt="" width="15" height="20" />
                 </div>
                 <div className="audio-filter-buttons-sort-selection">
-                  <button type="button" className="audio-filter-buttons-sort-selection-box">ALL NARRATIONS</button>
-                  <button type="button" className="audio-filter-buttons-sort-selection-box-2">BENGALI CLASSICS</button>
-                  <button type="button" className="audio-filter-buttons-sort-selection-box-2">NOVELS & FOLIOS</button>
-                  <button type="button" className="audio-filter-buttons-sort-selection-box-2">POETRY READINGS</button>
-                  <button type="button" className="audio-filter-buttons-sort-selection-box-2">UNDER 3 HOURS</button>
+                  {FILTERS.map((f) => (
+                    <button key={f.id} type="button" aria-pressed={filter === f.id} className={filter === f.id ? 'audio-filter-buttons-sort-selection-box' : 'audio-filter-buttons-sort-selection-box-2'} onClick={() => setFilter(f.id)}>{f.label}</button>
+                  ))}
                   <div className="audio-filter-buttons-sort-selection-box-3">
                     <div className="audio-vertical-divider-2" />
                   </div>
@@ -212,8 +262,11 @@ export default function AudioBooks() {
                     </div>
                     <div className="audio-options">
                       <div className="audio-options-box">
-                        <span className="audio-options-box-text">Recently Cataloged</span>
+                        <span className="audio-options-box-text">{SORTS[sort].label}</span>
                       </div>
+                      <select className="audio-sort-select" aria-label="Sort audio books" value={sort} onChange={(e) => setSort(e.target.value)}>
+                        {Object.entries(SORTS).map(([k, v]) => <option key={k} value={k}>{v.label}</option>)}
+                      </select>
                     </div>
                   </div>
                 </div>
@@ -222,7 +275,7 @@ export default function AudioBooks() {
           </div>
           <div className="audio-audio-book-catalog-grid">
             <div className="audio-audio-book-catalog-grid-2">
-              <article className="audio-article-plate-1">
+              <article className="audio-article-plate-1" {...card(0)}>
                 <div className="audio-article-plate-1-box">
                   <div className="audio-horizontalborder-2">
                     <div className="audio-horizontalborder-2-box">
@@ -265,7 +318,7 @@ export default function AudioBooks() {
                   <Link to="/audio-books/the-river-path" className="audio-horizontalborder-4-box-2">View Details →</Link>
                 </div>
               </article>
-              <article className="audio-article-plate-2">
+              <article className="audio-article-plate-2" {...card(1)}>
                 <div className="audio-article-plate-2-box">
                   <div className="audio-horizontalborder-2">
                     <div className="audio-horizontalborder-2-box">
@@ -308,7 +361,7 @@ export default function AudioBooks() {
                   <Link to="/audio-books/songs-of-the-delta" className="audio-horizontalborder-4-box-2">View Details →</Link>
                 </div>
               </article>
-              <article className="audio-article-plate-3">
+              <article className="audio-article-plate-3" {...card(2)}>
                 <div className="audio-article-plate-3-box">
                   <div className="audio-horizontalborder-2">
                     <div className="audio-horizontalborder-2-box">
@@ -351,7 +404,7 @@ export default function AudioBooks() {
                   <Link to="/audio-books/echoes-of-the-green-shore" className="audio-horizontalborder-5-box-2">View Details →</Link>
                 </div>
               </article>
-              <article className="audio-article-plate-4">
+              <article className="audio-article-plate-4" {...card(3)}>
                 <div className="audio-article-plate-4-box">
                   <div className="audio-horizontalborder-2">
                     <div className="audio-horizontalborder-2-box">
@@ -394,7 +447,7 @@ export default function AudioBooks() {
                   <Link to="/audio-books/quiet-horizons" className="audio-horizontalborder-4-box-2">View Details →</Link>
                 </div>
               </article>
-              <article className="audio-article-plate-5">
+              <article className="audio-article-plate-5" {...card(4)}>
                 <div className="audio-article-plate-5-box">
                   <div className="audio-horizontalborder-2">
                     <div className="audio-horizontalborder-2-box">
@@ -437,7 +490,7 @@ export default function AudioBooks() {
                   <Link to="/audio-books/shadows-of-the-delta" className="audio-horizontalborder-4-box-2">View Details →</Link>
                 </div>
               </article>
-              <article className="audio-article-plate-6">
+              <article className="audio-article-plate-6" {...card(5)}>
                 <div className="audio-article-plate-6-box">
                   <div className="audio-horizontalborder-2">
                     <div className="audio-horizontalborder-2-box">
@@ -480,6 +533,9 @@ export default function AudioBooks() {
                   <Link to="/audio-books/studies-in-regional-craft" className="audio-horizontalborder-5-box-2">View Details →</Link>
                 </div>
               </article>
+              {!ranked.length && (
+                <p className="audio-empty">No narrations match. <button type="button" onClick={() => { setFilter('all'); setQuery(''); }}>Show all audio books</button></p>
+              )}
             </div>
           </div>
         </div>

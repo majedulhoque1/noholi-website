@@ -384,3 +384,7 @@
   white-space: nowrap;
   min-height: 16px;
 }
+
+/* only one section ships in the preview, so both section buttons are disabled */
+.reader-navigation-controls-with-neutral-box:disabled,
+.reader-navigation-controls-with-neutral-box-3:disabled { opacity: 0.4; cursor: not-allowed; }

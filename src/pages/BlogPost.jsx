@@ -1,8 +1,10 @@
 import { Link } from 'react-router-dom';
+import { useArticleActions } from '../articleActions.js';
 import './BlogPost.css';
 
 // Generated from Figma frame "Noholi Library — Blog: The Solitary Hour (Before login)" (158:407) by tools/gen.py, then hand-edited.
 export default function BlogPost() {
+  const act = useArticleActions();
   return (
     <div className="blogpost">
       <section className="blogpost-main">
@@ -71,7 +73,7 @@ export default function BlogPost() {
                 </div>
               </div>
               <div className="blogpost-archival-actions">
-                <button type="button" className="blogpost-archival-actions-box">
+                <button type="button" className="blogpost-archival-actions-box" onClick={act.print}>
                   <img className="blogpost-archival-actions-box-box" src="/svg/container-14z0t0b.svg" alt="" width="14" height="12" />
                   <div className="blogpost-archival-actions-box-box-2">
                     <span className="blogpost-archival-actions-box-box-2-text">Print<br />Dispatch</span>
@@ -80,19 +82,19 @@ export default function BlogPost() {
                 <div className="blogpost-archival-actions-box-2">
                   <span className="blogpost-archival-actions-box-2-text">|</span>
                 </div>
-                <button type="button" className="blogpost-archival-actions-box">
+                <button type="button" className="blogpost-archival-actions-box" onClick={act.cite} title="Copy a citation">
                   <img className="blogpost-archival-actions-box-box-3" src="/svg/container-6pqxh8.svg" alt="" width="12" height="8" />
                   <div className="blogpost-archival-actions-box-box-2">
-                    <span className="blogpost-archival-actions-box-box-2-text-2">Citation</span>
+                    <span className="blogpost-archival-actions-box-box-2-text-2" aria-live="polite">{act.flash === 'cite' ? 'Copied ✓' : 'Citation'}</span>
                   </div>
                 </button>
                 <div className="blogpost-archival-actions-box-2">
                   <span className="blogpost-archival-actions-box-2-text">|</span>
                 </div>
-                <button type="button" className="blogpost-archival-actions-box">
+                <button type="button" className="blogpost-archival-actions-box" onClick={act.toggleSave} aria-pressed={act.saved}>
                   <img className="blogpost-archival-actions-box-box-4" src="/svg/container-srl5au.svg" alt="" width="10" height="12" />
                   <div className="blogpost-archival-actions-box-box-2">
-                    <span className="blogpost-archival-actions-box-box-2-text-2">Save</span>
+                    <span className="blogpost-archival-actions-box-box-2-text-2" aria-live="polite">{act.saved ? 'Saved ✓' : 'Save'}</span>
                   </div>
                 </button>
               </div>

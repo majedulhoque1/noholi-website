@@ -1,8 +1,39 @@
+import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import './BookReviews.css';
 
+// The six folios drawn in the design, in card order ("recent" = the design's gazetted order).
+const FOLIOS = [
+  { kind: 'patron' }, { kind: 'guide' }, { kind: 'scholarly' },
+  { kind: 'patron' }, { kind: 'guide' }, { kind: 'scholarly' },
+];
+const TABS = [
+  { id: 'all', label: 'All Reviews & Guides' },
+  { id: 'patron', label: 'Patron Book Reviews' },
+  { id: 'scholarly', label: 'Scholarly Critiques' },
+  { id: 'guide', label: 'Curated Reading Guides' },
+];
+const ORDERS = { recent: 'RECENTLY GAZETTED', earliest: 'EARLIEST GAZETTED' };
+const PER_PAGE = 6;
+
 // Generated from Figma frame "Noholi Library — Book Reviews, Critiques & Reading Guides (Before login)" (158:1717) by tools/gen.py, then hand-edited.
 export default function BookReviews() {
+  const [tab, setTab] = useState('all');
+  const [order, setOrder] = useState('recent');
+  const [page, setPage] = useState(1);
+  const countOf = (id) => FOLIOS.filter((f) => id === 'all' || f.kind === id).length;
+  const list = FOLIOS.map((f, i) => ({ ...f, i })).filter((f) => tab === 'all' || f.kind === tab);
+  if (order === 'earliest') list.reverse();
+  const pages = Math.max(1, Math.ceil(list.length / PER_PAGE));
+  const shown = list.slice((page - 1) * PER_PAGE, page * PER_PAGE);
+  const slot = (i) => shown.findIndex((f) => f.i === i);
+  const card = (i) => ({ hidden: slot(i) < 0, style: { order: slot(i) } });
+  const reviews = shown.filter((f) => f.kind !== 'guide').length;
+  const guides = shown.length - reviews;
+  const first = shown.length ? (page - 1) * PER_PAGE + 1 : 0;
+  const last = (page - 1) * PER_PAGE + shown.length;
+  const plural = (n, one, many) => `${n} ${n === 1 ? one : many}`;
+
   return (
     <div className="reviews">
       <section className="reviews-main">
@@ -159,24 +190,26 @@ export default function BookReviews() {
           <section className="reviews-filter-navigation-sorter-control">
             <div className="reviews-filter-navigation-sorter-control-box">
               <div className="reviews-filter-tabs">
-                <button type="button" className="reviews-filter-tabs-box">All Reviews & Guides (72)</button>
-                <button type="button" className="reviews-filter-tabs-box-2">Patron Book Reviews (38)</button>
-                <button type="button" className="reviews-filter-tabs-box-2">Scholarly Critiques (20)</button>
-                <button type="button" className="reviews-filter-tabs-box-2">Curated Reading Guides (14)</button>
+                {TABS.map((t) => (
+                  <button key={t.id} type="button" aria-pressed={tab === t.id} className={tab === t.id ? 'reviews-filter-tabs-box' : 'reviews-filter-tabs-box-2'} onClick={() => { setTab(t.id); setPage(1); }}>{t.label} ({countOf(t.id)})</button>
+                ))}
               </div>
               <div className="reviews-sorter-and-search">
-                <label className="reviews-label">ORDER BY:</label>
+                <label className="reviews-label" htmlFor="reviews-order">ORDER BY:</label>
                 <div className="reviews-options">
                   <div className="reviews-options-box">
-                    <span className="reviews-options-box-text">RECENTLY GAZETTED</span>
+                    <span className="reviews-options-box-text">{ORDERS[order]}</span>
                   </div>
+                  <select id="reviews-order" className="reviews-order-select" value={order} onChange={(e) => { setOrder(e.target.value); setPage(1); }}>
+                    {Object.entries(ORDERS).map(([k, v]) => <option key={k} value={k}>{v}</option>)}
+                  </select>
                 </div>
               </div>
             </div>
           </section>
           <section className="reviews-main-grid-3x2-folio-reviews-read">
             <div className="reviews-main-grid-3x2-folio-reviews-read-box">
-              <article className="reviews-article-card-1-patron-book-revie">
+              <article className="reviews-article-card-1-patron-book-revie" {...card(0)}>
                 <div className="reviews-article-card-1-patron-book-revie-box">
                   <div className="reviews-ribbon-header">
                     <div className="reviews-ribbon-header-box">
@@ -241,7 +274,7 @@ export default function BookReviews() {
                   <img className="reviews-action-footer-box-2" src="/svg/container-mvmi8l.svg" alt="" width="12" height="15" />
                 </div>
               </article>
-              <article className="reviews-article-card-2-curated-reading-g">
+              <article className="reviews-article-card-2-curated-reading-g" {...card(1)}>
                 <div className="reviews-article-card-2-curated-reading-g-box">
                   <div className="reviews-ribbon-header-2">
                     <div className="reviews-ribbon-header-2-box">
@@ -300,7 +333,7 @@ export default function BookReviews() {
                   <img className="reviews-action-footer-box-3" src="/svg/container-13fctgx.svg" alt="" width="17" height="17" />
                 </div>
               </article>
-              <article className="reviews-article-card-3-critical-scholarl">
+              <article className="reviews-article-card-3-critical-scholarl" {...card(2)}>
                 <div className="reviews-article-card-3-critical-scholarl-box">
                   <div className="reviews-ribbon-header-3">
                     <div className="reviews-ribbon-header-3-box">
@@ -365,7 +398,7 @@ export default function BookReviews() {
                   <img className="reviews-action-footer-2-box-2" src="/svg/container-mvmi8l.svg" alt="" width="12" height="15" />
                 </div>
               </article>
-              <article className="reviews-article-card-4-patron-book-revie">
+              <article className="reviews-article-card-4-patron-book-revie" {...card(3)}>
                 <div className="reviews-article-card-4-patron-book-revie-box">
                   <div className="reviews-ribbon-header">
                     <div className="reviews-ribbon-header-box">
@@ -430,7 +463,7 @@ export default function BookReviews() {
                   <img className="reviews-action-footer-box-2" src="/svg/container-mvmi8l.svg" alt="" width="12" height="15" />
                 </div>
               </article>
-              <article className="reviews-article-card-5-curated-reading-g">
+              <article className="reviews-article-card-5-curated-reading-g" {...card(4)}>
                 <div className="reviews-article-card-5-curated-reading-g-box">
                   <div className="reviews-ribbon-header-2">
                     <div className="reviews-ribbon-header-2-box-3">
@@ -489,7 +522,7 @@ export default function BookReviews() {
                   <img className="reviews-action-footer-box-3" src="/svg/container-13fctgx.svg" alt="" width="17" height="17" />
                 </div>
               </article>
-              <article className="reviews-article-card-6-patron-comparativ">
+              <article className="reviews-article-card-6-patron-comparativ" {...card(5)}>
                 <div className="reviews-article-card-6-patron-comparativ-box">
                   <div className="reviews-ribbon-header">
                     <div className="reviews-ribbon-header-box-2">
@@ -559,14 +592,13 @@ export default function BookReviews() {
           <section className="reviews-pagination-archival-record-summa">
             <div className="reviews-pagination-archival-record-summa-box">
               <div className="reviews-pagination-archival-record-summa-box-box">
-                <span className="reviews-pagination-archival-record-summa-box-box-text">{"Showing "}<span className="reviews-span">1 – 6</span>{" of "}<span className="reviews-span">58 Gazetted Reviews</span>{" & "}<span className="reviews-span">14 Reading Guides</span></span>
+                <span className="reviews-pagination-archival-record-summa-box-box-text">{"Showing "}<span className="reviews-span">{first} – {last}</span>{" of "}<span className="reviews-span">{plural(reviews, 'Gazetted Review', 'Gazetted Reviews')}</span>{" & "}<span className="reviews-span">{plural(guides, 'Reading Guide', 'Reading Guides')}</span></span>
               </div>
               <div className="reviews-pagination-archival-record-summa-box-box-2">
-                <button type="button" className="reviews-first-page">1</button>
-                <button type="button" className="reviews-page-2">2</button>
-                <button type="button" className="reviews-page-3">3</button>
-                <button type="button" className="reviews-page-4">4</button>
-                <button type="button" className="reviews-pagination-archival-record-summa-box-box-2-box">NEXT →</button>
+                {Array.from({ length: pages }, (_, i) => i + 1).map((n) => (
+                  <button key={n} type="button" className={n === page ? 'reviews-first-page' : 'reviews-page-2'} aria-current={n === page ? 'page' : undefined} onClick={() => setPage(n)}>{n}</button>
+                ))}
+                <button type="button" className="reviews-pagination-archival-record-summa-box-box-2-box" disabled={page >= pages} onClick={() => setPage(page + 1)}>NEXT →</button>
               </div>
             </div>
           </section>

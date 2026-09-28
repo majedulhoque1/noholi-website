@@ -1,8 +1,35 @@
+import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import './CreativeWritings.css';
 
 // Generated from Figma frame "Noholi Library — Creative Writings: Poetry, Short Stories & Excerpts (Before login)" (158:830) by tools/gen.py, then hand-edited.
+// The six compositions drawn in the design, in card order ("recent" = the design's gazetted order).
+const WORKS = ['poetry', 'stories', 'excerpts', 'poetry', 'stories', 'translations'];
+const TABS = [
+  { id: 'all', label: 'ALL WORKS', cls: 'writings-tab', text: 'writings-tab-text' },
+  { id: 'poetry', label: 'POETRY (কবিতা)', cls: 'writings-tab-2', text: 'writings-poetry' },
+  { id: 'stories', label: 'SHORT STORIES (ছোটগল্প)', cls: 'writings-tab-3', text: 'writings-short-stories' },
+  { id: 'excerpts', label: 'LITERARY EXCERPTS (উদ্ধৃতাংশ)', cls: 'writings-tab-4', text: 'writings-literary-excerpts' },
+  { id: 'translations', label: 'TRANSLATIONS (অনুবাদ)', cls: 'writings-tab-5', text: 'writings-translations' },
+];
+const ORDERS = { recent: 'RECENTLY GAZETTED', earliest: 'EARLIEST GAZETTED' };
+const PER_PAGE = 6;
+
 export default function CreativeWritings() {
+  const [tab, setTab] = useState('all');
+  const [order, setOrder] = useState('recent');
+  const [page, setPage] = useState(1);
+  const [compact, setCompact] = useState(false);
+  const countOf = (id) => WORKS.filter((w) => id === 'all' || w === id).length;
+  const list = WORKS.map((kind, i) => ({ kind, i })).filter((w) => tab === 'all' || w.kind === tab);
+  if (order === 'earliest') list.reverse();
+  const pages = Math.max(1, Math.ceil(list.length / PER_PAGE));
+  const shown = list.slice((page - 1) * PER_PAGE, page * PER_PAGE);
+  const slot = (i) => shown.findIndex((w) => w.i === i);
+  const card = (i) => ({ hidden: slot(i) < 0, style: { order: slot(i) } });
+  const first = shown.length ? (page - 1) * PER_PAGE + 1 : 0;
+  const last = (page - 1) * PER_PAGE + shown.length;
+
   return (
     <div className="writings">
       <section className="writings-main">
@@ -106,22 +133,12 @@ export default function CreativeWritings() {
             </div>
           </section>
           <section className="writings-literary-genre-filters-tabs-sort">
-            <div className="writings-tablist-genre-filters">
-              <div className="writings-tab">
-                <span className="writings-tab-text">ALL WORKS (34)</span>
-              </div>
-              <div className="writings-tab-2">
-                <span className="writings-poetry">POETRY (কবিতা) (14)</span>
-              </div>
-              <div className="writings-tab-3">
-                <span className="writings-short-stories">SHORT STORIES (ছোটগল্প) (11)</span>
-              </div>
-              <div className="writings-tab-4">
-                <span className="writings-literary-excerpts">LITERARY EXCERPTS (উদ্ধৃতাংশ) (6)</span>
-              </div>
-              <div className="writings-tab-5">
-                <span className="writings-translations">TRANSLATIONS (অনুবাদ) (3)</span>
-              </div>
+            <div className="writings-tablist-genre-filters" role="group" aria-label="Filter by form">
+              {TABS.map((t) => (
+                <button key={t.id} type="button" aria-pressed={tab === t.id} className={`${t.cls}${tab === t.id ? ' is-active' : ''}`} onClick={() => { setTab(t.id); setPage(1); }}>
+                  <span className={t.text}>{t.label} ({countOf(t.id)})</span>
+                </button>
+              ))}
             </div>
             <div className="writings-secondary-search-sort-controls">
               <div className="writings-secondary-search-sort-controls-box">
@@ -131,17 +148,20 @@ export default function CreativeWritings() {
                 <div className="writings-secondary-search-sort-controls-box-box">
                   <div className="writings-options">
                     <div className="writings-options-box">
-                      <span className="writings-options-box-text">RECENTLY GAZETTED</span>
+                      <span className="writings-options-box-text">{ORDERS[order]}</span>
                     </div>
+                    <select className="writings-order-select" aria-label="Order compositions" value={order} onChange={(e) => { setOrder(e.target.value); setPage(1); }}>
+                      {Object.entries(ORDERS).map(([k, v]) => <option key={k} value={k}>{v}</option>)}
+                    </select>
                   </div>
                   <img className="writings-secondary-search-sort-controls-box-box-box" src="/svg/container-5anvoh.svg" alt="" width="7" height="16" />
                 </div>
               </div>
-              <img className="writings-toggle-catalog-grid-density" src="/svg/button-toggle-catalog-grid-density-zbv7uh.svg" alt="" width="24" height="24" />
+              <button type="button" className="writings-density-toggle" aria-pressed={compact} aria-label={compact ? 'Show three columns' : 'Show two columns'} title={compact ? 'Three columns' : 'Two columns'} onClick={() => setCompact((c) => !c)}><img className="writings-toggle-catalog-grid-density" src="/svg/button-toggle-catalog-grid-density-zbv7uh.svg" alt="" width="24" height="24" /></button>
             </div>
           </section>
-          <section className="writings-curated-creative-writings-grid">
-            <article className="writings-article-card-1-poetry">
+          <section className={`writings-curated-creative-writings-grid${compact ? ' is-compact' : ''}`}>
+            <article className="writings-article-card-1-poetry" {...card(0)}>
               <div className="writings-article-card-1-poetry-box">
                 <div className="writings-classification-ribbon">
                   <div className="writings-classification-ribbon-2">
@@ -199,7 +219,7 @@ export default function CreativeWritings() {
                 </div>
               </div>
             </article>
-            <article className="writings-article-card-2-short-story">
+            <article className="writings-article-card-2-short-story" {...card(1)}>
               <div className="writings-article-card-2-short-story-box">
                 <div className="writings-classification-ribbon">
                   <div className="writings-classification-ribbon-2">
@@ -253,7 +273,7 @@ export default function CreativeWritings() {
                 </div>
               </div>
             </article>
-            <article className="writings-article-card-3-literary-excerpt">
+            <article className="writings-article-card-3-literary-excerpt" {...card(2)}>
               <div className="writings-article-card-3-literary-excerpt-box">
                 <div className="writings-classification-ribbon-3">
                   <div className="writings-classification-ribbon-2">
@@ -307,7 +327,7 @@ export default function CreativeWritings() {
                 </div>
               </div>
             </article>
-            <article className="writings-article-card-4-poetry">
+            <article className="writings-article-card-4-poetry" {...card(3)}>
               <div className="writings-article-card-4-poetry-box">
                 <div className="writings-classification-ribbon">
                   <div className="writings-classification-ribbon-2">
@@ -365,7 +385,7 @@ export default function CreativeWritings() {
                 </div>
               </div>
             </article>
-            <article className="writings-article-card-5-historical-fictio">
+            <article className="writings-article-card-5-historical-fictio" {...card(4)}>
               <div className="writings-article-card-5-historical-fictio-box">
                 <div className="writings-classification-ribbon">
                   <div className="writings-classification-ribbon-2">
@@ -419,7 +439,7 @@ export default function CreativeWritings() {
                 </div>
               </div>
             </article>
-            <article className="writings-article-card-6-translation">
+            <article className="writings-article-card-6-translation" {...card(5)}>
               <div className="writings-article-card-6-translation-box">
                 <div className="writings-classification-ribbon">
                   <div className="writings-classification-ribbon-2">
@@ -481,13 +501,13 @@ export default function CreativeWritings() {
           <section className="writings-archival-pagination-editorial-co">
             <div className="writings-pagination-controls">
               <div className="writings-pagination-controls-box">
-                <span className="writings-pagination-controls-box-text">{"SHOWING "}<span className="writings-span-3">1–6</span>{" OF "}<span className="writings-span-3">34</span>{" LITERARY COMPOSITIONS"}</span>
+                <span className="writings-pagination-controls-box-text">{"SHOWING "}<span className="writings-span-3">{first}–{last}</span>{" OF "}<span className="writings-span-3">{list.length}</span>{list.length === 1 ? ' LITERARY COMPOSITION' : ' LITERARY COMPOSITIONS'}</span>
               </div>
               <div className="writings-folio-pagination">
-                <button type="button" className="writings-folio-pagination-box">1</button>
-                <button type="button" className="writings-folio-pagination-box-2">2</button>
-                <button type="button" className="writings-folio-pagination-box-2">3</button>
-                <button type="button" className="writings-folio-pagination-box-3">
+                {Array.from({ length: pages }, (_, i) => i + 1).map((n) => (
+                  <button key={n} type="button" className={n === page ? 'writings-folio-pagination-box' : 'writings-folio-pagination-box-2'} aria-current={n === page ? 'page' : undefined} onClick={() => setPage(n)}>{n}</button>
+                ))}
+                <button type="button" className="writings-folio-pagination-box-3" disabled={page >= pages} onClick={() => setPage(page + 1)}>
                   <div className="writings-folio-pagination-box-3-box">
                     <span className="writings-folio-pagination-box-3-box-text">NEXT</span>
                   </div>

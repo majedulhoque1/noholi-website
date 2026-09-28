@@ -1,8 +1,31 @@
+import { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import './AudioBookDetails.css';
 
+// Chapter 1 player — no audio file ships with the prototype, so it runs the clock as a preview.
+const CHAPTER_SECONDS = 28 * 60 + 45;
+const SPEEDS = [1, 1.25, 1.5];
+const mmss = (sec) => `${String(Math.floor(sec / 60)).padStart(2, '0')}:${String(Math.floor(sec % 60)).padStart(2, '0')}`;
+
 // Generated from Figma frame "Noholi Library — Audio Book Details: The River Path (Before Login)" (71:420) by tools/gen.py, then hand-edited.
 export default function AudioBookDetails() {
+  const [playing, setPlaying] = useState(false);
+  const [speed, setSpeed] = useState(1);
+  const [elapsed, setElapsed] = useState(14 * 60 + 32);
+  const player = useRef(null);
+  useEffect(() => {
+    if (!playing) return undefined;
+    const id = setInterval(() => setElapsed((e) => Math.min(CHAPTER_SECONDS, e + speed)), 1000);
+    return () => clearInterval(id);
+  }, [playing, speed]);
+  useEffect(() => { if (elapsed >= CHAPTER_SECONDS) setPlaying(false); }, [elapsed]);
+  const skip = (d) => setElapsed((e) => Math.max(0, Math.min(CHAPTER_SECONDS, e + d)));
+  const toggle = () => { if (elapsed >= CHAPTER_SECONDS) setElapsed(0); setPlaying((p) => !p); };
+  const startListening = () => {
+    setPlaying(true);
+    player.current?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  };
+
   return (
     <div className="audiobook">
       <div className="audiobook-breadcrumb">
@@ -209,7 +232,7 @@ export default function AudioBookDetails() {
                   </div>
                 </div>
                 <div className="audiobook-folio-control-actions">
-                  <button type="button" className="audiobook-folio-control-actions-box">
+                  <button type="button" className="audiobook-folio-control-actions-box" onClick={startListening}>
                     <img className="audiobook-folio-control-actions-box-box" src="/svg/container-hqmhd4.svg" alt="" width="8" height="10" />
                     <span className="audiobook-folio-control-actions-box-text">START LISTENING • PLAY FOLIO</span>
                   </button>
@@ -235,10 +258,10 @@ export default function AudioBookDetails() {
                       </div>
                     </div>
                     <div className="audiobook-horizontalborder-box">
-                      <span className="audiobook-horizontalborder-box-text-3">READY TO PLAY</span>
+                      <span className="audiobook-horizontalborder-box-text-3" aria-live="polite">{playing ? 'NOW PLAYING' : elapsed > 14 * 60 + 32 ? 'PAUSED' : 'READY TO PLAY'}</span>
                     </div>
                   </div>
-                  <div className="audiobook-current-chapter-indicator">
+                  <div className="audiobook-current-chapter-indicator" ref={player}>
                     <div className="audiobook-current-chapter-indicator-box">
                       <span className="audiobook-now-loaded">NOW LOADED</span>
                     </div>
@@ -252,14 +275,14 @@ export default function AudioBookDetails() {
                   </div>
                   <div className="audiobook-scrubber-and-timeline">
                     <div className="audiobook-overlay">
-                      <div className="audiobook-overlay-box" />
+                      <div className="audiobook-overlay-box" style={{ width: `${(elapsed / CHAPTER_SECONDS) * 100}%` }} />
                     </div>
                     <div className="audiobook-scrubber-and-timeline-box">
                       <div className="audiobook-scrubber-and-timeline-box-box">
-                        <span className="audiobook-scrubber-and-timeline-box-box-text">14:32</span>
+                        <span className="audiobook-scrubber-and-timeline-box-box-text">{mmss(elapsed)}</span>
                       </div>
                       <div className="audiobook-scrubber-and-timeline-box-box">
-                        <span className="audiobook-scrubber-and-timeline-box-box-text-2">पद्मा নদীর উপাখ্যান</span>
+                        <span className="audiobook-scrubber-and-timeline-box-box-text-2">পদ্মা নদীর উপাখ্যান</span>
                       </div>
                       <div className="audiobook-scrubber-and-timeline-box-box">
                         <span className="audiobook-scrubber-and-timeline-box-box-text">28:45</span>
@@ -268,23 +291,23 @@ export default function AudioBookDetails() {
                   </div>
                   <div className="audiobook-primary-transport-controls">
                     <div className="audiobook-primary-transport-controls-box">
-                      <img className="audiobook-rewind-15-seconds" src="/svg/button-rewind-15-seconds-vxt7v1.svg" alt="" width="32" height="41" />
-                      <button type="button" className="audiobook-toggle-play-pause">
-                        <img className="audiobook-toggle-play-pause-box" src="/svg/container-4iz0ls.svg" alt="" width="9" height="11" />
+                      <button type="button" className="audiobook-skip" onClick={() => skip(-15)} aria-label="Back 15 seconds"><img className="audiobook-rewind-15-seconds" src="/svg/button-rewind-15-seconds-vxt7v1.svg" alt="" width="32" height="41" /></button>
+                      <button type="button" className="audiobook-toggle-play-pause" aria-pressed={playing} onClick={toggle}>
+                        {playing ? <span className="audiobook-pause-glyph" aria-hidden="true">❚❚</span> : <img className="audiobook-toggle-play-pause-box" src="/svg/container-4iz0ls.svg" alt="" width="9" height="11" />}
                         <div className="audiobook-toggle-play-pause-box-2">
-                          <span className="audiobook-toggle-play-pause-box-2-text">PLAY</span>
+                          <span className="audiobook-toggle-play-pause-box-2-text">{playing ? 'PAUSE' : 'PLAY'}</span>
                         </div>
                       </button>
-                      <img className="audiobook-forward-30-seconds" src="/svg/button-forward-30-seconds-9wcyfx.svg" alt="" width="32" height="41" />
+                      <button type="button" className="audiobook-skip" onClick={() => skip(30)} aria-label="Forward 30 seconds"><img className="audiobook-forward-30-seconds" src="/svg/button-forward-30-seconds-9wcyfx.svg" alt="" width="32" height="41" /></button>
                     </div>
                     <div className="audiobook-speed-volume-controls">
                       <div className="audiobook-speed-volume-controls-box">
                         <div className="audiobook-speed-volume-controls-box-box">
                           <span className="audiobook-speed-volume-controls-box-box-text">PACE:</span>
                         </div>
-                        <button type="button" className="audiobook-speed-volume-controls-box-box-2">1.0×</button>
-                        <button type="button" className="audiobook-speed-volume-controls-box-box-3">1.25×</button>
-                        <button type="button" className="audiobook-speed-volume-controls-box-box-3">1.5×</button>
+                        {SPEEDS.map((sp) => (
+                          <button key={sp} type="button" aria-pressed={speed === sp} className={speed === sp ? 'audiobook-speed-volume-controls-box-box-2' : 'audiobook-speed-volume-controls-box-box-3'} onClick={() => setSpeed(sp)}>{sp === 1 ? '1.0' : sp}×</button>
+                        ))}
                       </div>
                       <div className="audiobook-verticalborder-2">
                         <img className="audiobook-verticalborder-2-box" src="/svg/container-133xqih.svg" alt="" width="12" height="12" />
@@ -297,7 +320,7 @@ export default function AudioBookDetails() {
                     </div>
                   </div>
                 </div>
-                <div className="audiobook-chapter-folio-timestamps-table-a">
+                <div className="audiobook-chapter-folio-timestamps-table-a" id="chapters">
                   <div className="audiobook-background-horizontalborder">
                     <div className="audiobook-background-horizontalborder-box">
                       <h3 className="audiobook-heading-3">Folio Chapters & Voice Marks</h3>

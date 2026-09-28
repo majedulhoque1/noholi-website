@@ -3266,3 +3266,6 @@
   margin-top: 96px;
   margin-bottom: 96px;
 }
+
+/* editable sample critique: let the last paragraph wrap inside the box like the others */
+.sreview-paragraph-2-text-3 { white-space: normal; }

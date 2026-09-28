@@ -1,8 +1,27 @@
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import { useArticleActions } from '../articleActions.js';
+import { useState } from 'react';
+import { useAuth } from '../auth.jsx';
 import './Critique.css';
 
 // Generated from Figma frame "Noholi Library — Read Critique & Apparatus: Padma Nadir Majhi (Before login)" (158:2198) by tools/gen.py, then hand-edited.
 export default function Critique() {
+  const act = useArticleActions();
+  const { member } = useAuth();
+  const navigate = useNavigate();
+  const [composing, setComposing] = useState(false);
+  const [draft, setDraft] = useState('');
+  const [notes, setNotes] = useState([]);
+  const postNote = (e) => {
+    e.preventDefault();
+    const text = draft.trim();
+    if (!text) return;
+    const date = new Date().toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
+    const initials = member.name.split(' ').map((w) => w[0]).slice(0, 2).join('');
+    setNotes((ns) => [{ at: Date.now(), name: member.name, card: member.cardNumber, initials, date, text }, ...ns]);
+    setDraft('');
+    setComposing(false);
+  };
   return (
     <div className="critique">
       <section className="critique-main">
@@ -110,16 +129,16 @@ export default function Critique() {
                       </div>
                       <img className="critique-action-ribbon-box-box-2" src="/svg/container-s8x64t.svg" alt="" width="11" height="11" />
                     </Link>
-                    <button type="button" className="critique-action-ribbon-box-2">
+                    <button type="button" className="critique-action-ribbon-box-2" onClick={act.print}>
                       <img className="critique-action-ribbon-box-2-box" src="/svg/container-mp0vip.svg" alt="" width="14" height="12" />
                       <div className="critique-action-ribbon-box-2-box-2">
                         <span className="critique-action-ribbon-box-2-box-2-text">PRINT FOLIO DISPATCH</span>
                       </div>
                     </button>
-                    <button type="button" className="critique-action-ribbon-box-3">
+                    <button type="button" className="critique-action-ribbon-box-3" onClick={act.cite} title="Copy a citation">
                       <img className="critique-action-ribbon-box-3-box" src="/svg/container-1ngv1yq.svg" alt="" width="12" height="8" />
                       <div className="critique-action-ribbon-box-3-box-2">
-                        <span className="critique-action-ribbon-box-3-box-2-text">CITE APPARATUS</span>
+                        <span className="critique-action-ribbon-box-3-box-2-text" aria-live="polite">{act.flash === 'cite' ? 'CITATION COPIED ✓' : 'CITE APPARATUS'}</span>
                       </div>
                     </button>
                     <Link to="/wishlist/books" className="critique-action-ribbon-box-4">
@@ -417,11 +436,31 @@ export default function Critique() {
                     <div className="critique-archival-ledger-reader-annotatio-box">
                       <p className="critique-paragraph-3">
                         <span className="critique-heading-3-4">Scholarly Marginalia & Reader Reflections</span>
-                        <span className="critique-paragraph-3-text">2 Verified Archival Fellow Annotations on Record</span>
+                        <span className="critique-paragraph-3-text">{2 + notes.length} Verified Archival Fellow Annotations on Record</span>
                       </p>
-                      <button type="button" className="critique-archival-ledger-reader-annotatio-box-box">+ ADD ANNOTATION</button>
+                      <button type="button" className="critique-archival-ledger-reader-annotatio-box-box" aria-expanded={composing} onClick={() => (member ? setComposing((c) => !c) : navigate('/login'))}>{composing ? 'CANCEL' : '+ ADD ANNOTATION'}</button>
                     </div>
+                    {composing && (
+                      <form className="critique-annotation-form" onSubmit={postNote}>
+                        <label className="visually-hidden" htmlFor="critique-note">Your annotation</label>
+                        <textarea id="critique-note" rows={4} maxLength={1200} value={draft} onChange={(e) => setDraft(e.target.value)} placeholder="Add a scholarly note or reader reflection…" autoFocus />
+                        <div className="critique-annotation-form-row">
+                          <span>Posting as {member?.name}. Annotations are reviewed before public preservation.</span>
+                          <button type="submit" disabled={!draft.trim()}>POST ANNOTATION</button>
+                        </div>
+                      </form>
+                    )}
                     <div className="critique-existing-comments-ledger">
+                      {notes.map((n) => (
+                        <div key={n.at} className="critique-annotation-new">
+                          <div className="critique-annotation-new-head">
+                            <span className="critique-annotation-new-initials">{n.initials}</span>
+                            <strong>{n.name}</strong>
+                            <span className="critique-annotation-new-meta">(Patron Member #{n.card}) · {n.date} · Pending review</span>
+                          </div>
+                          <p>“{n.text}”</p>
+                        </div>
+                      ))}
                       <div className="critique-annotation-1">
                         <div className="critique-horizontalborder-5">
                           <div className="critique-horizontalborder-5-box">

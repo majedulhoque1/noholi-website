@@ -51,7 +51,7 @@ export default function Reader() {
             </div>
           </div>
           <nav className="reader-navigation-controls-with-neutral">
-            <button type="button" className="reader-navigation-controls-with-neutral-box">
+            <button type="button" className="reader-navigation-controls-with-neutral-box" disabled title="This is the first section">
               <div className="reader-navigation-controls-with-neutral-box-box">
                 <span className="reader-navigation-controls-with-neutral-box-box-text">←</span>
               </div>
@@ -60,9 +60,9 @@ export default function Reader() {
               </div>
             </button>
             <div className="reader-navigation-controls-with-neutral-box-2">
-              <span className="reader-navigation-controls-with-neutral-box-2-text">PROGRESS: IN PROGRESS</span>
+              <span className="reader-navigation-controls-with-neutral-box-2-text">SECTION 1 OF 1 · PREVIEW</span>
             </div>
-            <button type="button" className="reader-navigation-controls-with-neutral-box-3">
+            <button type="button" className="reader-navigation-controls-with-neutral-box-3" disabled title="Only this section is available in the online preview">
               <div className="reader-navigation-controls-with-neutral-box-3-box">
                 <span className="reader-navigation-controls-with-neutral-box-3-box-text">NEXT SECTION</span>
               </div>

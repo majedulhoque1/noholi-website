@@ -129,10 +129,11 @@
   width: 100%;
   min-height: 2473.5px;
   max-width: 1280px;
+  margin-inline: auto;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  padding: 64px max(48px, calc((100% - 1184px) / 2)) 64px;
+  padding: 64px 48px 64px;
 }
 
 .audiobook-main-content-box {
@@ -2886,3 +2887,12 @@
   white-space: pre;
   min-height: 39px;
 }
+
+/* ---- preview player state ---- */
+.audiobook-skip { background: none; border: 0; padding: 0; line-height: 0; cursor: pointer; flex-shrink: 0; }
+.audiobook-skip:hover { opacity: 0.7; }
+.audiobook-toggle-play-pause, .audiobook-folio-control-actions-box,
+.audiobook-speed-volume-controls-box-box-2, .audiobook-speed-volume-controls-box-box-3 { cursor: pointer; }
+.audiobook-speed-volume-controls-box-box-3:hover { border-color: var(--ink); }
+.audiobook-pause-glyph { font-size: 8px; line-height: 11px; letter-spacing: -1px; }
+.audiobook-overlay-box { transition: width 0.9s linear; }

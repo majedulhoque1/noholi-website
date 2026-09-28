@@ -20,7 +20,7 @@
 
 .ebooks-ebooks-box {
   position: absolute;
-  left: 48px;
+  left: max(48px, calc((100% - 1184px) / 2));
   top: 12px;
   width: 205.46px;
   display: flex;
@@ -94,11 +94,12 @@
   width: 100%;
   min-height: 607px;
   max-width: 1280px;
+  margin-inline: auto;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
   gap: 48px;
-  padding: 64px max(48px, calc((100% - 1184px) / 2)) 64px;
+  padding: 64px 48px 64px;
 }
 
 .ebooks-header-section {
@@ -172,7 +173,7 @@
   align-self: stretch;
   display: flex;
   justify-content: center;
-  align-items: flex-start;
+  align-items: stretch;
   gap: 32px;
 }
 
@@ -612,3 +613,7 @@
   white-space: nowrap;
   min-height: 36px;
 }
+
+/* equal-height cards: the button sits on the card's bottom edge whatever the title length */
+.ebooks-book-1, .ebooks-book-2, .ebooks-book-3, .ebooks-book-4 { justify-content: flex-start; }
+.ebooks-book-1-box-2, .ebooks-book-2-box-2, .ebooks-book-3-box-2, .ebooks-book-4-box-2 { margin-top: auto; }

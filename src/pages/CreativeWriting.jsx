@@ -1,8 +1,10 @@
 import { Link } from 'react-router-dom';
+import { useArticleActions } from '../articleActions.js';
 import './CreativeWriting.css';
 
 // Generated from Figma frame "Noholi Library — Creative Writing: The Scent of Wet Clay at Buriganga (Before login)" (158:1262) by tools/gen.py, then hand-edited.
 export default function CreativeWriting() {
+  const act = useArticleActions();
   return (
     <div className="writing">
       <section className="writing-main">
@@ -71,28 +73,28 @@ export default function CreativeWriting() {
                 </div>
               </div>
               <div className="writing-broadside-print-scholarly-action">
-                <button type="button" className="writing-broadside-print-scholarly-action-box">
+                <button type="button" className="writing-broadside-print-scholarly-action-box" onClick={act.print}>
                   <img className="writing-broadside-print-scholarly-action-box-box" src="/svg/container-mp0vip.svg" alt="" width="14" height="12" />
                   <div className="writing-broadside-print-scholarly-action-box-box-2">
                     <span className="writing-broadside-print-scholarly-action-box-box-2-text">PRINT BROADSIDE</span>
                   </div>
                 </button>
-                <button type="button" className="writing-broadside-print-scholarly-action-box-2">
+                <button type="button" className="writing-broadside-print-scholarly-action-box-2" onClick={act.cite} title="Copy a citation">
                   <img className="writing-broadside-print-scholarly-action-box-2-box" src="/svg/container-1ngv1yq.svg" alt="" width="12" height="8" />
                   <div className="writing-broadside-print-scholarly-action-box-2-box-2">
-                    <span className="writing-cite-verses">CITE VERSES</span>
+                    <span className="writing-cite-verses" aria-live="polite">{act.flash === 'cite' ? 'COPIED ✓' : 'CITE VERSES'}</span>
                   </div>
                 </button>
-                <button type="button" className="writing-broadside-print-scholarly-action-box-2">
+                <button type="button" className="writing-broadside-print-scholarly-action-box-2" onClick={act.toggleSave} aria-pressed={act.saved} title={act.saved ? 'Saved to this browser' : 'Save'}>
                   <img className="writing-broadside-print-scholarly-action-box-2-box-3" src="/svg/container-t3syeg.svg" alt="" width="11" height="12" />
                   <div className="writing-broadside-print-scholarly-action-box-2-box-2">
-                    <span className="writing-broadside-print-scholarly-action-box-2-box-2-text">সংরক্ষণ</span>
+                    <span className="writing-broadside-print-scholarly-action-box-2-box-2-text" aria-live="polite">{act.saved ? 'সংরক্ষিত ✓' : 'সংরক্ষণ'}</span>
                   </div>
                 </button>
-                <button type="button" className="writing-broadside-print-scholarly-action-box-2">
+                <button type="button" className="writing-broadside-print-scholarly-action-box-2" onClick={act.share}>
                   <img className="writing-broadside-print-scholarly-action-box-2-box-4" src="/svg/container-rwpkra.svg" alt="" width="12" height="14" />
                   <div className="writing-broadside-print-scholarly-action-box-2-box-2">
-                    <span className="writing-broadside-print-scholarly-action-box-2-box-2-text-2">SHARE FOLIO</span>
+                    <span className="writing-broadside-print-scholarly-action-box-2-box-2-text-2" aria-live="polite">{act.flash === 'share' ? 'LINK COPIED ✓' : 'SHARE FOLIO'}</span>
                   </div>
                 </button>
               </div>

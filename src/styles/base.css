@@ -85,3 +85,6 @@ img {
     display: none;
   }
 }
+
+/* Links whose target isn't built yet (e.g. PDF downloads): show them as unavailable, not as live links */
+a[aria-disabled="true"] { opacity: 0.5; cursor: not-allowed; pointer-events: auto; }

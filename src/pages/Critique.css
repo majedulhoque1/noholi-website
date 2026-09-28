@@ -3633,3 +3633,58 @@
   color: var(--ink-faint);
   min-height: 18px;
 }
+
+/* ---- reader annotations: inline composer + newly posted notes ---- */
+.critique-archival-ledger-reader-annotatio-box-box { cursor: pointer; }
+.critique-annotation-form {
+  align-self: stretch;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 16px;
+  background-color: var(--white);
+  border: 1px solid var(--stone);
+}
+.critique-annotation-form textarea {
+  width: 100%;
+  resize: vertical;
+  padding: 10px 12px;
+  font-family: var(--font-serif);
+  font-size: 15px;
+  line-height: 1.55;
+  color: var(--ink);
+  background: var(--paper);
+  border: 1px solid var(--stone);
+}
+.critique-annotation-form textarea:focus { outline: 2px solid var(--oxblood); outline-offset: 1px; }
+.critique-annotation-form-row { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 12px; }
+.critique-annotation-form-row span { font-family: var(--font-sans); font-size: 12px; color: var(--ink-muted); }
+.critique-annotation-form-row button {
+  padding: 8px 16px;
+  font-family: var(--font-sans);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 1.1px;
+  color: var(--white);
+  background: var(--oxblood);
+  border: 1px solid var(--oxblood);
+  cursor: pointer;
+}
+.critique-annotation-form-row button:disabled { opacity: 0.45; cursor: not-allowed; }
+.critique-annotation-new {
+  align-self: stretch;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 16px;
+  background-color: var(--white);
+  border: 1px solid var(--stone);
+  border-left: 3px solid var(--oxblood);
+}
+.critique-annotation-new-head { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; font-family: var(--font-sans); font-size: 13px; color: var(--ink); }
+.critique-annotation-new-initials {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 24px; height: 24px; font-size: 10px; font-weight: 600; color: var(--white); background: var(--oxblood);
+}
+.critique-annotation-new-meta { font-size: 12px; color: var(--ink-muted); }
+.critique-annotation-new p { margin: 0; font-family: var(--font-serif); font-size: 15px; line-height: 1.6; font-style: italic; color: var(--ink); white-space: pre-wrap; }

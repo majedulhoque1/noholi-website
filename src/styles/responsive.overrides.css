@@ -179,3 +179,8 @@
     max-width: 100%;
   }
 }
+
+/* Blogs: the desktop grid pins rows to the Figma card height; below the design width cards size to content */
+@media (max-width: 1279px) {
+  .blogs .blogs-curated-chronicle-ledger-grid { grid-auto-rows: auto; }
+}

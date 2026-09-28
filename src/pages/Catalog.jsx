@@ -538,9 +538,9 @@ export default function Catalog() {
             <nav className="catalog-nav-catalog-pagination">
               <button type="button" className="catalog-nav-catalog-pagination-box" disabled>← PREVIOUS</button>
               <div className="catalog-background-border-5">
-                <span className="catalog-background-border-5-text">Page 1 of 3</span>
+                <span className="catalog-background-border-5-text">Page 1 of 1</span>
               </div>
-              <button type="button" className="catalog-nav-catalog-pagination-box-2">NEXT →</button>
+              <button type="button" className="catalog-nav-catalog-pagination-box-2" disabled title="All titles are on this page">NEXT →</button>
             </nav>
           </div>
         </section>
