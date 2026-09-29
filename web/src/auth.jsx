@@ -1,5 +1,5 @@
 import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react';
-import { supabase } from './lib/supabase.js';
+import { isNetworkError, NETWORK_ERROR, supabase } from './lib/supabase.js';
 
 // Member session backed by Supabase Auth (see supabase/CONTRACT.md §6).
 // Sign-in: identifier → rpc('resolve_login') → signInWithPassword → rpc('my_role').
@@ -84,6 +84,7 @@ export function AuthProvider({ children }) {
     const id = String(identifier || '').trim();
     if (!id || !password) throw new Error('Enter your membership number or email and your password.');
     const { data: email, error: rErr } = await supabase.rpc('resolve_login', { identifier: id });
+    if (rErr && isNetworkError(rErr)) throw new Error(NETWORK_ERROR);
     if (rErr || !email) throw new Error(GENERIC_LOGIN_ERROR);
     let { error: sErr } = await supabase.auth.signInWithPassword({ email, password });
     // A staff email isn't a member login, so resolve_login maps it elsewhere. Try the address as
@@ -92,14 +93,15 @@ export function AuthProvider({ children }) {
     if (sErr && id.includes('@') && id.toLowerCase() !== String(email).toLowerCase()) {
       ({ error: sErr } = await supabase.auth.signInWithPassword({ email: id, password }));
     }
+    if (sErr && isNetworkError(sErr)) throw new Error(NETWORK_ERROR);
     if (sErr) throw new Error(GENERIC_LOGIN_ERROR);
     const mine = ++gen.current;
     let result;
     try {
       result = await loadMember();
-    } catch {
+    } catch (err) {
       await supabase.auth.signOut();
-      throw new Error(GENERIC_LOGIN_ERROR);
+      throw new Error(isNetworkError(err) ? NETWORK_ERROR : GENERIC_LOGIN_ERROR);
     }
     if (result.role === 'staff' || result.role === 'admin') {
       await supabase.auth.signOut();
