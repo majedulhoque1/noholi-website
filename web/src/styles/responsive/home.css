@@ -772,3 +772,28 @@ html[lang='bn'] .home-headline-split-across-two-lines-2 {
   max-width: 100%;
   height: auto;
 }
+
+/* Hero spine labels: the Bangla words render wider than the tiny Figma text boxes, and the
+   overflow spilled to the right, so every label sat off-centre. Centre each word on its box. */
+.home .home-spine1-box-7-text,
+.home .home-spine2-box-4-text,
+.home .home-spine3-box-6-text,
+.home .home-spine4-box-3-text {
+  left: 50% !important;
+  width: auto !important;
+  transform: translateX(-50%);
+  text-align: center;
+}
+/* spine 1: centre the label box on the spine's pale panel (panel: left 7.33, width 36) */
+.home .home-spine1-box-7 {
+  left: 7.33px !important;
+  width: 36px !important;
+}
+/* spines 2–4 (tilted): the Figma label boxes sit right of their panels' centre line */
+.home .home-spine2-box-4 { margin-left: -15px; }
+.home .home-spine3-box-6 { margin-left: -18px; }
+.home .home-spine4-box-3 { margin-left: -17px; }
+@media (max-width: 1279px) {
+  /* here spine 2's label is pinned from the right, so nudge it with margin-right instead */
+  .home .home-spine2-box-4 { margin-left: 0; margin-right: 15px; }
+}
