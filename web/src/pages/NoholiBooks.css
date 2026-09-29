@@ -601,3 +601,103 @@
   align-items: flex-start;
   padding: 4px 0 0 0;
 }
+
+/* Real data: count line, real covers, states, load-more, skeleton — cards are rendered with the
+   card-1/card-2/card-3 grid-position classes above, cycled by index (same trick Catalog.jsx uses),
+   so the fixed 5-track/gutter grid wraps to as many rows as there are books. */
+.nbooks-count-line {
+  align-self: stretch;
+  padding: 8px 0 0 0;
+  font-family: var(--font-sans);
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.3px;
+  color: var(--ink-soft);
+}
+
+.nbooks-cover-wrap {
+  flex-shrink: 0;
+  align-self: stretch;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+  background-color: var(--paper);
+  border: 1px solid var(--parchment-line);
+}
+.nbooks-cover-link { display: block; width: 100%; max-width: 200px; cursor: pointer; }
+.nbooks-cover {
+  width: 100%;
+  box-shadow: 0 1px 0 rgba(26, 24, 21, 0.08), 0 6px 14px -8px rgba(26, 24, 21, 0.35);
+}
+
+.nbooks-title-link:hover { color: var(--oxblood); }
+
+.nbooks-availability-note-2-box-text.is-available { color: var(--green); }
+.nbooks-availability-note-2-box-text.is-loan { color: var(--oxblood); }
+.nbooks-availability-note-2-box-text.is-reading { color: var(--ink-soft); }
+
+.nbooks-availability-note-2-box-2 { cursor: pointer; }
+.nbooks-availability-note-2-box-2:hover .nbooks-availability-note-2-box-2-box-text { color: var(--oxblood); }
+
+.nbooks-published-titles-grid.is-loading > * { opacity: 0.55; transition: opacity 0.2s; }
+
+.nbooks-empty {
+  grid-column: 1 / -1;
+  width: 100%;
+  padding: 48px 0;
+  text-align: center;
+  font-family: var(--font-sans);
+  font-size: 16px;
+  color: var(--ink-soft);
+  margin: 0;
+}
+.nbooks-empty button {
+  padding: 0;
+  font: inherit;
+  color: var(--oxblood);
+  text-decoration: underline;
+  font-weight: 600;
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+.nbooks-load-more {
+  display: flex;
+  justify-content: center;
+  align-self: stretch;
+  width: 100%;
+  max-width: 1184px;
+}
+.nbooks-load-more-btn {
+  padding: 12px 28px;
+  font-family: var(--font-sans);
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.4px;
+  text-transform: uppercase;
+  color: var(--ink);
+  background-color: var(--paper);
+  border: 1px solid var(--parchment-line);
+  cursor: pointer;
+}
+.nbooks-load-more-btn:hover:not(:disabled) { color: var(--oxblood); border-color: var(--oxblood); }
+.nbooks-load-more-btn:disabled { cursor: progress; color: var(--ink-soft); }
+
+/* Loading skeleton: reuses the card-1/2/3 shapes with a shimmer sweep instead of real content. */
+.nbooks-skel-block {
+  background: linear-gradient(90deg, var(--parchment-line) 25%, var(--paper-dim) 50%, var(--parchment-line) 75%);
+  background-size: 200% 100%;
+  animation: nbooks-shimmer 1.4s ease-in-out infinite;
+}
+.nbooks-cover-wrap.nbooks-skel-cover { padding: 0; }
+.nbooks-skel-cover-inner { width: 100%; aspect-ratio: 2 / 3; }
+.nbooks-skel-line { border-radius: 2px; }
+@keyframes nbooks-shimmer {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .nbooks-skel-block { animation: none; }
+}

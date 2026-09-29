@@ -63,3 +63,18 @@ export async function getCatalogFacets() {
   if (error) throw error;
   return data || { genres: [], categories: [], languages: [] };
 }
+
+/** Noholi Press's own imprint — `publisher = 'Noholi'` exactly. Returns { rows, total }. */
+export async function getNoholiBooks({ page = 1, pageSize = 24 } = {}) {
+  const from = (page - 1) * pageSize;
+  const to = from + pageSize - 1;
+  const { data, error, count } = await supabase
+    .from('books')
+    .select(BOOK_COLUMNS, { count: 'exact' })
+    .eq('publisher', 'Noholi')
+    .order('year_of_publication', { ascending: false, nullsFirst: false })
+    .order('title', { ascending: true })
+    .range(from, to);
+  if (error) throw error;
+  return { rows: data || [], total: count ?? 0 };
+}

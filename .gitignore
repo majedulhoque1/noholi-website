@@ -19,3 +19,6 @@ web/noholi-design-export.json
 supabase/.branches
 supabase/.temp
 supabase/seed/out
+
+# Claude Code personal settings
+.claude/settings.local.json
