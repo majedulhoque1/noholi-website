@@ -4,7 +4,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { MERIT_GRADES, type DefaultGuarantor, type MemberInput } from "@/hooks/use-members";
 
 const lbl = "text-[12px] font-medium text-muted-foreground";
-const inp = "h-8 text-[13px]";
+const inp = "h-11 text-base md:h-8 md:text-[13px]";
 
 export const isMemberInputValid = (v: MemberInput) => !!v.name.trim() && !!v.phone.trim();
 
@@ -23,7 +23,7 @@ export function MemberFormFields({ value, onChange, showStatus = true }: {
         <label className={lbl}>Full Name *</label>
         <Input aria-label="Full Name" value={value.name} onChange={(e) => set("name", e.target.value)} className={inp} placeholder="Enter full name" maxLength={200} />
       </div>
-      <div className="grid grid-cols-2 gap-2">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
         <div className="space-y-1">
           <label className={lbl}>Phone *</label>
           <Input aria-label="Phone" value={value.phone} onChange={(e) => set("phone", e.target.value)} className={inp} placeholder="+880..." maxLength={30} />
@@ -40,7 +40,7 @@ export function MemberFormFields({ value, onChange, showStatus = true }: {
       </div>
 
       {showStatus && (
-        <div className="grid grid-cols-2 gap-2">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
           <div className="space-y-1">
             <label className={lbl}>Status</label>
             <Select value={value.status} onValueChange={(v) => set("status", v as MemberInput["status"])}>
@@ -66,7 +66,7 @@ export function MemberFormFields({ value, onChange, showStatus = true }: {
       {showStatus && (
         <div className="space-y-1">
           <label className={lbl}>Merit Note (optional)</label>
-          <Textarea aria-label="Merit Note" value={value.meritNote} onChange={(e) => set("meritNote", e.target.value)} className="text-[13px] min-h-[52px]" maxLength={1000} />
+          <Textarea aria-label="Merit Note" value={value.meritNote} onChange={(e) => set("meritNote", e.target.value)} className="text-base min-h-[52px] md:text-[13px]" maxLength={1000} />
         </div>
       )}
 
@@ -74,7 +74,7 @@ export function MemberFormFields({ value, onChange, showStatus = true }: {
         <p className={`${lbl} mb-2`}>Address</p>
         <div className="space-y-2">
           <Input aria-label="Address Line" placeholder="Address Line" value={value.addressLine} onChange={(e) => set("addressLine", e.target.value)} className={inp} />
-          <div className="grid grid-cols-3 gap-2">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
             <Input aria-label="City" placeholder="City / Area" value={value.city} onChange={(e) => set("city", e.target.value)} className={inp} />
             <Input aria-label="District" placeholder="District" value={value.district} onChange={(e) => set("district", e.target.value)} className={inp} />
             <Input aria-label="Postal Code" placeholder="Postal Code" value={value.postalCode} onChange={(e) => set("postalCode", e.target.value)} className={inp} />
@@ -86,16 +86,16 @@ export function MemberFormFields({ value, onChange, showStatus = true }: {
         <p className={`${lbl} mb-1`}>Default guarantor</p>
         <p className="text-[11px] text-muted-foreground mb-2">Used for loans and web requests unless another guarantor is given.</p>
         <div className="space-y-2">
-          <div className="grid grid-cols-2 gap-2">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
             <Input aria-label="Guarantor Name" placeholder="Name" value={value.guarantor.name} onChange={(e) => setG("name", e.target.value)} className={inp} />
             <Input aria-label="Guarantor Relationship" placeholder="Relationship" value={value.guarantor.relationship} onChange={(e) => setG("relationship", e.target.value)} className={inp} />
           </div>
-          <div className="grid grid-cols-2 gap-2">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
             <Input aria-label="Guarantor Phone" placeholder="Phone" value={value.guarantor.phone} onChange={(e) => setG("phone", e.target.value)} className={inp} />
             <Input aria-label="Guarantor NID" placeholder="NID" value={value.guarantor.nid} onChange={(e) => setG("nid", e.target.value)} className={`${inp} font-mono`} />
           </div>
           <Input aria-label="Guarantor Street" placeholder="Street" value={value.guarantor.street} onChange={(e) => setG("street", e.target.value)} className={inp} />
-          <div className="grid grid-cols-3 gap-2">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
             <Input aria-label="Guarantor City" placeholder="City / Area" value={value.guarantor.city} onChange={(e) => setG("city", e.target.value)} className={inp} />
             <Input aria-label="Guarantor District" placeholder="District" value={value.guarantor.district} onChange={(e) => setG("district", e.target.value)} className={inp} />
             <Input aria-label="Guarantor Postal Code" placeholder="Postal Code" value={value.guarantor.postalCode} onChange={(e) => setG("postalCode", e.target.value)} className={inp} />

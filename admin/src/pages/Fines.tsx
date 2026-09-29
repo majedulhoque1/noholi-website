@@ -52,10 +52,11 @@ export default function FinesPage() {
   const hasFilters = search || filter !== "Open";
 
   const columns: Column<Fine>[] = [
-    { key: "id", label: "Fine", className: "text-muted-foreground font-mono text-[12px]", render: (f) => (f.isAccruing ? "—" : f.id) },
+    { key: "id", label: "Fine", className: "text-muted-foreground font-mono text-[12px]", mobile: "meta", render: (f) => (f.isAccruing ? "—" : f.id) },
     {
       key: "member",
       label: "Member",
+      mobile: "subtitle",
       render: (f) => (
         <>
           <span className="font-medium text-foreground">{f.member}</span>
@@ -67,6 +68,7 @@ export default function FinesPage() {
       key: "book",
       label: "Book / Loan",
       className: "max-w-[220px]",
+      mobile: "title",
       render: (f) => (
         <div className="min-w-0">
           <p className="truncate">{f.book}</p>
@@ -77,12 +79,13 @@ export default function FinesPage() {
         </div>
       ),
     },
-    { key: "dueDate", label: "Due Date", className: "text-muted-foreground whitespace-nowrap", render: (f) => formatDhaka(f.dueDate) },
+    { key: "dueDate", label: "Due Date", className: "text-muted-foreground whitespace-nowrap", mobile: "meta", render: (f) => formatDhaka(f.dueDate) },
     {
       key: "daysOverdue",
       label: "Days",
       headerClassName: "text-right",
       className: "text-right font-mono text-[12px]",
+      mobile: "meta",
       render: (f) => (f.kind === "Lost" ? "—" : f.daysOverdue),
     },
     {
@@ -90,6 +93,7 @@ export default function FinesPage() {
       label: "Amount",
       headerClassName: "text-right",
       className: "text-right font-medium whitespace-nowrap",
+      mobile: "meta",
       render: (f) => formatTaka(f.amount),
     },
     {
@@ -97,6 +101,7 @@ export default function FinesPage() {
       label: "Balance",
       headerClassName: "text-right",
       className: "text-right whitespace-nowrap",
+      mobile: "meta",
       render: (f) =>
         f.isAccruing ? (
           <span className="text-[11px] text-muted-foreground">not payable yet</span>
@@ -109,6 +114,7 @@ export default function FinesPage() {
     {
       key: "status",
       label: "Status",
+      mobile: "badge",
       render: (f) => <StatusBadge variant={FINE_STATUS_VARIANT[f.status]}>{f.status}</StatusBadge>,
     },
     ...(canWrite
@@ -118,6 +124,7 @@ export default function FinesPage() {
             label: "",
             headerClassName: "text-right",
             className: "text-right",
+            mobile: "actions" as const,
             render: (f: Fine) => (
               <RowActions
                 primary={

@@ -76,12 +76,12 @@ export function AccountSettings() {
             <input type="text" autoComplete="username" value={user?.email ?? ""} readOnly hidden />
             <div className="space-y-1.5">
               <Label htmlFor="new-pw" className="text-xs">New password</Label>
-              <Input id="new-pw" type="password" autoComplete="new-password" value={newPw} onChange={(e) => setNewPw(e.target.value)} className="h-8 text-sm" />
+              <Input id="new-pw" type="password" autoComplete="new-password" value={newPw} onChange={(e) => setNewPw(e.target.value)} className="h-11 text-base md:h-8 md:text-sm" />
               {pwStrength && <p className={`text-[11px] ${pwStrength.color}`}>Strength: {pwStrength.label}</p>}
             </div>
             <div className="space-y-1.5">
               <Label htmlFor="confirm-pw" className="text-xs">Confirm new password</Label>
-              <Input id="confirm-pw" type="password" autoComplete="new-password" value={confirmPw} onChange={(e) => setConfirmPw(e.target.value)} className="h-8 text-sm" />
+              <Input id="confirm-pw" type="password" autoComplete="new-password" value={confirmPw} onChange={(e) => setConfirmPw(e.target.value)} className="h-11 text-base md:h-8 md:text-sm" />
             </div>
             {pwError && <p className="text-[12px] text-destructive">{pwError}</p>}
             <div className="flex justify-end">

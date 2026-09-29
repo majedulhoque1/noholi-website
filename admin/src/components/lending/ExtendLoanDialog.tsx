@@ -58,12 +58,12 @@ export function ExtendLoanDialog({ loan, today, onClose, onExtend }: ExtendLoanD
               value={newDate}
               min={minDate}
               onChange={(e) => setNewDate(e.target.value)}
-              className="h-8 text-[13px]"
+              className="h-11 text-base md:h-8 md:text-[13px]"
             />
           </div>
           <div className="flex gap-1">
             {[7, 14].map((d) => (
-              <Button key={d} variant="outline" size="sm" className="h-7 text-[12px]" onClick={() => setNewDate(addDaysISO(base, d))}>
+              <Button key={d} variant="outline" size="sm" className="h-9 text-[12px] md:h-7" onClick={() => setNewDate(addDaysISO(base, d))}>
                 +{d} days
               </Button>
             ))}

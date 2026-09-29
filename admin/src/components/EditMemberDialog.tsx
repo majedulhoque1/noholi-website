@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from "@/components/ui/dialog";
 import { emptyMemberInput, memberToInput, type Member, type MemberInput } from "@/hooks/use-members";
 import { MemberFormFields, isMemberInputValid } from "@/components/members/MemberFormFields";
 
@@ -38,7 +38,7 @@ export function EditMemberDialog({ open, onClose, onSave, member }: EditMemberDi
 
   return (
     <Dialog open={open} onOpenChange={(o) => !o && !saving && onClose()}>
-      <DialogContent className="max-w-lg max-h-[88vh] flex flex-col">
+      <DialogContent className="md:max-w-lg md:max-h-[88vh] flex flex-col">
         <DialogHeader>
           <DialogTitle className="text-base">Edit Member</DialogTitle>
           <DialogDescription className="text-[13px]">
@@ -49,12 +49,12 @@ export function EditMemberDialog({ open, onClose, onSave, member }: EditMemberDi
           <MemberFormFields value={form} onChange={setForm} />
         </div>
         {error && <p className="text-[12px] text-destructive">{error}</p>}
-        <div className="flex justify-end gap-2 pt-2">
-          <Button variant="outline" size="sm" className="text-[13px] h-8" onClick={onClose} disabled={saving}>Cancel</Button>
-          <Button size="sm" className="text-[13px] h-8" onClick={handleSubmit} disabled={!isMemberInputValid(form) || saving}>
+        <DialogFooter>
+          <Button variant="outline" size="sm" className="text-[13px] h-11 md:h-8" onClick={onClose} disabled={saving}>Cancel</Button>
+          <Button size="sm" className="text-[13px] h-11 md:h-8" onClick={handleSubmit} disabled={!isMemberInputValid(form) || saving}>
             {saving && <Loader2 className="h-3.5 w-3.5 animate-spin mr-1" />}Save Changes
           </Button>
-        </div>
+        </DialogFooter>
       </DialogContent>
     </Dialog>
   );

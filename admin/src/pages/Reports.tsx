@@ -55,11 +55,12 @@ const tooltipStyle = {
 };
 
 const topColumns: Column<TopBook>[] = [
-  { key: "rank", label: "#", className: "text-muted-foreground w-8", render: (_, i) => i + 1 },
+  { key: "rank", label: "#", className: "text-muted-foreground w-8", mobile: "meta", render: (_, i) => i + 1 },
   {
     key: "title",
     label: "Title",
     className: "max-w-[240px]",
+    mobile: "title",
     render: (b) => (
       <div className="min-w-0">
         <p className="font-medium truncate">{b.title}</p>
@@ -67,15 +68,16 @@ const topColumns: Column<TopBook>[] = [
       </div>
     ),
   },
-  { key: "last", label: "Last borrowed", className: "text-muted-foreground whitespace-nowrap", render: (b) => formatDhaka(b.last_borrowed) },
-  { key: "borrows", label: "Borrows", headerClassName: "text-right", className: "text-right font-mono", render: (b) => b.times_borrowed },
+  { key: "last", label: "Last borrowed", className: "text-muted-foreground whitespace-nowrap", mobile: "meta", render: (b) => formatDhaka(b.last_borrowed) },
+  { key: "borrows", label: "Borrows", headerClassName: "text-right", className: "text-right font-mono", mobile: "meta", render: (b) => b.times_borrowed },
 ];
 
 const overdueColumns: Column<OverdueRow>[] = [
-  { key: "loan", label: "Loan", className: "font-mono text-[12px] text-muted-foreground", render: (r) => r.loan_id },
+  { key: "loan", label: "Loan", className: "font-mono text-[12px] text-muted-foreground", mobile: "meta", render: (r) => r.loan_id },
   {
     key: "member",
     label: "Member",
+    mobile: "subtitle",
     render: (r) => (
       <div>
         <span className="font-medium">{r.member_name}</span>
@@ -84,24 +86,25 @@ const overdueColumns: Column<OverdueRow>[] = [
       </div>
     ),
   },
-  { key: "book", label: "Book", className: "max-w-[200px] truncate", render: (r) => r.book_title },
-  { key: "due", label: "Due", className: "whitespace-nowrap text-muted-foreground", render: (r) => formatDhaka(r.due_date) },
-  { key: "days", label: "Days", headerClassName: "text-right", className: "text-right font-mono", render: (r) => r.days_overdue },
-  { key: "fine", label: "Accruing", headerClassName: "text-right", className: "text-right whitespace-nowrap text-destructive", render: (r) => formatTaka(Number(r.accruing_fine)) },
+  { key: "book", label: "Book", className: "max-w-[200px] truncate", mobile: "title", render: (r) => r.book_title },
+  { key: "due", label: "Due", className: "whitespace-nowrap text-muted-foreground", mobile: "meta", render: (r) => formatDhaka(r.due_date) },
+  { key: "days", label: "Days", headerClassName: "text-right", className: "text-right font-mono", mobile: "meta", render: (r) => r.days_overdue },
+  { key: "fine", label: "Accruing", headerClassName: "text-right", className: "text-right whitespace-nowrap text-destructive", mobile: "meta", render: (r) => formatTaka(Number(r.accruing_fine)) },
   {
     key: "guarantor",
     label: "Guarantor",
     className: "text-[12px]",
+    mobile: "meta",
     render: (r) => (r.guarantor_name ? `${r.guarantor_name} · ${r.guarantor_phone ?? "—"}` : "—"),
   },
 ];
 
 interface FinesByMonth { month: string; label: string; payments: number; total: number; byMethod: string }
 const finesColumns: Column<FinesByMonth>[] = [
-  { key: "month", label: "Month", className: "whitespace-nowrap", render: (r) => formatDhaka(r.month, { month: "long", year: "numeric" }) },
-  { key: "payments", label: "Payments", headerClassName: "text-right", className: "text-right font-mono", render: (r) => r.payments },
-  { key: "methods", label: "By method", className: "text-[12px] text-muted-foreground", render: (r) => r.byMethod },
-  { key: "total", label: "Collected", headerClassName: "text-right", className: "text-right font-medium whitespace-nowrap", render: (r) => formatTaka(r.total) },
+  { key: "month", label: "Month", className: "whitespace-nowrap", mobile: "title", render: (r) => formatDhaka(r.month, { month: "long", year: "numeric" }) },
+  { key: "payments", label: "Payments", headerClassName: "text-right", className: "text-right font-mono", mobile: "meta", render: (r) => r.payments },
+  { key: "methods", label: "By method", className: "text-[12px] text-muted-foreground", mobile: "subtitle", render: (r) => r.byMethod },
+  { key: "total", label: "Collected", headerClassName: "text-right", className: "text-right font-medium whitespace-nowrap", mobile: "meta", render: (r) => formatTaka(r.total) },
 ];
 
 export default function ReportsPage() {

@@ -60,7 +60,7 @@ export function MemberViewDrawer({ member, tab, onTabChange, onClose, onEdit, on
 
   return (
     <Sheet open={!!member} onOpenChange={(o) => !o && onClose()}>
-      <SheetContent className="w-full sm:max-w-lg p-0 flex flex-col">
+      <SheetContent className="w-full md:max-w-lg p-0 flex flex-col">
         {member && (
           <>
             <SheetHeader className="p-4 border-b border-border space-y-3">

@@ -108,24 +108,27 @@ export default function DonationsPage() {
   };
 
   const columns: Column<Donation>[] = [
-    { key: "id", label: "ID", className: "text-muted-foreground font-mono text-[12px]", render: (d) => d.id },
-    { key: "donor", label: "Donor", className: "font-medium text-foreground", render: (d) => d.donorName },
-    { key: "book", label: "Book Title", render: (d) => d.bookTitle },
+    { key: "id", label: "ID", className: "text-muted-foreground font-mono text-[12px]", mobile: "meta", render: (d) => d.id },
+    { key: "donor", label: "Donor", className: "font-medium text-foreground", mobile: "subtitle", render: (d) => d.donorName },
+    { key: "book", label: "Book Title", mobile: "title", render: (d) => d.bookTitle },
     {
       key: "condition",
       label: "Condition",
+      mobile: "meta",
       render: (d) => (d.condition ? <StatusBadge variant={CONDITION_VARIANT[d.condition] ?? "default"}>{d.condition}</StatusBadge> : "—"),
     },
-    { key: "date", label: "Date Received", className: "text-muted-foreground", render: (d) => formatDhaka(d.dateReceived) },
+    { key: "date", label: "Date Received", className: "text-muted-foreground", mobile: "meta", render: (d) => formatDhaka(d.dateReceived) },
     {
       key: "status",
       label: "Review Status",
+      mobile: "badge",
       render: (d) => <StatusBadge variant={STATUS_VARIANT[d.reviewStatus]}>{d.reviewStatus}</StatusBadge>,
     },
     {
       key: "accession",
       label: "Inventory Book ID",
       className: "text-muted-foreground font-mono text-[12px]",
+      mobile: "meta",
       render: (d) => d.assignedAccessionId ?? "—",
     },
     ...(canWrite
@@ -135,6 +138,7 @@ export default function DonationsPage() {
             label: "",
             headerClassName: "text-right",
             className: "text-right",
+            mobile: "actions" as const,
             render: (d: Donation) => {
               const a = actionsFor(d);
               return <RowActions primary={a.primary} secondary={a.secondary} />;

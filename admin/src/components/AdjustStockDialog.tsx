@@ -91,7 +91,7 @@ export function AdjustStockDialog({ book, open, onClose, onConfirm }: AdjustStoc
                 type="button"
                 variant="outline"
                 size="icon"
-                className="h-8 w-8 shrink-0"
+                className="h-11 w-11 md:h-8 md:w-8 shrink-0"
                 onClick={() => handleChange(value - 1)}
                 disabled={value <= 0}
               >
@@ -102,13 +102,13 @@ export function AdjustStockDialog({ book, open, onClose, onConfirm }: AdjustStoc
                 min={0}
                 value={value}
                 onChange={(e) => handleChange(parseInt(e.target.value) || 0)}
-                className="text-center h-8 text-sm"
+                className="text-center h-11 text-base md:h-8 md:text-sm"
               />
               <Button
                 type="button"
                 variant="outline"
                 size="icon"
-                className="h-8 w-8 shrink-0"
+                className="h-11 w-11 md:h-8 md:w-8 shrink-0"
                 onClick={() => handleChange(value + 1)}
               >
                 <Plus className="h-3.5 w-3.5" />
@@ -124,7 +124,7 @@ export function AdjustStockDialog({ book, open, onClose, onConfirm }: AdjustStoc
               value={reason}
               onChange={(e) => setReason(e.target.value)}
               placeholder="e.g. 2 new copies bought, 1 copy damaged beyond repair"
-              className="text-[13px] min-h-[60px]"
+              className="text-base min-h-[60px] md:text-[13px]"
             />
           </div>
 

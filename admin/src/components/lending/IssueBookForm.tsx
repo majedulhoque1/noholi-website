@@ -129,7 +129,7 @@ export function IssueBookForm({ settings, onIssue }: IssueBookFormProps) {
           <label className="text-[12px] font-medium text-muted-foreground">1. Member</label>
           <Popover open={memberOpen} onOpenChange={setMemberOpen}>
             <PopoverTrigger asChild>
-              <Button variant="outline" size="sm" className="w-full h-8 text-[13px] justify-between font-normal" data-testid="issue-member">
+              <Button variant="outline" size="sm" className="w-full h-11 text-base md:h-8 md:text-[13px] justify-between font-normal" data-testid="issue-member">
                 {selectedMember ? (
                   <span className="truncate">{selectedMember.name} <span className="text-muted-foreground text-[11px]">({selectedMember.memberId})</span></span>
                 ) : (
@@ -138,11 +138,11 @@ export function IssueBookForm({ settings, onIssue }: IssueBookFormProps) {
                 <ChevronDown className="h-3.5 w-3.5 text-muted-foreground" />
               </Button>
             </PopoverTrigger>
-            <PopoverContent className="p-0 w-[320px]" align="start">
+            <PopoverContent className="p-0 w-[calc(100vw-2rem)] max-w-[320px]" align="start">
               <Command shouldFilter={false}>
                 <CommandInput
                   placeholder="Name, member ID, phone or email…"
-                  className="text-[13px]"
+                  className="text-base md:text-[13px]"
                   value={memberSearch.query}
                   onValueChange={memberSearch.setQuery}
                 />
@@ -181,7 +181,7 @@ export function IssueBookForm({ settings, onIssue }: IssueBookFormProps) {
           <label className="text-[12px] font-medium text-muted-foreground">2. Book</label>
           <Popover open={bookOpen} onOpenChange={setBookOpen}>
             <PopoverTrigger asChild>
-              <Button variant="outline" size="sm" className="w-full h-8 text-[13px] justify-between font-normal" data-testid="issue-book">
+              <Button variant="outline" size="sm" className="w-full h-11 text-base md:h-8 md:text-[13px] justify-between font-normal" data-testid="issue-book">
                 {selectedBook ? (
                   <span className="truncate">{selectedBook.title} — <span className="text-muted-foreground text-[11px]">{selectedBook.id}</span></span>
                 ) : (
@@ -190,11 +190,11 @@ export function IssueBookForm({ settings, onIssue }: IssueBookFormProps) {
                 <ChevronDown className="h-3.5 w-3.5 text-muted-foreground" />
               </Button>
             </PopoverTrigger>
-            <PopoverContent className="p-0 w-[360px]" align="start">
+            <PopoverContent className="p-0 w-[calc(100vw-2rem)] max-w-[360px]" align="start">
               <Command shouldFilter={false}>
                 <CommandInput
                   placeholder="Title or author (English / বাংলা), ISBN, ID…"
-                  className="text-[13px]"
+                  className="text-base md:text-[13px]"
                   value={bookSearch.query}
                   onValueChange={bookSearch.setQuery}
                 />
@@ -249,7 +249,7 @@ export function IssueBookForm({ settings, onIssue }: IssueBookFormProps) {
               value={dueDate}
               min={settings.today}
               onChange={(e) => setDueDate(e.target.value)}
-              className="pl-8 h-8 text-[13px]"
+              className="pl-8 h-11 text-base md:h-8 md:text-[13px]"
               aria-label="Due date"
             />
           </div>
@@ -275,7 +275,7 @@ export function IssueBookForm({ settings, onIssue }: IssueBookFormProps) {
           <div className="space-y-1">
             <label className="text-[12px] font-medium text-muted-foreground">Relationship *</label>
             <Select value={g.relationship || undefined} onValueChange={setField("relationship")}>
-              <SelectTrigger className="h-8 text-[13px]" aria-label="Relationship">
+              <SelectTrigger className="h-11 text-base md:h-8 md:text-[13px]" aria-label="Relationship">
                 <SelectValue placeholder="Select..." />
               </SelectTrigger>
               <SelectContent>
@@ -294,14 +294,14 @@ export function IssueBookForm({ settings, onIssue }: IssueBookFormProps) {
         </div>
       </div>
 
-      <div className="flex items-center justify-between gap-3">
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <div className="flex items-center gap-2">
           <Checkbox id="guarantor-confirm" checked={confirmed} onCheckedChange={(v) => setConfirmed(!!v)} />
           <label htmlFor="guarantor-confirm" className="text-[12px] text-muted-foreground cursor-pointer select-none">
             I confirm the guarantor is responsible for this borrowing.
           </label>
         </div>
-        <Button size="sm" className="h-8 text-[13px] px-6 gap-1.5" disabled={!canIssue} onClick={handleIssue}>
+        <Button size="sm" className="w-full h-11 text-base md:w-auto md:h-8 md:text-[13px] px-6 gap-1.5" disabled={!canIssue} onClick={handleIssue}>
           {submitting && <Loader2 className="h-3.5 w-3.5 animate-spin" />}
           {submitting ? "Issuing…" : "Confirm Issue"}
         </Button>
@@ -316,7 +316,7 @@ function Field({ label, value, onChange, placeholder }: { label: string; value: 
   return (
     <div className="space-y-1">
       <label className="text-[12px] font-medium text-muted-foreground">{label}</label>
-      <Input value={value} onChange={(e) => onChange(e.target.value)} placeholder={placeholder} className="h-8 text-[13px]" aria-label={label.replace(" *", "")} />
+      <Input value={value} onChange={(e) => onChange(e.target.value)} placeholder={placeholder} className="h-11 text-base md:h-8 md:text-[13px]" aria-label={label.replace(" *", "")} />
     </div>
   );
 }

@@ -134,8 +134,8 @@ export default function Dashboard() {
         ) : (
           <ul className="divide-y divide-border">
             {activity.map((a) => (
-              <li key={a.id} className="flex items-center justify-between gap-3 py-1.5 text-[13px]">
-                <span className="min-w-0 truncate">
+              <li key={a.id} className="flex flex-col gap-0.5 py-1.5 text-[13px] sm:flex-row sm:items-center sm:justify-between sm:gap-3">
+                <span className="min-w-0 break-words sm:truncate">
                   <span className="text-foreground">{describeAction(a.action, a.entity)}</span>
                   {a.entityId && <span className="ml-1.5 font-mono text-[11px] text-muted-foreground">{a.entityId}</span>}
                   {a.actorRole !== "staff" && a.actorRole !== "admin" && (

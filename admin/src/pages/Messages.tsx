@@ -55,6 +55,7 @@ export default function MessagesPage() {
   const columns: Column<ContactMessage>[] = [
     {
       key: "from", label: "From",
+      mobile: "title",
       render: (m) => (
         <div className="min-w-0">
           <p className={cn("text-foreground", m.status === "New" && "font-semibold")}>{m.name}</p>
@@ -64,6 +65,7 @@ export default function MessagesPage() {
     },
     {
       key: "message", label: "Message",
+      mobile: "subtitle",
       render: (m) => (
         <div className="min-w-0 max-w-[520px]">
           <p className={cn("truncate", m.status === "New" ? "font-semibold text-foreground" : "text-foreground")}>{m.subject || "(no subject)"}</p>
@@ -71,19 +73,20 @@ export default function MessagesPage() {
         </div>
       ),
     },
-    { key: "when", label: "Received", className: "text-[12px] text-muted-foreground whitespace-nowrap", render: (m) => when(m.createdAt) },
-    { key: "status", label: "Status", render: (m) => <StatusBadge variant={STATUS_VARIANT[m.status]}>{m.status}</StatusBadge> },
+    { key: "when", label: "Received", className: "text-[12px] text-muted-foreground whitespace-nowrap", mobile: "meta", render: (m) => when(m.createdAt) },
+    { key: "status", label: "Status", mobile: "badge", render: (m) => <StatusBadge variant={STATUS_VARIANT[m.status]}>{m.status}</StatusBadge> },
     {
       key: "actions", label: "", headerClassName: "text-right", className: "text-right whitespace-nowrap",
+      mobile: "actions",
       render: (m) => (
         <div className="flex justify-end gap-1" onClick={(e) => e.stopPropagation()}>
           {m.email && (
-            <Button asChild size="sm" variant="outline" className="h-7 text-[12px] gap-1">
+            <Button asChild size="sm" variant="outline" className="h-11 md:h-7 text-[12px] gap-1">
               <a href={replyHref(m)}><Reply className="h-3 w-3" /> Reply by email</a>
             </Button>
           )}
           {!m.email && m.phone && (
-            <Button asChild size="sm" variant="outline" className="h-7 text-[12px] gap-1">
+            <Button asChild size="sm" variant="outline" className="h-11 md:h-7 text-[12px] gap-1">
               <a href={`tel:${m.phone}`}><Phone className="h-3 w-3" /> Call</a>
             </Button>
           )}
@@ -107,7 +110,7 @@ export default function MessagesPage() {
       )}
 
       <Sheet open={!!open} onOpenChange={(o) => !o && setOpenId(null)}>
-        <SheetContent className="w-full sm:max-w-lg p-0 flex flex-col">
+        <SheetContent className="w-full md:max-w-lg p-0 flex flex-col">
           {open && (
             <>
               <SheetHeader className="p-4 border-b border-border space-y-2 text-left">

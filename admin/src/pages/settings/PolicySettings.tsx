@@ -109,7 +109,7 @@ export function PolicySettings() {
                     value={form[f.key] ?? ""}
                     disabled={readOnly}
                     onChange={(e) => setForm((p) => ({ ...p, [f.key]: e.target.value }))}
-                    className="h-8 text-sm w-28"
+                    className="h-11 text-base w-24 md:h-8 md:text-sm md:w-28"
                   />
                   {f.unit && <span className="text-[12px] text-muted-foreground">{f.unit}</span>}
                 </div>

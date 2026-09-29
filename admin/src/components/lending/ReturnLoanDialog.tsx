@@ -58,7 +58,7 @@ export function ReturnLoanDialog({ loan, today, onClose, onReturn }: Props) {
               min={loan.issuedDate}
               max={today}
               onChange={(e) => setDate(e.target.value)}
-              className="h-8 text-[13px]"
+              className="h-11 text-base md:h-8 md:text-[13px]"
             />
           </div>
           {loan.status === "Overdue" && (

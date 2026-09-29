@@ -3,7 +3,7 @@ import { Loader2, Upload } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Switch } from "@/components/ui/switch";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from "@/components/ui/dialog";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { compressCover } from "@/components/inventory/compress-cover";
 import { deriveStatus, type Book, type BookMetadata } from "@/hooks/use-inventory";
@@ -99,7 +99,7 @@ export function EditBookDialog({ book, open, onClose, onSave, onUploadCover }: P
 
   return (
     <Dialog open={open} onOpenChange={(o) => !o && !saving && onClose()}>
-      <DialogContent className="max-w-2xl max-h-[85vh] overflow-y-auto">
+      <DialogContent className="md:max-w-2xl md:max-h-[85vh] md:overflow-y-auto">
         <DialogHeader>
           <DialogTitle className="text-base">Edit Book</DialogTitle>
           <DialogDescription className="text-[13px]">{book.id}</DialogDescription>
@@ -131,23 +131,23 @@ export function EditBookDialog({ book, open, onClose, onSave, onUploadCover }: P
             </div>
           </div>
 
-          <div className="grid grid-cols-2 gap-3">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
             <Field label="Title (English) *" value={form.title} onChange={(v) => set("title", v)} />
             <Field label="Title (Bangla)" value={form.titleBangla} onChange={(v) => set("titleBangla", v)} />
           </div>
 
-          <div className="grid grid-cols-2 gap-3">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
             <Field label="Author (English) *" value={form.author} onChange={(v) => set("author", v)} />
             <Field label="Author (Bangla)" value={form.authorBangla} onChange={(v) => set("authorBangla", v)} />
           </div>
 
-          <div className="grid grid-cols-3 gap-3">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
             <Field label="Genre" value={form.genre} onChange={(v) => set("genre", v)} />
             <Field label="Category" value={form.category} onChange={(v) => set("category", v)} />
             <div className="space-y-1">
               <label className="text-[12px] font-medium text-muted-foreground">Language</label>
               <Select value={form.language} onValueChange={(v) => set("language", v)}>
-                <SelectTrigger className="h-8 text-[12px]" aria-label="Language"><SelectValue /></SelectTrigger>
+                <SelectTrigger className="h-11 text-base md:h-8 md:text-[12px]" aria-label="Language"><SelectValue /></SelectTrigger>
                 <SelectContent>
                   <SelectItem value="Bangla" className="text-[12px]">Bangla</SelectItem>
                   <SelectItem value="English" className="text-[12px]">English</SelectItem>
@@ -156,18 +156,18 @@ export function EditBookDialog({ book, open, onClose, onSave, onUploadCover }: P
             </div>
           </div>
 
-          <div className="grid grid-cols-4 gap-3">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
             <Field label="ISBN" value={form.isbn} onChange={(v) => set("isbn", v)} />
             <Field label="Publications" value={form.publisher} onChange={(v) => set("publisher", v)} />
             <Field label="Year" value={form.yearOfPublication} onChange={(v) => set("yearOfPublication", v)} />
             <Field label="Edition" value={form.edition} onChange={(v) => set("edition", v)} />
           </div>
 
-          <div className="grid grid-cols-3 gap-3">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
             <div className="space-y-1">
               <label className="text-[12px] font-medium text-muted-foreground">Condition</label>
               <Select value={form.condition || undefined} onValueChange={(v) => set("condition", v)}>
-                <SelectTrigger className="h-8 text-[12px]" aria-label="Condition"><SelectValue placeholder="—" /></SelectTrigger>
+                <SelectTrigger className="h-11 text-base md:h-8 md:text-[12px]" aria-label="Condition"><SelectValue placeholder="—" /></SelectTrigger>
                 <SelectContent>
                   {conditionOptions.map((c) => (
                     <SelectItem key={c} value={c} className="text-[12px]">{c}</SelectItem>
@@ -177,7 +177,7 @@ export function EditBookDialog({ book, open, onClose, onSave, onUploadCover }: P
             </div>
             <div className="space-y-1">
               <label className="text-[12px] font-medium text-muted-foreground">Pages</label>
-              <Input type="number" min={0} value={form.pages || ""} onChange={(e) => set("pages", Number(e.target.value))} className="h-8 text-[13px]" />
+              <Input type="number" min={0} value={form.pages || ""} onChange={(e) => set("pages", Number(e.target.value))} className="h-11 text-base md:h-8 md:text-[13px]" />
             </div>
             <div className="space-y-1">
               <label className="text-[12px] font-medium text-muted-foreground">Price (৳)</label>
@@ -187,14 +187,14 @@ export function EditBookDialog({ book, open, onClose, onSave, onUploadCover }: P
                 value={form.price ?? ""}
                 placeholder="Unknown"
                 onChange={(e) => set("price", e.target.value === "" ? null : Math.max(0, Number(e.target.value)))}
-                className="h-8 text-[13px]"
+                className="h-11 text-base md:h-8 md:text-[13px]"
               />
             </div>
           </div>
 
-          <div className="grid grid-cols-2 gap-3 items-end">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-3 md:items-end">
             <Field label="Shelf Location" value={form.location} onChange={(v) => set("location", v)} />
-            <label className="flex items-center gap-2 h-8 text-[12px] text-muted-foreground cursor-pointer">
+            <label className="flex items-center gap-2 h-11 md:h-8 text-[12px] text-muted-foreground cursor-pointer">
               <Switch checked={!form.isCirculating} onCheckedChange={(v) => set("isCirculating", !v)} />
               Reading room only (cannot be borrowed)
             </label>
@@ -205,7 +205,7 @@ export function EditBookDialog({ book, open, onClose, onSave, onUploadCover }: P
             <p className="text-[11px] uppercase tracking-wide font-semibold text-muted-foreground">
               System-derived · read-only
             </p>
-            <div className="grid grid-cols-5 gap-3 text-[13px]">
+            <div className="grid grid-cols-2 md:grid-cols-5 gap-3 text-[13px]">
               {[
                 ["Total", book.totalCopies],
                 ["Available", book.availableCopies],
@@ -228,15 +228,15 @@ export function EditBookDialog({ book, open, onClose, onSave, onUploadCover }: P
           </div>
 
           {error && <p className="text-[12px] text-destructive" role="alert">{error}</p>}
-
-          <div className="flex justify-end gap-2 pt-1">
-            <Button variant="outline" size="sm" className="text-[13px] h-8" onClick={onClose} disabled={saving}>Cancel</Button>
-            <Button size="sm" className="text-[13px] h-8 gap-1.5" onClick={submit} disabled={saving || uploading || invalid}>
-              {saving && <Loader2 className="h-3.5 w-3.5 animate-spin" />}
-              {saving ? "Saving…" : "Save Changes"}
-            </Button>
-          </div>
         </div>
+
+        <DialogFooter>
+          <Button variant="outline" size="sm" className="text-[13px] h-11 md:h-8" onClick={onClose} disabled={saving}>Cancel</Button>
+          <Button size="sm" className="text-[13px] h-11 md:h-8 gap-1.5" onClick={submit} disabled={saving || uploading || invalid}>
+            {saving && <Loader2 className="h-3.5 w-3.5 animate-spin" />}
+            {saving ? "Saving…" : "Save Changes"}
+          </Button>
+        </DialogFooter>
       </DialogContent>
     </Dialog>
   );
@@ -246,7 +246,7 @@ function Field({ label, value, onChange }: { label: string; value: string; onCha
   return (
     <div className="space-y-1">
       <label className="text-[12px] font-medium text-muted-foreground">{label}</label>
-      <Input value={value} onChange={(e) => onChange(e.target.value)} className="h-8 text-[13px]" />
+      <Input value={value} onChange={(e) => onChange(e.target.value)} className="h-11 text-base md:h-8 md:text-[13px]" />
     </div>
   );
 }

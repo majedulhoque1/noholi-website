@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from "@/components/ui/dialog";
 import { emptyMemberInput, type MemberInput } from "@/hooks/use-members";
 import { MemberFormFields, isMemberInputValid } from "@/components/members/MemberFormFields";
 
@@ -36,7 +36,7 @@ export function AddMemberDialog({ open, onClose, onAdd }: AddMemberDialogProps) 
 
   return (
     <Dialog open={open} onOpenChange={(o) => !o && !saving && close()}>
-      <DialogContent className="max-w-lg max-h-[88vh] flex flex-col">
+      <DialogContent className="md:max-w-lg md:max-h-[88vh] flex flex-col">
         <DialogHeader>
           <DialogTitle className="text-base">Add New Member</DialogTitle>
           <DialogDescription className="text-[13px]">The MEM-#### ID is assigned automatically. Create their website login afterwards from the member's actions.</DialogDescription>
@@ -45,12 +45,12 @@ export function AddMemberDialog({ open, onClose, onAdd }: AddMemberDialogProps) 
           <MemberFormFields value={form} onChange={setForm} showStatus={false} />
         </div>
         {error && <p className="text-[12px] text-destructive">{error}</p>}
-        <div className="flex justify-end gap-2 pt-2">
-          <Button variant="outline" size="sm" className="text-[13px] h-8" onClick={close} disabled={saving}>Cancel</Button>
-          <Button size="sm" className="text-[13px] h-8" onClick={handleSubmit} disabled={!isMemberInputValid(form) || saving}>
+        <DialogFooter>
+          <Button variant="outline" size="sm" className="text-[13px] h-11 md:h-8" onClick={close} disabled={saving}>Cancel</Button>
+          <Button size="sm" className="text-[13px] h-11 md:h-8" onClick={handleSubmit} disabled={!isMemberInputValid(form) || saving}>
             {saving && <Loader2 className="h-3.5 w-3.5 animate-spin mr-1" />}Add Member
           </Button>
-        </div>
+        </DialogFooter>
       </DialogContent>
     </Dialog>
   );

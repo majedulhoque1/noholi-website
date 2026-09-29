@@ -81,10 +81,11 @@ export default function Lending() {
   };
 
   const columns: Column<ActiveLoan>[] = [
-    { key: "id", label: "Loan ID", className: "text-muted-foreground font-mono text-[12px]", render: (l) => l.id },
+    { key: "id", label: "Loan ID", className: "text-muted-foreground font-mono text-[12px]", mobile: "meta", render: (l) => l.id },
     {
       key: "member",
       label: "Member",
+      mobile: "subtitle",
       render: (l) => (
         <>
           <span className="font-medium text-foreground">{l.member}</span>
@@ -96,6 +97,7 @@ export default function Lending() {
       key: "book",
       label: "Book",
       className: "max-w-[240px]",
+      mobile: "title",
       render: (l) => (
         <div className="min-w-0">
           <p className="text-foreground truncate">{l.book}</p>
@@ -103,11 +105,12 @@ export default function Lending() {
         </div>
       ),
     },
-    { key: "issued", label: "Issued", className: "text-muted-foreground whitespace-nowrap", render: (l) => formatDhaka(l.issuedDate) },
+    { key: "issued", label: "Issued", className: "text-muted-foreground whitespace-nowrap", mobile: "meta", render: (l) => formatDhaka(l.issuedDate) },
     {
       key: "due",
       label: tab === "Returned" ? "Due / Returned" : "Due Date",
       className: "text-muted-foreground whitespace-nowrap",
+      mobile: "meta",
       render: (l) => (
         <>
           {formatDhaka(l.dueDate)}
@@ -120,6 +123,7 @@ export default function Lending() {
       label: "Fine",
       headerClassName: "text-right",
       className: "text-right whitespace-nowrap text-[12px]",
+      mobile: "meta",
       render: (l) =>
         l.fineAmount > 0 ? (
           <span className={cn(l.fineIsAccruing ? "text-destructive" : "text-foreground")}>
@@ -135,6 +139,7 @@ export default function Lending() {
     {
       key: "status",
       label: "Status",
+      mobile: "badge",
       render: (l) => <StatusBadge variant={LOAN_STATUS_VARIANT[l.status]}>{l.status}</StatusBadge>,
     },
     ...(canWrite
@@ -144,6 +149,7 @@ export default function Lending() {
             label: "",
             headerClassName: "text-right",
             className: "text-right",
+            mobile: "actions" as const,
             render: (l: ActiveLoan) => {
               const isOpen = l.status === "Active" || l.status === "Overdue";
               // void_loan also accepts Returned loans whose fine has no payments yet.

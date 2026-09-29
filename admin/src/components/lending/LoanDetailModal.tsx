@@ -16,7 +16,7 @@ export function LoanDetailModal({ loan, open, onClose }: LoanDetailModalProps) {
 
   return (
     <Dialog open={open} onOpenChange={(v) => !v && onClose()}>
-      <DialogContent className="max-w-lg max-h-[85vh] overflow-y-auto">
+      <DialogContent className="md:max-w-lg md:max-h-[85vh] md:overflow-y-auto">
         <DialogHeader>
           <DialogTitle className="text-[14px] font-semibold">Loan Details — {loan.id}</DialogTitle>
         </DialogHeader>

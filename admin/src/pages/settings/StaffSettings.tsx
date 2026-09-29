@@ -74,12 +74,13 @@ export function StaffSettings() {
   };
 
   const columns: Column<StaffRow>[] = [
-    { key: "email", label: "Email", className: "font-medium text-foreground", render: (s) => <>{s.email}{s.user_id === user?.id && <span className="text-muted-foreground font-normal"> (you)</span>}</> },
-    { key: "role", label: "Role", render: (s) => <StatusBadge variant={s.role === "admin" ? "accent" : "default"}>{s.role === "admin" ? "Administrator" : "Staff"}</StatusBadge> },
-    { key: "last", label: "Last sign-in", className: "text-[12px] text-muted-foreground whitespace-nowrap", render: (s) => when(s.last_sign_in_at) },
-    { key: "created", label: "Added", className: "text-[12px] text-muted-foreground whitespace-nowrap", render: (s) => formatDhaka(s.created_at) },
+    { key: "email", label: "Email", className: "font-medium text-foreground", mobile: "title", render: (s) => <>{s.email}{s.user_id === user?.id && <span className="text-muted-foreground font-normal"> (you)</span>}</> },
+    { key: "role", label: "Role", mobile: "badge", render: (s) => <StatusBadge variant={s.role === "admin" ? "accent" : "default"}>{s.role === "admin" ? "Administrator" : "Staff"}</StatusBadge> },
+    { key: "last", label: "Last sign-in", className: "text-[12px] text-muted-foreground whitespace-nowrap", mobile: "meta", render: (s) => when(s.last_sign_in_at) },
+    { key: "created", label: "Added", className: "text-[12px] text-muted-foreground whitespace-nowrap", mobile: "meta", render: (s) => formatDhaka(s.created_at) },
     ...(isAdmin ? [{
       key: "actions", label: "", headerClassName: "text-right", className: "text-right",
+      mobile: "actions" as const,
       render: (s: StaffRow) => s.user_id === user?.id ? null : (
         <Button size="sm" variant="ghost" className="h-7 text-[12px] gap-1 text-destructive" onClick={() => setRemoving(s)}>
           <UserMinus className="h-3.5 w-3.5" /> Remove
@@ -118,21 +119,21 @@ export function StaffSettings() {
             </p>
           ) : (
             <form className="flex flex-wrap items-end gap-3" onSubmit={(e) => { e.preventDefault(); handleAdd(); }}>
-              <div className="space-y-1.5">
+              <div className="space-y-1.5 w-full sm:w-auto">
                 <Label htmlFor="staff-email" className="text-xs">Email</Label>
-                <Input id="staff-email" type="email" value={email} onChange={(e) => setEmail(e.target.value)} className="h-8 text-sm w-64" placeholder="name@example.com" />
+                <Input id="staff-email" type="email" value={email} onChange={(e) => setEmail(e.target.value)} className="h-11 text-base w-full sm:w-64 md:h-8 md:text-sm" placeholder="name@example.com" />
               </div>
-              <div className="space-y-1.5">
+              <div className="space-y-1.5 w-full sm:w-auto">
                 <Label className="text-xs">Role</Label>
                 <Select value={role} onValueChange={(v) => setRole(v as "staff" | "admin")}>
-                  <SelectTrigger className="h-8 text-sm w-40" aria-label="Role"><SelectValue /></SelectTrigger>
+                  <SelectTrigger className="h-11 text-base w-full sm:w-40 md:h-8 md:text-sm" aria-label="Role"><SelectValue /></SelectTrigger>
                   <SelectContent>
                     <SelectItem value="staff">Staff</SelectItem>
                     <SelectItem value="admin">Administrator</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
-              <Button type="submit" size="sm" className="h-8" disabled={adding || !/^\S+@\S+\.\S+$/.test(email.trim())}>
+              <Button type="submit" size="sm" className="h-11 w-full sm:w-auto md:h-8" disabled={adding || !/^\S+@\S+\.\S+$/.test(email.trim())}>
                 {adding && <Loader2 className="h-3.5 w-3.5 animate-spin mr-1" />}Create staff login
               </Button>
             </form>

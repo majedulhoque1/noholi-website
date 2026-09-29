@@ -84,7 +84,7 @@ export function EditLoanDetailsDialog({ loan, onClose, onSave }: EditLoanDetails
 
   return (
     <Dialog open={!!loan} onOpenChange={(v) => !v && onClose()}>
-      <DialogContent className="max-w-lg max-h-[85vh] overflow-y-auto">
+      <DialogContent className="md:max-w-lg md:max-h-[85vh] md:overflow-y-auto">
         <DialogHeader>
           <DialogTitle className="text-[14px] font-semibold">Edit loan details — {loan.id}</DialogTitle>
         </DialogHeader>
@@ -93,14 +93,14 @@ export function EditLoanDetailsDialog({ loan, onClose, onSave }: EditLoanDetails
           <p className="text-muted-foreground">
             {loan.book} · {loan.member} ({loan.memberId})
           </p>
-          <div className="grid grid-cols-2 gap-2.5">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
             {FIELDS.map((f) => (
-              <label key={f.key} className={f.wide ? "col-span-2 space-y-1" : "space-y-1"}>
+              <label key={f.key} className={f.wide ? "sm:col-span-2 space-y-1" : "space-y-1"}>
                 <span className="text-[12px] font-medium text-muted-foreground">{f.label}</span>
-                <Input value={form[f.key]} onChange={set(f.key)} className="h-8 text-[13px]" />
+                <Input value={form[f.key]} onChange={set(f.key)} className="h-11 text-base md:h-8 md:text-[13px]" />
               </label>
             ))}
-            <label className="col-span-2 space-y-1">
+            <label className="sm:col-span-2 space-y-1">
               <span className="text-[12px] font-medium text-muted-foreground">
                 Guarantor NID — currently {maskNid(loan.guarantor.nid)}
               </span>
@@ -108,12 +108,12 @@ export function EditLoanDetailsDialog({ loan, onClose, onSave }: EditLoanDetails
                 value={nid}
                 onChange={(e) => setNid(e.target.value)}
                 placeholder="Leave blank to keep the current NID"
-                className="h-8 text-[13px]"
+                className="h-11 text-base md:h-8 md:text-[13px]"
               />
             </label>
-            <label className="col-span-2 space-y-1">
+            <label className="sm:col-span-2 space-y-1">
               <span className="text-[12px] font-medium text-muted-foreground">Notes</span>
-              <Textarea value={form.notes} onChange={set("notes")} rows={3} className="text-[13px]" />
+              <Textarea value={form.notes} onChange={set("notes")} rows={3} className="text-base md:text-[13px]" />
             </label>
           </div>
           {error && <p className="text-destructive text-[12px]">{error}</p>}

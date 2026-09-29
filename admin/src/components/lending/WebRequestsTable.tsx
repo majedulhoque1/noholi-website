@@ -46,10 +46,11 @@ export function WebRequestsTable({ requests, loading, error, canWrite, settings,
   }, []);
 
   const columns: Column<BorrowRequest>[] = [
-    { key: "id", label: "Request", className: "text-muted-foreground font-mono text-[12px]", render: (r) => r.id },
+    { key: "id", label: "Request", className: "text-muted-foreground font-mono text-[12px]", mobile: "meta", render: (r) => r.id },
     {
       key: "member",
       label: "Member",
+      mobile: "subtitle",
       render: (r) => (
         <div>
           <span className="font-medium text-foreground">{r.memberName}</span>
@@ -62,6 +63,7 @@ export function WebRequestsTable({ requests, loading, error, canWrite, settings,
       key: "book",
       label: "Book",
       className: "max-w-[220px]",
+      mobile: "title",
       render: (r) => (
         <div className="min-w-0">
           <p className="text-foreground truncate">{r.bookTitle}</p>
@@ -69,11 +71,12 @@ export function WebRequestsTable({ requests, loading, error, canWrite, settings,
         </div>
       ),
     },
-    { key: "pickup", label: "Pickup", className: "text-muted-foreground whitespace-nowrap", render: (r) => formatDhaka(r.pickupDate) },
+    { key: "pickup", label: "Pickup", className: "text-muted-foreground whitespace-nowrap", mobile: "meta", render: (r) => formatDhaka(r.pickupDate) },
     {
       key: "expires",
       label: "Hold until",
       className: "whitespace-nowrap",
+      mobile: "meta",
       render: (r) => (
         <div className="space-y-0.5">
           <p className="text-muted-foreground">{formatDhaka(r.expiresAt)}</p>
@@ -84,6 +87,7 @@ export function WebRequestsTable({ requests, loading, error, canWrite, settings,
     {
       key: "guarantor",
       label: "Guarantor",
+      mobile: "meta",
       render: (r) => (
         <div className="text-[12px]">
           <p className="text-foreground">
@@ -101,6 +105,7 @@ export function WebRequestsTable({ requests, loading, error, canWrite, settings,
       key: "note",
       label: "Note",
       className: "text-muted-foreground text-[12px] max-w-[160px] truncate",
+      mobile: "hidden",
       render: (r) => r.note || "—",
     },
     ...(canWrite
@@ -110,6 +115,7 @@ export function WebRequestsTable({ requests, loading, error, canWrite, settings,
             label: "",
             headerClassName: "text-right",
             className: "text-right",
+            mobile: "actions" as const,
             render: (r: BorrowRequest) => (
               <RowActions
                 primary={[

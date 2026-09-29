@@ -26,7 +26,8 @@ export const trimInput = (v: DonationInput): DonationInput => ({
 });
 
 const lbl = "text-[12px] font-medium text-muted-foreground";
-const selectCls = "w-full h-8 rounded border border-input bg-background px-2.5 text-[13px] text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring";
+const selectCls = "w-full h-11 rounded border border-input bg-background px-2.5 text-base text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring md:h-8 md:text-[13px]";
+const inp = "h-11 text-base md:h-8 md:text-[13px]";
 
 export function DonationFields({ value, onChange }: { value: DonationInput; onChange: (v: DonationInput) => void }) {
   const set = (k: keyof DonationInput) => (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) =>
@@ -34,21 +35,21 @@ export function DonationFields({ value, onChange }: { value: DonationInput; onCh
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
       <div className="space-y-1"><label className={lbl}>Donor Name *</label>
-        <Input aria-label="Donor Name" className="h-8 text-[13px]" placeholder="Enter donor name" value={value.donorName} onChange={set("donorName")} maxLength={150} /></div>
+        <Input aria-label="Donor Name" className={inp} placeholder="Enter donor name" value={value.donorName} onChange={set("donorName")} maxLength={150} /></div>
       <div className="space-y-1"><label className={lbl}>Donor Contact</label>
-        <Input aria-label="Donor Contact" className="h-8 text-[13px]" placeholder="Phone or email" value={value.donorContact} onChange={set("donorContact")} maxLength={150} /></div>
+        <Input aria-label="Donor Contact" className={inp} placeholder="Phone or email" value={value.donorContact} onChange={set("donorContact")} maxLength={150} /></div>
       <div className="space-y-1"><label className={lbl}>Book Title *</label>
-        <Input aria-label="Book Title" className="h-8 text-[13px]" placeholder="Enter book title" value={value.bookTitle} onChange={set("bookTitle")} maxLength={300} /></div>
+        <Input aria-label="Book Title" className={inp} placeholder="Enter book title" value={value.bookTitle} onChange={set("bookTitle")} maxLength={300} /></div>
       <div className="space-y-1"><label className={lbl}>Author</label>
-        <Input aria-label="Author" className="h-8 text-[13px]" placeholder="Enter author" value={value.bookAuthor} onChange={set("bookAuthor")} maxLength={200} /></div>
+        <Input aria-label="Author" className={inp} placeholder="Enter author" value={value.bookAuthor} onChange={set("bookAuthor")} maxLength={200} /></div>
       <div className="space-y-1"><label className={lbl}>Condition *</label>
         <select aria-label="Condition" className={selectCls} value={value.condition} onChange={set("condition")}>
           <option>New</option><option>Good</option><option>Fair</option><option>Poor</option>
         </select></div>
       <div className="space-y-1"><label className={lbl}>Date Received *</label>
-        <Input aria-label="Date Received" type="date" className="h-8 text-[13px]" value={value.dateReceived} onChange={set("dateReceived")} /></div>
+        <Input aria-label="Date Received" type="date" className={inp} value={value.dateReceived} onChange={set("dateReceived")} /></div>
       <div className="space-y-1 md:col-span-2"><label className={lbl}>Notes</label>
-        <Textarea aria-label="Notes" className="text-[13px] min-h-[60px]" value={value.notes} onChange={set("notes")} maxLength={1000} /></div>
+        <Textarea aria-label="Notes" className="text-base min-h-[60px] md:text-[13px]" value={value.notes} onChange={set("notes")} maxLength={1000} /></div>
     </div>
   );
 }
@@ -66,7 +67,7 @@ export function DonationViewDrawer({ donation, onOpenChange }: { donation: Donat
   const d = donation;
   return (
     <Sheet open={!!d} onOpenChange={onOpenChange}>
-      <SheetContent className="w-full sm:max-w-lg p-0 flex flex-col">
+      <SheetContent className="w-full md:max-w-lg p-0 flex flex-col">
         {d && (<>
           <SheetHeader className="p-4 border-b border-border">
             <SheetTitle className="text-[15px]">{d.bookTitle}</SheetTitle>
@@ -106,7 +107,7 @@ export function EditDonationDialog({ donation, onOpenChange, onSave }: {
   }, [donation]);
   return (
     <Dialog open={!!donation} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-lg max-h-[85vh] flex flex-col">
+      <DialogContent className="md:max-w-lg md:max-h-[85vh] flex flex-col">
         <DialogHeader>
           <DialogTitle>Edit Donation</DialogTitle>
           <DialogDescription className="font-mono text-[12px]">{donation?.id}</DialogDescription>
@@ -132,14 +133,14 @@ export function RejectDonationDialog({ donation, onOpenChange, onReject }: {
   useEffect(() => { if (donation) setReason(""); }, [donation]);
   return (
     <Dialog open={!!donation} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-md">
+      <DialogContent className="md:max-w-md">
         <DialogHeader>
           <DialogTitle>Reject Donation</DialogTitle>
           <DialogDescription>{donation?.id} · {donation?.bookTitle}. The record stays in the database.</DialogDescription>
         </DialogHeader>
         <div className="space-y-1">
           <label className={lbl}>Rejection reason *</label>
-          <Textarea aria-label="Rejection reason" className="text-[13px]" value={reason} onChange={(e) => setReason(e.target.value)} maxLength={500} />
+          <Textarea aria-label="Rejection reason" className="text-base md:text-[13px]" value={reason} onChange={(e) => setReason(e.target.value)} maxLength={500} />
         </div>
         <DialogFooter>
           <Button variant="outline" size="sm" onClick={() => onOpenChange(false)} disabled={saving}>Cancel</Button>
@@ -159,7 +160,7 @@ export function AddToInventoryDialog({ donation, onOpenChange, onConfirm }: {
   const [saving, setSaving] = useState(false);
   return (
     <Dialog open={!!donation} onOpenChange={(o) => !saving && onOpenChange(o)}>
-      <DialogContent className="max-w-md">
+      <DialogContent className="md:max-w-md">
         <DialogHeader>
           <DialogTitle>Add to Inventory</DialogTitle>
           <DialogDescription>

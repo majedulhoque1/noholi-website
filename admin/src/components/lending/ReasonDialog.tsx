@@ -61,20 +61,20 @@ export function ReasonDialog({
             value={text}
             onChange={(e) => setText(e.target.value)}
             placeholder={placeholder}
-            className="text-[13px] min-h-[72px]"
+            className="text-base min-h-[72px] md:text-[13px]"
           />
         </div>
         {error && <p className="text-[12px] text-destructive" role="alert">{error}</p>}
         <DialogFooter>
-          <Button variant="outline" size="sm" onClick={onClose} disabled={saving} className="text-[13px]">Cancel</Button>
+          <Button variant="outline" size="sm" onClick={onClose} disabled={saving} className="text-[13px] h-11 md:h-9">Cancel</Button>
           <Button
             size="sm"
             onClick={submit}
             disabled={saving || (required && !text.trim())}
             className={
               destructive
-                ? "text-[13px] gap-1.5 bg-destructive text-destructive-foreground hover:bg-destructive/90"
-                : "text-[13px] gap-1.5"
+                ? "text-[13px] h-11 md:h-9 gap-1.5 bg-destructive text-destructive-foreground hover:bg-destructive/90"
+                : "text-[13px] h-11 md:h-9 gap-1.5"
             }
           >
             {saving && <Loader2 className="h-3.5 w-3.5 animate-spin" />}

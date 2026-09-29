@@ -14,7 +14,7 @@ export function PageHeader({ title, subtitle, actions }: PageHeaderProps) {
         )}
       </div>
       {actions && (
-        <div className="flex flex-wrap items-center gap-2 [&>*]:min-w-[120px] [&>*]:flex-1 md:flex-nowrap md:[&>*]:min-w-0 md:[&>*]:flex-initial">
+        <div className="flex flex-wrap items-center gap-2 [&>*]:min-w-[120px] [&>*]:flex-1 [&>button]:min-h-[44px] md:flex-nowrap md:[&>*]:min-w-0 md:[&>*]:flex-initial md:[&>button]:min-h-0">
           {actions}
         </div>
       )}

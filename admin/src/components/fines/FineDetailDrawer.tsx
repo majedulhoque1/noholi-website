@@ -37,7 +37,7 @@ export function FineDetailDrawer({ fine, open, onClose }: Props) {
 
   return (
     <Sheet open={open} onOpenChange={(o) => !o && onClose()}>
-      <SheetContent className="w-[360px] sm:w-[400px] flex flex-col overflow-hidden">
+      <SheetContent className="w-full md:w-[400px] flex flex-col overflow-hidden">
         <SheetHeader className="shrink-0">
           <SheetTitle className="text-base">{fine.isAccruing ? `Accruing fine · ${fine.id}` : `Fine ${fine.id}`}</SheetTitle>
         </SheetHeader>

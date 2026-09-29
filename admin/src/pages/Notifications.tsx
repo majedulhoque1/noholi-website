@@ -33,10 +33,10 @@ export default function NotificationsPage() {
 
   return (
     <div className="space-y-4">
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <PageHeader title="Notifications" subtitle={`${unreadCount} unread · live from the library records, refreshed every minute`} />
         {unreadCount > 0 && (
-          <Button variant="outline" size="sm" onClick={markAllAsRead}>
+          <Button variant="outline" size="sm" className="h-11 w-full sm:w-auto sm:h-9" onClick={markAllAsRead}>
             Mark all as read
           </Button>
         )}

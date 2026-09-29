@@ -85,6 +85,7 @@ export function ApplicationsPanel({ apps, canWrite, onMemberCreated, onTempPassw
   const columns: Column<Application>[] = [
     {
       key: "photo", label: "", className: "w-12",
+      mobile: "hidden",
       render: (a) => (
         <button
           type="button"
@@ -96,9 +97,10 @@ export function ApplicationsPanel({ apps, canWrite, onMemberCreated, onTempPassw
         </button>
       ),
     },
-    { key: "id", label: "ID", className: "text-muted-foreground font-mono text-[12px]", render: (a) => a.id },
+    { key: "id", label: "ID", className: "text-muted-foreground font-mono text-[12px]", mobile: "meta", render: (a) => a.id },
     {
       key: "name", label: "Applicant",
+      mobile: "title",
       render: (a) => (
         <div className="min-w-0">
           <p className="font-medium text-foreground">{a.name}</p>
@@ -106,17 +108,19 @@ export function ApplicationsPanel({ apps, canWrite, onMemberCreated, onTempPassw
         </div>
       ),
     },
-    { key: "contact", label: "Contact", render: (a) => <ContactInfo email={a.email || undefined} phone={a.phone} /> },
+    { key: "contact", label: "Contact", mobile: "subtitle", render: (a) => <ContactInfo email={a.email || undefined} phone={a.phone} /> },
     {
       key: "address", label: "Address",
+      mobile: "meta",
       render: (a) => {
         const addr = [a.street, a.city, a.district, a.postalCode].filter(Boolean).join(", ");
         return addr ? <span className="text-[12px] text-muted-foreground">{addr}</span> : <span className="text-muted-foreground/50">—</span>;
       },
     },
-    { key: "created", label: "Applied", className: "text-muted-foreground text-[12px] whitespace-nowrap", render: (a) => formatDhaka(a.createdAt) },
+    { key: "created", label: "Applied", className: "text-muted-foreground text-[12px] whitespace-nowrap", mobile: "meta", render: (a) => formatDhaka(a.createdAt) },
     {
       key: "contacted", label: "Contacted",
+      mobile: "meta",
       render: (a) => (
         <Checkbox
           aria-label={`Contacted ${a.name}`}
@@ -131,6 +135,7 @@ export function ApplicationsPanel({ apps, canWrite, onMemberCreated, onTempPassw
     },
     {
       key: "status", label: "Status",
+      mobile: "badge",
       render: (a) => (
         <div className="space-y-0.5">
           <StatusBadge variant={STATUS_VARIANT[a.status]}>{a.status}</StatusBadge>
@@ -141,6 +146,7 @@ export function ApplicationsPanel({ apps, canWrite, onMemberCreated, onTempPassw
     },
     ...(canWrite ? [{
       key: "actions", label: "", headerClassName: "text-right", className: "text-right whitespace-nowrap",
+      mobile: "actions" as const,
       render: (a: Application) => a.status !== "Pending" ? null : (
         <div className="flex justify-end gap-1">
           <Button size="sm" className="h-7 text-[12px] gap-1" onClick={() => setApproving(a)}><Check className="h-3 w-3" /> Approve</Button>
@@ -196,7 +202,7 @@ export function ApplicationsPanel({ apps, canWrite, onMemberCreated, onTempPassw
           </DialogHeader>
           <div className="space-y-1">
             <label className="text-[12px] font-medium text-muted-foreground">Reason *</label>
-            <Textarea aria-label="Rejection reason" className="text-[13px]" value={reason} onChange={(e) => setReason(e.target.value)} maxLength={500} />
+            <Textarea aria-label="Rejection reason" className="text-base md:text-[13px]" value={reason} onChange={(e) => setReason(e.target.value)} maxLength={500} />
           </div>
           <DialogFooter>
             <Button variant="outline" size="sm" onClick={() => setRejecting(null)} disabled={busy}>Cancel</Button>

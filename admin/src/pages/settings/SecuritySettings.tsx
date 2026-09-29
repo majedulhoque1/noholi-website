@@ -70,9 +70,10 @@ export function SecuritySettings() {
   useEffect(() => { load(0); }, [load]);
 
   const columns: Column<AuditRow>[] = [
-    { key: "at", label: "Time (Dhaka)", className: "text-[12px] text-muted-foreground whitespace-nowrap", render: (r) => when(r.at) },
+    { key: "at", label: "Time (Dhaka)", className: "text-[12px] text-muted-foreground whitespace-nowrap", mobile: "meta", render: (r) => when(r.at) },
     {
       key: "actor", label: "Actor",
+      mobile: "subtitle",
       render: (r) => (
         <div className="flex items-center gap-1.5 min-w-0">
           <span className="truncate">{r.actor ? emails[r.actor] ?? `${r.actor.slice(0, 8)}…` : "System"}</span>
@@ -80,8 +81,8 @@ export function SecuritySettings() {
         </div>
       ),
     },
-    { key: "action", label: "Action", className: "font-mono text-[12px] text-foreground", render: (r) => r.action },
-    { key: "entity", label: "Entity", className: "text-[12px]", render: (r) => <><span className="text-muted-foreground">{r.entity}</span>{r.entity_id && <span className="font-mono text-foreground"> {r.entity_id}</span>}</> },
+    { key: "action", label: "Action", className: "font-mono text-[12px] text-foreground", mobile: "title", render: (r) => r.action },
+    { key: "entity", label: "Entity", className: "text-[12px]", mobile: "meta", render: (r) => <><span className="text-muted-foreground">{r.entity}</span>{r.entity_id && <span className="font-mono text-foreground"> {r.entity_id}</span>}</> },
   ];
 
   return (
@@ -98,7 +99,7 @@ export function SecuritySettings() {
             placeholder="Search action, table, ID or role…"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="h-8 text-sm max-w-xs"
+            className="h-11 text-base max-w-xs md:h-8 md:text-sm"
             aria-label="Search activity"
           />
           {error && <p className="text-[12px] text-destructive">{error}</p>}
