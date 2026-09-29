@@ -120,7 +120,7 @@
 }
 
 .login-input::placeholder {
-  color: rgba(74, 68, 56, 0.6);
+  color: color-mix(in srgb, var(--ink-soft) 60%, transparent);
   opacity: 1;
 }
 
@@ -152,7 +152,7 @@
 }
 
 .login-input-2::placeholder {
-  color: rgba(74, 68, 56, 0.6);
+  color: color-mix(in srgb, var(--ink-soft) 60%, transparent);
   opacity: 1;
 }
 
@@ -187,7 +187,7 @@
   justify-content: center;
   align-items: center;
   padding: 14px 24px 14px 24px;
-  background-color: var(--oxblood);
+  background-color: var(--oxblood-fill);
 }
 
 .login-submit-button-text {
@@ -198,7 +198,7 @@
   line-height: 16px;
   letter-spacing: 0.6px;
   text-transform: uppercase;
-  color: var(--paper);
+  color: var(--white);
   text-align: center;
   white-space: nowrap;
 }
@@ -250,7 +250,7 @@
 }
 
 .login-submit-button:hover {
-  background-color: var(--oxblood-soft);
+  background-color: var(--oxblood-soft-fill);
 }
 
 .login-forgot-password-link-box:hover,

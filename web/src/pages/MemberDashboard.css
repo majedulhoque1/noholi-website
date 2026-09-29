@@ -11,7 +11,7 @@
   align-items: flex-start;
   padding: 12px 0 12px 0;
   background-color: var(--paper);
-  border-bottom: 1px solid rgba(201, 191, 168, 0.6);
+  border-bottom: 1px solid color-mix(in srgb, var(--parchment-line) 60%, transparent);
 }
 
 .mdash-breadcrumb-box {
@@ -465,7 +465,7 @@
   flex-direction: column;
   align-items: flex-end;
   padding: 4px 12px 4px 12px;
-  background-color: rgba(122, 46, 39, 0.05);
+  background-color: color-mix(in srgb, var(--oxblood) 5%, transparent);
   border: 1px solid var(--oxblood);
 }
 
@@ -947,7 +947,7 @@
   justify-content: space-between;
   align-items: center;
   padding: 16px 0 0 0;
-  border-top: 1px solid rgba(201, 191, 168, 0.6);
+  border-top: 1px solid color-mix(in srgb, var(--parchment-line) 60%, transparent);
 }
 
 .mdash-circulation-archive-link-box {
@@ -1140,7 +1140,7 @@
   flex-direction: column;
   align-items: flex-start;
   padding: 12px 0 0 0;
-  border-top: 1px solid rgba(201, 191, 168, 0.6);
+  border-top: 1px solid color-mix(in srgb, var(--parchment-line) 60%, transparent);
 }
 
 .mdash-horizontalborder-3-text {
@@ -1205,7 +1205,7 @@
   align-items: flex-start;
   gap: 6px;
   padding: 12px 0 0 0;
-  border-top: 1px solid rgba(201, 191, 168, 0.6);
+  border-top: 1px solid color-mix(in srgb, var(--parchment-line) 60%, transparent);
 }
 
 .mdash-horizontalborder-4-box {

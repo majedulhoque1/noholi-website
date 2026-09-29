@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { coverUrl } from '../lib/books.js';
+import { translate, useLang } from '../i18n/LanguageContext.jsx';
 import './BookCover.css';
 
 // Tints for the typographic placeholder, all from tokens.css. Picked by hashing the book id,
@@ -16,9 +17,13 @@ function tintOf(id) {
 export function availability(book) {
   const total = Number(book?.total_copies) || 0;
   const avail = Math.max(0, Number(book?.available_copies) || 0);
-  if (book && book.is_circulating === false) return { state: 'reading', text: 'Reading room only', canBorrow: false, reason: 'This title is for the reading room only and cannot be borrowed.' };
-  if (avail > 0) return { state: 'available', text: `${avail} of ${total || avail} available`, canBorrow: true, reason: '' };
-  return { state: 'loan', text: 'All copies on loan', canBorrow: false, reason: 'All copies are on loan.' };
+  if (book && book.is_circulating === false) {
+    return { state: 'reading', text: translate('bookCover.readingRoomOnly'), canBorrow: false, reason: translate('bookCover.readingRoomOnlyReason') };
+  }
+  if (avail > 0) {
+    return { state: 'available', text: translate('bookCover.availableOfTotal', { avail, total: total || avail }), canBorrow: true, reason: '' };
+  }
+  return { state: 'loan', text: translate('bookCover.allOnLoan'), canBorrow: false, reason: translate('bookCover.allOnLoanReason') };
 }
 
 const isBangla = (book) => /bangla|bengali/i.test(book?.language || '');
@@ -31,6 +36,7 @@ const isBangla = (book) => /bangla|bengali/i.test(book?.language || '');
  * - No cover, or the image fails to load: a typographic cover in the site's own type.
  */
 export default function BookCover({ book, className = '', eager = false }) {
+  const { t } = useLang();
   const url = coverUrl(book);
   const [failed, setFailed] = useState(false);
   const [fit, setFit] = useState('');
@@ -64,7 +70,7 @@ export default function BookCover({ book, className = '', eager = false }) {
           <span className="bookcover-title" lang={bn ? 'bn' : 'en'}>{title}</span>
           <span className="bookcover-rule" />
           <span className="bookcover-author" lang={bn ? 'bn' : 'en'}>{author}</span>
-          <span className="bookcover-imprint">Noholi Library</span>
+          <span className="bookcover-imprint">{t('bookCover.imprint')}</span>
         </div>
       )}
     </div>

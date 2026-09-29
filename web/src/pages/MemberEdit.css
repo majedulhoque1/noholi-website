@@ -57,7 +57,7 @@
   line-height: 16px;
   letter-spacing: 1.2px;
   text-transform: uppercase;
-  color: var(--parchment-line);
+  color: var(--stone);
   white-space: nowrap;
 }
 
@@ -103,7 +103,7 @@
   width: 10px;
   flex-shrink: 0;
   height: 10px;
-  background-color: var(--oxblood);
+  background-color: var(--oxblood-fill);
 }
 
 .medit-page-header-2-box-box-2 {
@@ -254,7 +254,7 @@
   flex-shrink: 0;
   align-self: stretch;
   padding: 8px 14px 8px 14px;
-  background-color: var(--white);
+  background-color: var(--surface);
   border: 1px solid var(--parchment-line);
   overflow: hidden;
   font-family: var(--font-sans);
@@ -325,7 +325,7 @@
   flex-direction: column;
   align-items: flex-start;
   padding: 2px 6px 2px 6px;
-  background-color: #ece7dc;
+  background-color: var(--paper-tint);
   border: 1px solid var(--parchment-line);
 }
 
@@ -345,7 +345,7 @@
   flex-shrink: 0;
   align-self: stretch;
   padding: 9px 14px 8px 14px;
-  background-color: #ece7dc;
+  background-color: var(--paper-tint);
   border: 1px solid var(--parchment-line);
   overflow: hidden;
   font-family: Cousine, "Courier New", Courier, monospace;
@@ -391,7 +391,7 @@
   flex-shrink: 0;
   align-self: stretch;
   padding: 8px 14px 8px 14px;
-  background-color: var(--white);
+  background-color: var(--surface);
   border: 1px solid var(--parchment-line);
   overflow: hidden;
   font-family: var(--font-sans);
@@ -415,7 +415,7 @@
   flex-shrink: 0;
   align-self: stretch;
   padding: 8px 14px 8px 14px;
-  background-color: var(--white);
+  background-color: var(--surface);
   border: 1px solid var(--parchment-line);
   overflow: hidden;
   font-family: var(--font-sans);
@@ -440,7 +440,7 @@
   flex-shrink: 0;
   align-self: stretch;
   padding: 8px 14px 8px 14px;
-  background-color: var(--white);
+  background-color: var(--surface);
   border: 1px solid var(--parchment-line);
   overflow: hidden;
   font-family: var(--font-sans);
@@ -452,7 +452,7 @@
 }
 
 .medit-input-5::placeholder {
-  color: #9ca3af;
+  color: var(--ink-faint);
   opacity: 1;
 }
 
@@ -520,7 +520,7 @@
   display: flex;
   align-items: flex-start;
   padding: 4px 10px 4px 10px;
-  background-color: var(--white);
+  background-color: var(--surface);
   border: 1px solid var(--parchment-line);
   font-family: var(--font-sans);
   font-size: 11px;
@@ -540,7 +540,7 @@
   align-items: flex-start;
   gap: 16px;
   padding: 16px 0 0 0;
-  border-top: 1px solid rgba(201, 191, 168, 0.6);
+  border-top: 1px solid color-mix(in srgb, var(--parchment-line) 60%, transparent);
 }
 
 .medit-address-section-box {
@@ -595,7 +595,7 @@
   flex-shrink: 0;
   align-self: stretch;
   padding: 8px 14px 8px 14px;
-  background-color: var(--white);
+  background-color: var(--surface);
   border: 1px solid var(--parchment-line);
   overflow: hidden;
   font-family: var(--font-sans);
@@ -607,7 +607,7 @@
 }
 
 .medit-input-6::placeholder {
-  color: #9ca3af;
+  color: var(--ink-faint);
   opacity: 1;
 }
 
@@ -633,7 +633,7 @@
   flex-shrink: 0;
   align-self: stretch;
   padding: 8px 14px 8px 14px;
-  background-color: var(--white);
+  background-color: var(--surface);
   border: 1px solid var(--parchment-line);
   overflow: hidden;
   font-family: var(--font-sans);
@@ -645,7 +645,7 @@
 }
 
 .medit-input-7::placeholder {
-  color: #9ca3af;
+  color: var(--ink-faint);
   opacity: 1;
 }
 
@@ -653,7 +653,7 @@
   flex-shrink: 0;
   align-self: stretch;
   padding: 8px 14px 8px 14px;
-  background-color: var(--white);
+  background-color: var(--surface);
   border: 1px solid var(--parchment-line);
   overflow: hidden;
   font-family: var(--font-sans);
@@ -665,7 +665,7 @@
 }
 
 .medit-input-8::placeholder {
-  color: #9ca3af;
+  color: var(--ink-faint);
   opacity: 1;
 }
 
@@ -673,7 +673,7 @@
   flex-shrink: 0;
   align-self: stretch;
   padding: 8px 14px 8px 14px;
-  background-color: var(--white);
+  background-color: var(--surface);
   border: 1px solid var(--parchment-line);
   overflow: hidden;
   font-family: var(--font-sans);
@@ -685,7 +685,7 @@
 }
 
 .medit-input-9::placeholder {
-  color: #9ca3af;
+  color: var(--ink-faint);
   opacity: 1;
 }
 
@@ -696,7 +696,7 @@
   align-items: center;
   gap: 16px;
   padding: 16px 0 0 0;
-  border-top: 1px solid rgba(201, 191, 168, 0.6);
+  border-top: 1px solid color-mix(in srgb, var(--parchment-line) 60%, transparent);
 }
 
 .medit-action-buttons-box {
@@ -706,14 +706,14 @@
   justify-content: center;
   align-items: center;
   padding: 10px 24px 10px 24px;
-  background-color: var(--oxblood);
+  background-color: var(--oxblood-fill);
   font-family: var(--font-sans);
   font-size: 14px;
   font-weight: 500;
   line-height: 20px;
   letter-spacing: 0.7px;
   text-transform: uppercase;
-  color: var(--paper);
+  color: var(--white);
   text-align: center;
   white-space: nowrap;
 }
@@ -769,7 +769,7 @@
   flex-direction: column;
   align-items: flex-start;
   padding: 24px 0 0 0;
-  border-top: 1px solid rgba(201, 191, 168, 0.6);
+  border-top: 1px solid color-mix(in srgb, var(--parchment-line) 60%, transparent);
 }
 
 .medit-footer-desk-assistance-notice-2-box {

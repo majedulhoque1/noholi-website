@@ -60,7 +60,7 @@
   position: relative;
 }
 
-/* dropdown panel — "Library Hover" etc.: 146px wide, paper fill, 0 4 4 rgba(0,0,0,.25) */
+/* dropdown panel — "Library Hover" etc.: 146px wide, paper fill, 0 4 4 color-mix(in srgb, var(--ink) 25%, transparent) */
 .nav-menu {
   position: absolute;
   top: 100%;
@@ -69,7 +69,7 @@
   display: flex;
   flex-direction: column;
   background-color: var(--paper);
-  box-shadow: 0 4px 4px rgba(0, 0, 0, 0.25);
+  box-shadow: 0 4px 4px color-mix(in srgb, var(--ink) 25%, transparent);
 }
 
 .nav-menu--right {
@@ -114,6 +114,23 @@
   margin-left: 16px; /* 24px left pad in Figma includes the 8px icon padding */
 }
 
+/* Dark mode: swap the moon icon for a sun, in CSS only — the button itself has
+   no theme-aware markup, so the img is hidden and a masked pseudo-element
+   (same 16x16 box) takes its place. */
+:root[data-theme='dark'] .header-theme img {
+  display: none;
+}
+
+:root[data-theme='dark'] .header-theme::after {
+  content: '';
+  display: block;
+  width: 16px;
+  height: 16px;
+  background-color: var(--text-strong);
+  -webkit-mask: url('/svg/sun.svg') center / contain no-repeat;
+  mask: url('/svg/sun.svg') center / contain no-repeat;
+}
+
 .is-member .header-theme {
   margin-left: 20px;
 }
@@ -133,14 +150,14 @@
 .header-cta {
   margin-left: 16px;
   padding: 10px 16px;
-  background-color: var(--oxblood);
+  background-color: var(--oxblood-fill);
   font-family: var(--font-sans);
   font-size: 12px;
   font-weight: 600;
   line-height: 16px;
   letter-spacing: 0.6px;
   text-transform: uppercase;
-  color: var(--paper-bright);
+  color: var(--white);
   white-space: nowrap;
 }
 
@@ -149,7 +166,7 @@
 }
 
 .header-cta:hover {
-  background-color: var(--oxblood-soft);
+  background-color: var(--oxblood-soft-fill);
 }
 
 /* member state */
@@ -193,7 +210,7 @@
   padding-top: 14px;
   background-color: var(--paper);
   border: 1px solid var(--parchment-line);
-  box-shadow: 0 4px 12px -2px rgba(40, 32, 20, 0.08), 0 16px 36px -6px rgba(40, 32, 20, 0.16);
+  box-shadow: 0 4px 12px -2px color-mix(in srgb, var(--ink-deep) 8%, transparent), 0 16px 36px -6px color-mix(in srgb, var(--ink-deep) 16%, transparent);
 }
 
 .account-menu::before {
@@ -233,12 +250,12 @@
 
 .account-menu-dot {
   margin: 0 6px;
-  color: #70685b;
+  color: var(--ink-faint);
 }
 
 .account-menu-badge {
   padding: 2px 8px;
-  background-color: var(--oxblood);
+  background-color: var(--oxblood-fill);
   font-family: var(--font-sans);
   font-size: 10.5px;
   font-weight: 700;
@@ -250,8 +267,8 @@
 
 .account-menu-list {
   padding: 4px 0;
-  border-top: 1px solid #ddd4c4;
-  border-bottom: 1px solid #ddd4c4;
+  border-top: 1px solid var(--paper-tint);
+  border-bottom: 1px solid var(--paper-tint);
 }
 
 .account-menu-item {
@@ -272,13 +289,13 @@
 .account-menu-hint {
   font-size: 12px;
   line-height: 18px;
-  color: #70685b;
+  color: var(--ink-faint);
 }
 
 .account-menu-hint--due {
   font-weight: 600;
   letter-spacing: -0.3px;
-  color: #1b5e4a;
+  color: var(--green);
 }
 
 .account-menu-foot {

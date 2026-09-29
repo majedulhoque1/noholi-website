@@ -40,7 +40,7 @@ export default function StudioWriting() {
   // the design's ledger figures are shown until the visitor edits, then counted live
   const [edited, setEdited] = useState({ abstract: false, manuscript: false });
   const ms = useManuscript(MANUSCRIPT);
-  const { status, setStatus, submit } = useSubmission(REQUIRED, SOON_STUDIO, { ok: false });
+  const { status, setStatus, submit } = useSubmission(REQUIRED, SOON_STUDIO(), { ok: false });
   const onSaveDraft = () =>
     setStatus(saveDraft(formRef.current, 'noholi.draft.creative-writing')
       ? { ok: true, text: 'Draft saved in this browser.' }

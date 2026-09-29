@@ -39,7 +39,7 @@
   align-items: flex-start;
   padding: 12px max(48px, calc((100% - 1184px) / 2)) 12px;
   background-color: var(--paper);
-  border-bottom: 1px solid rgba(201, 191, 168, 0.6);
+  border-bottom: 1px solid color-mix(in srgb, var(--parchment-line) 60%, transparent);
 }
 
 .audiobook-breadcrumb-box {
@@ -185,7 +185,7 @@
   flex-direction: column;
   align-items: flex-start;
   padding: 4px 10px 4px 10px;
-  background-color: var(--ink);
+  background-color: var(--ink-fill);
 }
 
 .audiobook-archival-dossier-header-strip-2-box-box-box-text {
@@ -196,7 +196,7 @@
   line-height: 16.5px;
   letter-spacing: 1.54px;
   text-transform: uppercase;
-  color: var(--paper);
+  color: var(--white);
   white-space: nowrap;
   min-height: 17px;
 }
@@ -239,7 +239,7 @@
   width: 8px;
   flex-shrink: 0;
   height: 8px;
-  background-color: var(--oxblood);
+  background-color: var(--oxblood-fill);
 }
 
 .audiobook-archival-dossier-header-strip-2-box-box-2-box-text {
@@ -692,7 +692,7 @@
   top: 24px;
   width: 4px;
   height: 16px;
-  background-color: var(--ink);
+  background-color: var(--ink-fill);
 }
 
 .audiobook-stylized-bengali-waveform-cartou-box-box-2 {
@@ -701,7 +701,7 @@
   top: 16px;
   width: 4px;
   height: 32px;
-  background-color: var(--ink);
+  background-color: var(--ink-fill);
 }
 
 .audiobook-stylized-bengali-waveform-cartou-box-box-3 {
@@ -710,7 +710,7 @@
   top: 8px;
   width: 4px;
   height: 48px;
-  background-color: var(--oxblood);
+  background-color: var(--oxblood-fill);
 }
 
 .audiobook-stylized-bengali-waveform-cartou-box-box-4 {
@@ -719,7 +719,7 @@
   top: 20px;
   width: 4px;
   height: 24px;
-  background-color: var(--ink);
+  background-color: var(--ink-fill);
 }
 
 .audiobook-stylized-bengali-waveform-cartou-box-box-5 {
@@ -728,7 +728,7 @@
   top: 4px;
   width: 4px;
   height: 56px;
-  background-color: var(--ink);
+  background-color: var(--ink-fill);
 }
 
 .audiobook-stylized-bengali-waveform-cartou-box-box-6 {
@@ -737,7 +737,7 @@
   top: 0;
   width: 4px;
   height: 64px;
-  background-color: var(--oxblood);
+  background-color: var(--oxblood-fill);
 }
 
 .audiobook-stylized-bengali-waveform-cartou-box-box-7 {
@@ -746,7 +746,7 @@
   top: 12px;
   width: 4px;
   height: 40px;
-  background-color: var(--ink);
+  background-color: var(--ink-fill);
 }
 
 .audiobook-stylized-bengali-waveform-cartou-box-box-8 {
@@ -755,7 +755,7 @@
   top: 8px;
   width: 4px;
   height: 48px;
-  background-color: var(--ink);
+  background-color: var(--ink-fill);
 }
 
 .audiobook-stylized-bengali-waveform-cartou-box-box-9 {
@@ -764,7 +764,7 @@
   top: 16px;
   width: 4px;
   height: 32px;
-  background-color: var(--oxblood);
+  background-color: var(--oxblood-fill);
 }
 
 .audiobook-stylized-bengali-waveform-cartou-box-box-10 {
@@ -773,7 +773,7 @@
   top: 4px;
   width: 4px;
   height: 56px;
-  background-color: var(--ink);
+  background-color: var(--ink-fill);
 }
 
 .audiobook-stylized-bengali-waveform-cartou-box-box-11 {
@@ -782,7 +782,7 @@
   top: 0;
   width: 4px;
   height: 64px;
-  background-color: var(--ink);
+  background-color: var(--ink-fill);
 }
 
 .audiobook-stylized-bengali-waveform-cartou-box-box-12 {
@@ -791,7 +791,7 @@
   top: 14px;
   width: 4px;
   height: 36px;
-  background-color: var(--ink);
+  background-color: var(--ink-fill);
 }
 
 .audiobook-stylized-bengali-waveform-cartou-box-box-13 {
@@ -800,7 +800,7 @@
   top: 10px;
   width: 4px;
   height: 44px;
-  background-color: var(--oxblood);
+  background-color: var(--oxblood-fill);
 }
 
 .audiobook-stylized-bengali-waveform-cartou-box-box-14 {
@@ -809,7 +809,7 @@
   top: 18px;
   width: 4px;
   height: 28px;
-  background-color: var(--ink);
+  background-color: var(--ink-fill);
 }
 
 .audiobook-stylized-bengali-waveform-cartou-box-box-15 {
@@ -818,7 +818,7 @@
   top: 22px;
   width: 4px;
   height: 20px;
-  background-color: var(--ink);
+  background-color: var(--ink-fill);
 }
 
 .audiobook-stylized-bengali-waveform-cartou-box-2 {
@@ -992,7 +992,7 @@
   align-items: center;
   gap: 8px;
   padding: 14px 20px 14px 20px;
-  background-color: var(--oxblood);
+  background-color: var(--oxblood-fill);
 }
 
 .audiobook-folio-control-actions-box-box {
@@ -1011,7 +1011,7 @@
   line-height: 16px;
   letter-spacing: 1.44px;
   text-transform: uppercase;
-  color: var(--paper);
+  color: var(--white);
   text-align: center;
   white-space: nowrap;
   min-height: 16px;
@@ -1136,7 +1136,7 @@
   width: 8px;
   flex-shrink: 0;
   height: 8px;
-  background-color: var(--oxblood);
+  background-color: var(--oxblood-fill);
 }
 
 .audiobook-horizontalborder-box-2-box-2 {
@@ -1260,7 +1260,7 @@
   align-self: stretch;
   position: relative;
   width: 624px;
-  background-color: rgba(201, 191, 168, 0.5);
+  background-color: color-mix(in srgb, var(--parchment-line) 50%, transparent);
 }
 
 .audiobook-overlay-box {
@@ -1269,7 +1269,7 @@
   top: 0;
   width: 315.73px;
   height: 8px;
-  background-color: var(--oxblood);
+  background-color: var(--oxblood-fill);
 }
 
 .audiobook-scrubber-and-timeline-box {
@@ -1341,7 +1341,7 @@
   align-items: center;
   gap: 8px;
   padding: 10px 20px 10px 20px;
-  background-color: var(--oxblood);
+  background-color: var(--oxblood-fill);
 }
 
 .audiobook-toggle-play-pause-box {
@@ -1367,7 +1367,7 @@
   line-height: 16px;
   letter-spacing: 0.6px;
   text-transform: uppercase;
-  color: var(--paper-bright);
+  color: var(--white);
   text-align: center;
   white-space: nowrap;
   min-height: 16px;
@@ -1423,13 +1423,13 @@
   justify-content: center;
   align-items: center;
   padding: 2px 8px 2px 8px;
-  background-color: var(--ink);
+  background-color: var(--ink-fill);
   border: 1px solid var(--ink);
   font-family: Arial, Helvetica, sans-serif;
   font-size: 12px;
   font-weight: 400;
   line-height: 16px;
-  color: var(--paper);
+  color: var(--white);
   text-align: center;
   white-space: nowrap;
   min-height: 22px;
@@ -1477,7 +1477,7 @@
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  background-color: var(--white);
+  background-color: var(--surface);
 }
 
 .audiobook-input-audio-volume-box {
@@ -1584,7 +1584,7 @@
   justify-content: space-between;
   align-items: center;
   padding: 16px;
-  background-color: rgba(122, 46, 39, 0.05);
+  background-color: color-mix(in srgb, var(--oxblood) 5%, transparent);
 }
 
 .audiobook-chapter-1-box {
@@ -1601,7 +1601,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  background-color: var(--oxblood);
+  background-color: var(--oxblood-fill);
 }
 
 .audiobook-chapter-1-box-box-text {
@@ -1610,7 +1610,7 @@
   font-size: 12px;
   font-weight: 600;
   line-height: 16px;
-  color: var(--paper);
+  color: var(--white);
   text-align: center;
   white-space: nowrap;
   min-height: 16px;
@@ -1670,7 +1670,7 @@
   flex-direction: column;
   align-items: flex-start;
   padding: 0 6px 0 6px;
-  background-color: var(--oxblood);
+  background-color: var(--oxblood-fill);
 }
 
 .audiobook-chapter-1-box-box-2-box-box-2-text {
@@ -1681,7 +1681,7 @@
   line-height: 15px;
   letter-spacing: 0.5px;
   text-transform: uppercase;
-  color: var(--paper);
+  color: var(--white);
   white-space: nowrap;
   min-height: 15px;
 }
@@ -2893,6 +2893,6 @@
 .audiobook-skip:hover { opacity: 0.7; }
 .audiobook-toggle-play-pause, .audiobook-folio-control-actions-box,
 .audiobook-speed-volume-controls-box-box-2, .audiobook-speed-volume-controls-box-box-3 { cursor: pointer; }
-.audiobook-speed-volume-controls-box-box-3:hover { border-color: var(--ink); }
+.audiobook-speed-volume-controls-box-box-3:hover { border-color: var(--ink-fill); }
 .audiobook-pause-glyph { font-size: 8px; line-height: 11px; letter-spacing: -1px; }
 .audiobook-overlay-box { transition: width 0.9s linear; }

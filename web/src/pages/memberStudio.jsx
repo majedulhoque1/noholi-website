@@ -1,4 +1,5 @@
 import { useRef, useState } from 'react';
+import { translate, useLang } from '../i18n/LanguageContext.jsx';
 import './memberStudio.css';
 
 // Shared behaviour for the member-only form pages (writing studio, wishlist requests).
@@ -7,16 +8,19 @@ import './memberStudio.css';
 /**
  * Online writing submissions and wishlists are not built yet (no backend). Forms still check
  * their fields, then say plainly that nothing was sent.
+ * Functions (not plain strings) so the message reflects the language active when a page
+ * component actually renders/submits, not whatever was active when this module first loaded.
  */
-export const SOON_STUDIO = 'Coming soon: online submissions to the editorial desk are not open yet, so nothing was sent. Save a draft in this browser, or bring your manuscript to the circulation desk.';
-export const SOON_REQUEST = 'Coming soon: requests cannot be sent online yet, so nothing was sent. Please ask at the circulation desk.';
+export const SOON_STUDIO = () => translate('studioShared.soonStudio');
+export const SOON_REQUEST = () => translate('studioShared.soonRequest');
 
 /** Honest empty state for lists that have no data source yet, drawn inside the page's own layout. */
-export function ComingSoon({ title = 'Coming soon', children, action }) {
+export function ComingSoon({ title, children, action }) {
+  const { t } = useLang();
   return (
     <div className="studio-soon" role="note">
       <span className="studio-soon-kicker">COMING SOON / শীঘ্রই আসছে</span>
-      <p className="studio-soon-title">{title}</p>
+      <p className="studio-soon-title">{title ?? t('studioShared.comingSoon')}</p>
       {children && <p className="studio-soon-text">{children}</p>}
       {action}
     </div>
@@ -25,6 +29,7 @@ export function ComingSoon({ title = 'Coming soon', children, action }) {
 
 /** Validates `required` ([name, label] pairs, plus checkbox names) and returns an inline status. */
 export function useSubmission(required, successText, { ok: successOk = true } = {}) {
+  const { t } = useLang();
   const [status, setStatus] = useState(null);
   const submit = (e, extraCheck) => {
     e.preventDefault();
@@ -38,7 +43,7 @@ export function useSubmission(required, successText, { ok: successOk = true } = 
       })
       .map(([, label]) => label);
     if (missing.length) {
-      setStatus({ ok: false, text: `Please complete: ${missing.join(', ')}.` });
+      setStatus({ ok: false, text: t('studioShared.pleaseComplete', { fields: missing.join(', ') }) });
       return false;
     }
     const problem = extraCheck ? extraCheck(data, form) : null;

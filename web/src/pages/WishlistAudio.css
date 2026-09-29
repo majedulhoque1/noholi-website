@@ -104,7 +104,7 @@
   width: 8px;
   flex-shrink: 0;
   height: 8px;
-  background-color: var(--oxblood-soft);
+  background-color: var(--oxblood-soft-fill);
 }
 
 .wlaudio-folio-header-breadcrumbs-strip-box-box-box-2 {
@@ -320,7 +320,7 @@
   justify-content: space-between;
   align-items: center;
   padding: 0 0 4px 0;
-  border-bottom: 1px solid rgba(205, 197, 188, 0.6);
+  border-bottom: 1px solid color-mix(in srgb, var(--stone) 60%, transparent);
 }
 
 .wlaudio-horizontalborder-box {
@@ -422,7 +422,7 @@
   flex-direction: column;
   align-items: flex-start;
   padding: 2px 0 0 0;
-  border-top: 1px solid rgba(205, 197, 188, 0.4);
+  border-top: 1px solid color-mix(in srgb, var(--stone) 40%, transparent);
 }
 
 .wlaudio-horizontalborder-2-box {
@@ -577,7 +577,7 @@
   align-items: center;
   gap: 16px;
   padding: 0 0 16px 0;
-  background-color: var(--white);
+  background-color: var(--surface);
   border: 1px solid var(--stone);
 }
 
@@ -603,7 +603,7 @@
   width: 8px;
   flex-shrink: 0;
   height: 8px;
-  background-color: var(--oxblood-soft);
+  background-color: var(--oxblood-soft-fill);
 }
 
 .wlaudio-background-horizontalborder-box-box-2 {
@@ -696,7 +696,7 @@
   justify-content: center;
   align-items: center;
   padding: 8px;
-  background-color: #ece8df;
+  background-color: var(--paper-tint);
   border: 1px solid var(--stone);
   overflow: hidden;
 }
@@ -760,7 +760,7 @@
   align-items: flex-start;
   padding: 2px 4px 2px 4px;
   background-color: var(--paper-dim);
-  border: 1px solid rgba(205, 197, 188, 0.6);
+  border: 1px solid color-mix(in srgb, var(--stone) 60%, transparent);
 }
 
 .wlaudio-background-border-3-text {
@@ -807,8 +807,8 @@
   align-items: flex-start;
   gap: 12px;
   padding: 8px 0 8px 0;
-  border-top: 1px solid rgba(205, 197, 188, 0.5);
-  border-bottom: 1px solid rgba(205, 197, 188, 0.5);
+  border-top: 1px solid color-mix(in srgb, var(--stone) 50%, transparent);
+  border-bottom: 1px solid color-mix(in srgb, var(--stone) 50%, transparent);
 }
 
 .wlaudio-border-box {
@@ -1064,7 +1064,7 @@
   align-items: center;
   gap: 16px;
   padding: 0 0 16px 0;
-  background-color: var(--white);
+  background-color: var(--surface);
   border: 1px solid var(--stone);
 }
 
@@ -1091,7 +1091,7 @@
   width: 8px;
   flex-shrink: 0;
   height: 8px;
-  background-color: var(--ink-faint);
+  background-color: var(--ink-soft-fill);
 }
 
 .wlaudio-background-horizontalborder-2-box-box-2 {
@@ -1155,7 +1155,7 @@
   line-height: 14px;
   letter-spacing: 0.55px;
   text-transform: uppercase;
-  color: #4c463a;
+  color: var(--ink-muted);
   white-space: nowrap;
 }
 
@@ -1186,7 +1186,7 @@
   justify-content: center;
   align-items: center;
   padding: 8px;
-  background-color: #ece8df;
+  background-color: var(--paper-tint);
   border: 1px solid var(--stone);
   overflow: hidden;
 }
@@ -1211,7 +1211,7 @@
   flex-direction: column;
   align-items: center;
   padding: 0 2px 0 2px;
-  background-color: var(--oxblood-soft);
+  background-color: var(--oxblood-soft-fill);
 }
 
 .wlaudio-background-border-4-box-text {
@@ -1299,8 +1299,8 @@
   align-items: flex-start;
   gap: 12px;
   padding: 14px 0 8px 0;
-  border-top: 1px solid rgba(205, 197, 188, 0.5);
-  border-bottom: 1px solid rgba(205, 197, 188, 0.5);
+  border-top: 1px solid color-mix(in srgb, var(--stone) 50%, transparent);
+  border-bottom: 1px solid color-mix(in srgb, var(--stone) 50%, transparent);
 }
 
 .wlaudio-border-2-box {
@@ -1422,7 +1422,7 @@
   align-items: center;
   gap: 4px;
   padding: 8px 16px 8px 16px;
-  border: 1px solid var(--black);
+  border: 1px solid var(--text-strong);
 }
 
 .wlaudio-article-entry-2-titash-ekti-nadi-box-box-2-box-2-box-box-box {
@@ -1448,7 +1448,7 @@
   line-height: 18px;
   letter-spacing: 1.04px;
   text-transform: uppercase;
-  color: var(--black);
+  color: var(--text-strong);
   text-align: center;
   white-space: nowrap;
 }
@@ -1514,7 +1514,7 @@
   align-items: center;
   gap: 16px;
   padding: 0 0 16px 0;
-  background-color: var(--white);
+  background-color: var(--surface);
   border: 1px solid var(--stone);
 }
 
@@ -1726,7 +1726,7 @@
   align-items: center;
   gap: 16px;
   padding: 0 0 16px 0;
-  background-color: var(--white);
+  background-color: var(--surface);
   border: 1px solid var(--stone);
 }
 
@@ -2053,7 +2053,7 @@
   align-items: flex-start;
   gap: 15.3px;
   padding: 24px;
-  background-color: var(--white);
+  background-color: var(--surface);
   border: 1px solid var(--stone);
 }
 
@@ -2197,7 +2197,7 @@
 }
 
 .wlaudio-input::placeholder {
-  color: rgba(75, 70, 63, 0.6);
+  color: color-mix(in srgb, var(--ink-muted) 60%, transparent);
   opacity: 1;
 }
 
@@ -2227,7 +2227,7 @@
 }
 
 .wlaudio-input-2::placeholder {
-  color: rgba(75, 70, 63, 0.6);
+  color: color-mix(in srgb, var(--ink-muted) 60%, transparent);
   opacity: 1;
 }
 
@@ -2262,7 +2262,7 @@
 }
 
 .wlaudio-input-3::placeholder {
-  color: rgba(75, 70, 63, 0.6);
+  color: color-mix(in srgb, var(--ink-muted) 60%, transparent);
   opacity: 1;
 }
 
@@ -2313,7 +2313,7 @@
 }
 
 .wlaudio-input-4::placeholder {
-  color: rgba(75, 70, 63, 0.6);
+  color: color-mix(in srgb, var(--ink-muted) 60%, transparent);
   opacity: 1;
 }
 
@@ -2345,7 +2345,7 @@
 }
 
 .wlaudio-textarea::placeholder {
-  color: rgba(75, 70, 63, 0.6);
+  color: color-mix(in srgb, var(--ink-muted) 60%, transparent);
   opacity: 1;
 }
 
@@ -2357,7 +2357,7 @@
   align-items: center;
   gap: 8px;
   padding: 12px 16px 12px 16px;
-  background-color: var(--oxblood-soft);
+  background-color: var(--oxblood-soft-fill);
 }
 
 .wlaudio-submit-button-in-brand-sealing-w-box {
@@ -2397,7 +2397,7 @@
   align-items: center;
   gap: 6px;
   padding: 11.5px 0 2.5px 0;
-  border-top: 1px solid rgba(205, 197, 188, 0.6);
+  border-top: 1px solid color-mix(in srgb, var(--stone) 60%, transparent);
 }
 
 .wlaudio-paragraph-horizontalborder-text {
@@ -2420,7 +2420,7 @@
   align-items: flex-start;
   gap: 16px;
   padding: 24px;
-  background-color: var(--white);
+  background-color: var(--surface);
   border: 1px solid var(--stone);
 }
 
@@ -2537,7 +2537,7 @@
   flex-direction: column;
   align-items: flex-start;
   padding: 0 4px 0 4px;
-  background-color: #ffdad5;
+  background-color: var(--error-bg);
 }
 
 .wlaudio-proposal-1-box-box-text {
@@ -2548,7 +2548,7 @@
   line-height: 14px;
   letter-spacing: 1.32px;
   text-transform: uppercase;
-  color: #3f0303;
+  color: var(--oxblood);
   white-space: nowrap;
 }
 
@@ -2577,7 +2577,7 @@
   justify-content: space-between;
   align-items: center;
   padding: 4px 0 0 0;
-  border-top: 1px solid rgba(205, 197, 188, 0.6);
+  border-top: 1px solid color-mix(in srgb, var(--stone) 60%, transparent);
 }
 
 .wlaudio-horizontalborder-6-box {
@@ -2671,7 +2671,7 @@
   flex-direction: column;
   align-items: flex-start;
   padding: 0 4px 0 4px;
-  background-color: #ece1d1;
+  background-color: var(--paper-tint);
 }
 
 .wlaudio-proposal-2-box-box-text {
@@ -2682,7 +2682,7 @@
   line-height: 14px;
   letter-spacing: 1.32px;
   text-transform: uppercase;
-  color: #201b11;
+  color: var(--ink);
   white-space: nowrap;
 }
 

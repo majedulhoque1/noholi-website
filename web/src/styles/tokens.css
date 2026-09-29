@@ -1,6 +1,8 @@
-/* Noholi design tokens — values taken verbatim from the Figma export. */
+/* Noholi design tokens — values taken verbatim from the Figma export.
+   Dark ("night") mode lives in the :root[data-theme="dark"] block below.
+   Toggled by web/src/lib/theme.js via document.documentElement.dataset.theme. */
 :root {
-  /* ink */
+  /* ink (text) */
   --ink: #1a1815;
   --ink-deep: #1c1c16;
   --ink-soft: #4a4438;
@@ -9,10 +11,11 @@
   --black: #000000;
   --white: #ffffff;
 
-  /* paper */
+  /* paper (surfaces) */
   --paper: #f7f3ea;
   --paper-bright: #fdf9f0;
   --paper-dim: #f1eee5;
+  --paper-tint: #ece8df;
   --parchment-line: #c9bfa8;
   --stone: #cdc5bc;
 
@@ -20,6 +23,23 @@
   --oxblood: #7a2e27;
   --oxblood-soft: #98453c;
   --green: #065f46;
+
+  /* Semantic roles carved out of the dual-purpose tokens above, so a single
+     token never has to mean two different things in dark mode. Each one's
+     light value equals the token it was carved from, so light mode is
+     pixel-identical; only the dark override (below) differs per role. */
+  --surface: #ffffff; /* was: --white used as a card background */
+  --text-strong: #000000; /* was: --black used for text/dividers */
+  --oxblood-fill: #7a2e27; /* was: --oxblood used as a background / filled-button border */
+  --oxblood-soft-fill: #98453c; /* was: --oxblood-soft used as a background */
+  --ink-fill: #1a1815; /* was: --ink used as a solid "ink stamp" background (chips, hover states, notice banners) */
+  --ink-soft-fill: #4a4438; /* was: --ink-soft used as a swatch/illustration fill (book-cover placeholders, hero spine art, status dots) */
+  --stone-fill: #cdc5bc; /* was: --stone used as a hairline divider bar (background-color, not border) */
+  --green-fill: #065f46; /* was: --green used as a swatch fill with light text on top */
+
+  /* status */
+  --error: #ba1a1a;
+  --error-bg: #ffdad5;
 
   /* type */
   --font-sans: 'Source Sans 3', 'Source Sans Pro', Arial, sans-serif;
@@ -29,4 +49,54 @@
   --font-work: 'Work Sans', Arial, sans-serif;
   --font-bengali: 'Noto Serif Bengali', serif;
   --font-mono: 'JetBrains Mono', 'Courier New', monospace;
+}
+
+/* Night mode — warm editorial dark, not grey. Text tokens lighten for
+   contrast; "fill" tokens (the *-fill roles, plus --black/--white which are
+   intentionally left out of this block) keep their own identity so filled
+   buttons, seals and illustration swatches read as deliberate ink/color
+   rather than inverting into pale shapes. */
+:root[data-theme='dark'] {
+  /* ink -> pale text on a dark page (--ink ~4.5:1+, secondary tones same) */
+  --ink: #efe8da;
+  --ink-deep: #f5efe0;
+  --ink-soft: #a89c86;
+  --ink-muted: #9f9380;
+  --ink-faint: #93876d;
+  /* --black and --white are deliberately NOT overridden: --black stays the
+     literal ink-stamp black used by a few self-bordered seals/chips, --white
+     stays literal white wherever it is text on a filled button. */
+
+  /* paper -> a warm-dark, three-step surface stack (page / card / raised) */
+  --paper: #15120e;
+  --paper-bright: #1c1813;
+  --paper-dim: #231e18;
+  --paper-tint: #231e18;
+  --parchment-line: #3a332a;
+  --stone: #ada192;
+
+  /* accents: text/thin-line role lightens for legibility, fills stay a rich,
+     saturated mid tone so filled buttons keep their weight */
+  --oxblood: #d48476;
+  --oxblood-soft: #e0a091;
+  --green: #5cc290;
+
+  --surface: #1c1813;
+  --text-strong: #efe8da;
+  --oxblood-fill: #8e3a31;
+  --oxblood-soft-fill: #a34a3f;
+  --ink-fill: #0d0b07;
+  --ink-soft-fill: #4a4438;
+  --stone-fill: #453b2d;
+  --green-fill: #2f6b4a;
+
+  --error: #ffb4ab;
+  --error-bg: #93000a;
+}
+
+/* Logos are black-on-transparent PNGs: show them light on the dark page. */
+:root[data-theme='dark'] .header-logo img,
+:root[data-theme='dark'] .site-footer-logo img,
+:root[data-theme='dark'] .mobile-menu-logo img {
+  filter: invert(1) sepia(0.15) brightness(0.96);
 }

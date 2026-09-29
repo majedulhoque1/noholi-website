@@ -12,7 +12,7 @@
   align-items: flex-start;
   padding: 0 max(192px, calc((100% - 896px) / 2)) 0;
   background-color: var(--paper);
-  border-bottom: 1px solid rgba(201, 191, 168, 0.6);
+  border-bottom: 1px solid color-mix(in srgb, var(--parchment-line) 60%, transparent);
 }
 
 .reader-breadcrumb-reader-status-bar-box {
@@ -347,7 +347,7 @@
   align-items: center;
   gap: 8px;
   padding: 8px 16px 8px 16px;
-  background-color: var(--oxblood);
+  background-color: var(--oxblood-fill);
 }
 
 .reader-navigation-controls-with-neutral-box-3-box {
@@ -365,7 +365,7 @@
   line-height: 16px;
   letter-spacing: 0.6px;
   text-transform: uppercase;
-  color: var(--paper);
+  color: var(--white);
   text-align: center;
   white-space: nowrap;
   min-height: 16px;
@@ -379,7 +379,7 @@
   line-height: 16px;
   letter-spacing: 0.6px;
   text-transform: uppercase;
-  color: var(--paper);
+  color: var(--white);
   text-align: center;
   white-space: nowrap;
   min-height: 16px;

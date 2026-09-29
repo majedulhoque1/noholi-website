@@ -33,7 +33,7 @@ export default function StudioBlog() {
   const [duration, setDuration] = useState('10-15');
   const [abstract, setAbstract] = useState('');
   const ms = useManuscript();
-  const { status, setStatus, submit } = useSubmission(REQUIRED, SOON_STUDIO, { ok: false });
+  const { status, setStatus, submit } = useSubmission(REQUIRED, SOON_STUDIO(), { ok: false });
   const onSaveDraft = () =>
     setStatus(saveDraft(formRef.current, 'noholi.draft.blog')
       ? { ok: true, text: 'Draft saved in this browser.' }

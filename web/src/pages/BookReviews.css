@@ -110,7 +110,7 @@
   width: 6px;
   flex-shrink: 0;
   height: 6px;
-  background-color: var(--oxblood-soft);
+  background-color: var(--oxblood-soft-fill);
 }
 
 .reviews-folio-header-breadcrumbs-registr-box-box-text {
@@ -275,7 +275,7 @@
   align-items: center;
   gap: 16px;
   padding: 16px 0 0 0;
-  border-top: 1px solid rgba(205, 197, 188, 0.6);
+  border-top: 1px solid color-mix(in srgb, var(--stone) 60%, transparent);
 }
 
 .reviews-horizontalborder-box {
@@ -424,7 +424,7 @@
   align-items: flex-start;
   gap: -0.5px;
   padding: 0 0 3.5px 12px;
-  border-left: 1px solid rgba(205, 197, 188, 0.6);
+  border-left: 1px solid color-mix(in srgb, var(--stone) 60%, transparent);
 }
 
 .reviews-verticalborder-box {
@@ -467,7 +467,7 @@
   align-items: flex-start;
   gap: 12px;
   padding: 12px 0 4px 0;
-  border-top: 1px solid rgba(205, 197, 188, 0.6);
+  border-top: 1px solid color-mix(in srgb, var(--stone) 60%, transparent);
 }
 
 .reviews-horizontalborder-2-box {
@@ -520,7 +520,7 @@
   align-items: flex-start;
   gap: 3.5px;
   padding: 0 0 11.5px 12px;
-  border-left: 1px solid rgba(205, 197, 188, 0.6);
+  border-left: 1px solid color-mix(in srgb, var(--stone) 60%, transparent);
 }
 
 .reviews-verticalborder-2-box {
@@ -564,7 +564,7 @@
   justify-content: space-between;
   align-items: center;
   padding: 8px 0.01px 0 0;
-  border-top: 1px solid rgba(205, 197, 188, 0.6);
+  border-top: 1px solid color-mix(in srgb, var(--stone) 60%, transparent);
 }
 
 .reviews-horizontalborder-3-box {
@@ -669,7 +669,7 @@
   align-items: center;
   gap: 4px;
   padding: 0 0 2px 0;
-  border-bottom: 1px solid rgba(152, 69, 60, 0.4);
+  border-bottom: 1px solid color-mix(in srgb, var(--oxblood-soft) 40%, transparent);
 }
 
 .reviews-horizontalborder-4-box {
@@ -875,7 +875,7 @@
   align-items: center;
   gap: 4px;
   padding: 12px 24px 12px 24px;
-  background-color: var(--oxblood-soft);
+  background-color: var(--oxblood-soft-fill);
 }
 
 .reviews-verticalborder-3-box-box {
@@ -976,7 +976,7 @@
   justify-content: center;
   align-items: center;
   padding: 8px 12px 8px 12px;
-  border-bottom: 2px solid rgba(0, 0, 0, 0);
+  border-bottom: 2px solid transparent;
   font-family: var(--font-work);
   font-size: 13px;
   font-weight: 500;
@@ -1069,7 +1069,7 @@
   flex-direction: column;
   justify-content: space-between;
   align-items: flex-start;
-  background-color: var(--white);
+  background-color: var(--surface);
   border: 1px solid var(--stone);
 }
 
@@ -1369,7 +1369,7 @@
   align-items: flex-start;
   gap: 2.5px;
   padding: 8px 0 0 0;
-  border-top: 1px solid rgba(205, 197, 188, 0.6);
+  border-top: 1px solid color-mix(in srgb, var(--stone) 60%, transparent);
 }
 
 .reviews-reviewer-citation-text {
@@ -1565,7 +1565,7 @@
   flex-direction: column;
   align-items: flex-start;
   padding: 2px 4px 2px 4px;
-  background-color: var(--oxblood-soft);
+  background-color: var(--oxblood-soft-fill);
 }
 
 .reviews-progression-badge-2-box-text {
@@ -1654,7 +1654,7 @@
   gap: 1.32px;
   padding: 8px;
   background-color: var(--paper-bright);
-  border: 1px solid rgba(205, 197, 188, 0.8);
+  border: 1px solid color-mix(in srgb, var(--stone) 80%, transparent);
 }
 
 .reviews-core-syllabus-list-2-box {
@@ -1734,7 +1734,7 @@
   align-items: flex-start;
   gap: 2.5px;
   padding: 8px 0 0 0;
-  border-top: 1px solid rgba(205, 197, 188, 0.6);
+  border-top: 1px solid color-mix(in srgb, var(--stone) 60%, transparent);
 }
 
 .reviews-metadata-date-text {
@@ -1784,7 +1784,7 @@
   flex-direction: column;
   justify-content: space-between;
   align-items: flex-start;
-  background-color: var(--white);
+  background-color: var(--surface);
   border: 1px solid var(--stone);
 }
 
@@ -2105,7 +2105,7 @@
   flex-direction: column;
   justify-content: space-between;
   align-items: flex-start;
-  background-color: var(--white);
+  background-color: var(--surface);
   border: 1px solid var(--stone);
 }
 
@@ -2404,7 +2404,7 @@
   gap: 1.38px;
   padding: 8px;
   background-color: var(--paper-bright);
-  border: 1px solid rgba(205, 197, 188, 0.8);
+  border: 1px solid color-mix(in srgb, var(--stone) 80%, transparent);
 }
 
 .reviews-core-syllabus-list-3-box {
@@ -2461,7 +2461,7 @@
   flex-direction: column;
   justify-content: space-between;
   align-items: flex-start;
-  background-color: var(--white);
+  background-color: var(--surface);
   border: 1px solid var(--stone);
 }
 
@@ -2816,7 +2816,7 @@
   flex-direction: column;
   align-items: flex-start;
   padding: 24px;
-  background-color: rgba(247, 243, 234, 0.5);
+  background-color: color-mix(in srgb, var(--paper) 50%, transparent);
   border: 1px solid var(--stone);
 }
 

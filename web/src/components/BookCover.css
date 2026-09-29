@@ -8,14 +8,14 @@
   container-type: inline-size;
   background-color: var(--bc-bg);
   color: var(--bc-fg);
-  --bc-bg: var(--oxblood);
-  --bc-fg: var(--paper);
-  --bc-frame: rgba(247, 243, 234, 0.45);
+  --bc-bg: var(--oxblood-fill);
+  --bc-fg: var(--white);
+  --bc-frame: color-mix(in srgb, var(--white) 45%, transparent);
 }
-.bookcover--oxblood { --bc-bg: var(--oxblood); --bc-fg: var(--paper); }
-.bookcover--green { --bc-bg: var(--green); --bc-fg: var(--paper); }
-.bookcover--umber { --bc-bg: var(--ink-soft); --bc-fg: var(--paper-bright); }
-.bookcover--rose { --bc-bg: var(--oxblood-soft); --bc-fg: var(--paper-bright); }
+.bookcover--oxblood { --bc-bg: var(--oxblood-fill); --bc-fg: var(--white); }
+.bookcover--green { --bc-bg: var(--green-fill); --bc-fg: var(--white); }
+.bookcover--umber { --bc-bg: var(--ink-soft-fill); --bc-fg: var(--white); }
+.bookcover--rose { --bc-bg: var(--oxblood-soft-fill); --bc-fg: var(--white); }
 .bookcover--paper { --bc-bg: var(--paper-dim); --bc-fg: var(--ink); --bc-frame: var(--parchment-line); }
 
 .bookcover-img {

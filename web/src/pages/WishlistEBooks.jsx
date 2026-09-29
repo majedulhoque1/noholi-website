@@ -26,7 +26,7 @@ export default function WishlistEBooks() {
   const [sort, setSort] = useState('latest');
   const [format, setFormat] = useState('both');
   // E-book wishlists and digitisation proposals have no backend yet: honest "coming soon" states.
-  const { status, submit } = useSubmission(REQUIRED, SOON_REQUEST, { ok: false });
+  const { status, submit } = useSubmission(REQUIRED, SOON_REQUEST(), { ok: false });
   const onSubmit = (e) => submit(e);
 
   return (

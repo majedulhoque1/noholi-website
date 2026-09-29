@@ -205,7 +205,7 @@
   display: flex;
   align-items: center;
   padding: 2px 12px 2px 12px;
-  background-color: #ece8df;
+  background-color: var(--paper-tint);
   border: 1px solid var(--oxblood-soft);
 }
 
@@ -1144,7 +1144,7 @@
   align-self: stretch;
   position: relative;
   width: 140.39px;
-  background-color: var(--stone);
+  background-color: var(--stone-fill);
 }
 
 .writing-background-border-8-box-box-box {
@@ -1153,7 +1153,7 @@
   top: 0;
   width: 46.78px;
   height: 4px;
-  background-color: var(--oxblood-soft);
+  background-color: var(--oxblood-soft-fill);
 }
 
 .writing-background-border-8-box-2 {
@@ -1190,7 +1190,7 @@
   align-items: flex-start;
   gap: 4px;
   padding: 4px 0 4px 16px;
-  background-color: rgba(247, 243, 234, 0.5);
+  background-color: color-mix(in srgb, var(--paper) 50%, transparent);
   border-left: 2px solid var(--oxblood-soft);
 }
 
@@ -1343,7 +1343,7 @@
   flex-direction: column;
   align-items: flex-start;
   padding: 7.43px 0 0 16px;
-  border-left: 1px solid rgba(205, 197, 188, 0.7);
+  border-left: 1px solid color-mix(in srgb, var(--stone) 70%, transparent);
 }
 
 .writing-verticalborder-box {
@@ -1381,7 +1381,7 @@
   width: 48px;
   flex-shrink: 0;
   height: 1px;
-  background-color: var(--stone);
+  background-color: var(--stone-fill);
 }
 
 .writing-ornamental-asterism-box {
@@ -1489,7 +1489,7 @@
   align-items: flex-start;
   gap: 12px;
   padding: 24px;
-  background-color: #ece8df;
+  background-color: var(--paper-tint);
   border-left: 4px solid var(--oxblood-soft);
 }
 
@@ -1773,7 +1773,7 @@
   flex-direction: column;
   align-items: flex-start;
   padding: 8px 16px 8px 16px;
-  background-color: #ece8df;
+  background-color: var(--paper-tint);
   border-bottom: 1px solid var(--stone);
 }
 
@@ -2057,7 +2057,7 @@
   flex-direction: column;
   justify-content: center;
   align-items: flex-start;
-  background-color: #e6e2d9;
+  background-color: var(--paper-tint);
   border: 1px solid var(--stone);
   overflow: hidden;
 }
@@ -2303,7 +2303,7 @@
   flex-direction: column;
   align-items: flex-start;
   padding: 32px 48px 32px 48px;
-  background-color: #ece8df;
+  background-color: var(--paper-tint);
   border-top: 1px solid var(--stone);
   border-bottom: 1px solid var(--stone);
 }
@@ -2401,7 +2401,7 @@
   flex-direction: column;
   align-items: center;
   padding: 12px 24px 12px 24px;
-  background-color: var(--oxblood-soft);
+  background-color: var(--oxblood-soft-fill);
   font-family: var(--font-work);
   font-size: 13px;
   font-weight: 500;

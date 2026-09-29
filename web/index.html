@@ -5,6 +5,31 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Noholi Library — Stories Live Here</title>
     <meta name="description" content="A community reading room and independent press for Bengali literature in Dhaka." />
+    <!-- Night mode: set data-theme before first paint so there is no light-mode flash.
+         Kept in sync at runtime by src/lib/theme.js (same storage key, same logic). -->
+    <script>
+      (function () {
+        try {
+          var stored = null;
+          try {
+            stored = window.localStorage.getItem('noholi.theme');
+          } catch (e) {}
+          var theme =
+            stored === 'dark' || stored === 'light'
+              ? stored
+              : window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches
+                ? 'dark'
+                : 'light';
+          document.documentElement.dataset.theme = theme;
+        } catch (e) {}
+      })();
+    </script>
+    <meta name="theme-color" content="#fdf9f0" />
+    <style>
+      :root[data-theme='dark'] {
+        color-scheme: dark;
+      }
+    </style>
     <link rel="icon" type="image/png" href="/images/logo-header.png" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />

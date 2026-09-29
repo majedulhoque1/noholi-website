@@ -124,7 +124,7 @@
   line-height: 16px;
   letter-spacing: 1.2px;
   text-transform: uppercase;
-  color: var(--black);
+  color: var(--text-strong);
   white-space: nowrap;
   min-height: 16px;
 }
@@ -160,7 +160,7 @@
   width: 6px;
   flex-shrink: 0;
   height: 6px;
-  background-color: var(--oxblood-soft);
+  background-color: var(--oxblood-soft-fill);
 }
 
 .gallery-section {
@@ -1539,7 +1539,7 @@
   width: 10px;
   flex-shrink: 0;
   height: 10px;
-  background-color: var(--oxblood-soft);
+  background-color: var(--oxblood-soft-fill);
 }
 
 .gallery-section-3-box-box-box-2 {

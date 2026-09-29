@@ -45,7 +45,7 @@ export default function StudioReview() {
   const [plate, setPlate] = useState(null);
   // the design's ledger figures are shown until the critique is edited, then counted live
   const [counts, setCounts] = useState(null);
-  const { status, setStatus, submit } = useSubmission(REQUIRED, SOON_STUDIO, { ok: false });
+  const { status, setStatus, submit } = useSubmission(REQUIRED, SOON_STUDIO(), { ok: false });
 
   const recount = () => {
     const text = critiqueRef.current?.innerText.trim() || '';

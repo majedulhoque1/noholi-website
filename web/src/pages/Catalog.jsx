@@ -1,28 +1,31 @@
 import { useEffect, useRef, useState } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
 import BookCover, { availability } from '../components/BookCover.jsx';
-import { bookPath, getCatalogFacets, searchBooks } from '../lib/books.js';
+import { bookPath, displayAuthor, displayTitle, getCatalogFacets, searchBooks } from '../lib/books.js';
 import { describeError } from '../lib/supabase.js';
+import { useLang } from '../i18n/LanguageContext.jsx';
 import './Catalog.css';
 
 const PAGE_SIZE = 12;
-const FILTERS = [
-  { key: 'category', facet: 'categories', label: 'Category', all: 'All Categories', cls: 'catalog-all-categories' },
-  { key: 'genre', facet: 'genres', label: 'Genre', all: 'All Genres', cls: 'catalog-all-genres' },
-  { key: 'language', facet: 'languages', label: 'Language', all: 'All Languages', cls: 'catalog-all-languages' },
-];
+function useFilters(t) {
+  return [
+    { key: 'category', facet: 'categories', label: t('catalog.filterCategory'), all: t('catalog.allCategories'), cls: 'catalog-all-categories' },
+    { key: 'genre', facet: 'genres', label: t('catalog.filterGenre'), all: t('catalog.allGenres'), cls: 'catalog-all-genres' },
+    { key: 'language', facet: 'languages', label: t('catalog.filterLanguage'), all: t('catalog.allLanguages'), cls: 'catalog-all-languages' },
+  ];
+}
 // The design grid has three columns; these article classes place a card in column 1, 3 or 5.
 const ARTICLE = ['catalog-article-book-1-the-river-path', 'catalog-article-book-2-quiet-hours', 'catalog-article-book-3-shadows-of-the-de'];
 const norm = (v) => (v || '').toString().trim().toLowerCase();
-const fmt = (n) => Number(n || 0).toLocaleString('en-US');
+const fmt = (n, lang) => Number(n || 0).toLocaleString(lang === 'bn' ? 'bn-BD' : 'en-US');
 
 /**
  * Filter values in the URL may be loosely typed (the home page links `?genre=fiction`);
  * match them to a real facet value case-insensitively. "children" is a category here.
  */
-function resolveFilters(params, facets) {
+function resolveFilters(params, facets, filters) {
   const out = { category: '', genre: '', language: '' };
-  for (const f of FILTERS) {
+  for (const f of filters) {
     const raw = params.get(f.key);
     if (!raw) continue;
     const hit = facets?.[f.facet]?.find((o) => norm(o) === norm(raw));
@@ -36,12 +39,13 @@ function resolveFilters(params, facets) {
 }
 
 function BookCardItem({ book, index }) {
+  const { t, lang } = useLang();
   const path = bookPath(book);
-  const title = book.title || book.title_bangla;
+  const title = lang === 'bn' ? displayTitle(book) : book.title || book.title_bangla;
   const bn = book.title_bangla && book.title_bangla !== title ? book.title_bangla : '';
-  const author = book.author || book.author_bangla;
+  const author = lang === 'bn' ? displayAuthor(book) : book.author || book.author_bangla;
   const av = availability(book);
-  const badges = [['Category', book.category], ['Genre', book.genre], ['Language', book.language]].filter(([, v]) => v);
+  const badges = [[t('catalog.categoryLabel'), book.category], [t('catalog.genreLabel'), book.genre], [t('catalog.languageLabel'), book.language]].filter(([, v]) => v);
   return (
     <article className={ARTICLE[index % 3]}>
       <div className="catalog-article-book-1-the-river-path-box">
@@ -50,14 +54,14 @@ function BookCardItem({ book, index }) {
         </Link>
         <div className="catalog-metadata-title">
           <h2 className="catalog-heading-2 catalog-clamp"><Link to={path} className="catalog-title-link">{title}</Link></h2>
-          {bn && (
+          {bn && lang !== 'bn' && (
             <div className="catalog-metadata-title-box">
               <span className="catalog-metadata-title-box-text catalog-clamp" lang="bn">{bn}</span>
             </div>
           )}
           {author && (
             <div className="catalog-metadata-title-box-2">
-              <span className="catalog-by-a-r-chowdhury catalog-clamp">by {author}</span>
+              <span className="catalog-by-a-r-chowdhury catalog-clamp">{t('catalog.byAuthor', { author })}</span>
             </div>
           )}
         </div>
@@ -72,8 +76,8 @@ function BookCardItem({ book, index }) {
       <div className="catalog-article-book-1-the-river-path-box-2">
         <div className="catalog-horizontalborder-3 catalog-card-foot">
           <span className={`catalog-availability is-${av.state}`}>{av.text}</span>
-          <Link to={path} className="catalog-horizontalborder-3-box" aria-label={`View details: ${title}`}>
-            <span className="catalog-horizontalborder-3-box-text">VIEW DETAILS</span>
+          <Link to={path} className="catalog-horizontalborder-3-box" aria-label={t('catalog.viewDetailsAria', { title })}>
+            <span className="catalog-horizontalborder-3-box-text">{t('catalog.viewDetails')}</span>
             <div className="catalog-horizontalborder-3-box-box">
               <span className="catalog-horizontalborder-3-box-box-text">→</span>
             </div>
@@ -88,6 +92,8 @@ function BookCardItem({ book, index }) {
 // Runs on the real catalogue: rpc('search_books') + rpc('catalog_facets'). State lives in the URL
 // (?q=&page=&genre=&category=&language=) so back/forward, reloads and shared links all work.
 export default function Catalog() {
+  const { t, lang } = useLang();
+  const FILTERS = useFilters(t);
   const [params, setParams] = useSearchParams();
   const [facets, setFacets] = useState(null);
   const [facetsFailed, setFacetsFailed] = useState(false);
@@ -100,7 +106,7 @@ export default function Catalog() {
 
   const q = (params.get('q') || '').trim();
   const page = Math.max(1, parseInt(params.get('page') || '1', 10) || 1);
-  const current = resolveFilters(params, facets);
+  const current = resolveFilters(params, facets, FILTERS);
   const hasFilterParam = FILTERS.some((f) => params.get(f.key));
   const [draft, setDraft] = useState(q);
   useEffect(() => { setDraft(q); }, [q]);
@@ -159,7 +165,7 @@ export default function Catalog() {
       </select>
     );
   };
-  const describeScope = [q && `“${q}”`, current.category && `Category: ${current.category}`, current.genre && `Genre: ${current.genre}`, current.language && `Language: ${current.language}`].filter(Boolean).join(' · ');
+  const describeScope = [q && `“${q}”`, current.category && `${t('catalog.categoryLabel')}: ${current.category}`, current.genre && `${t('catalog.genreLabel')}: ${current.genre}`, current.language && `${t('catalog.languageLabel')}: ${current.language}`].filter(Boolean).join(' · ');
 
   return (
     <div className="catalog">
@@ -167,13 +173,13 @@ export default function Catalog() {
         <div className="catalog-hero-title-section">
           <div className="catalog-hero-title-section-box">
             <div className="catalog-horizontalborder">
-              <h1 className="catalog-heading-1">Browse the Catalog</h1>
+              <h1 className="catalog-heading-1">{t('catalog.heading')}</h1>
               <div className="catalog-horizontalborder-box">
-                <span className="catalog-horizontalborder-box-text">তালিকাভুক্ত গ্রন্থসমূহ ও সংগ্রহশালা</span>
+                <span className="catalog-horizontalborder-box-text">{t('catalog.headingBn')}</span>
               </div>
             </div>
             <div className="catalog-hero-title-section-box-box">
-              <span className="catalog-hero-title-section-box-box-text">Explore books and publications available across our reading rooms and circulating collection.{' '}<br className="soft-br" />Members may borrow or reserve titles through the catalog.</span>
+              <span className="catalog-hero-title-section-box-box-text">{t('catalog.intro')}</span>
             </div>
           </div>
         </div>
@@ -181,15 +187,15 @@ export default function Catalog() {
           <div className="catalog-background-border">
             <div className="catalog-horizontalborder-2">
               <div className="catalog-horizontalborder-2-box">
-                <span className="catalog-horizontalborder-2-box-text">FILTER CATALOG</span>
+                <span className="catalog-horizontalborder-2-box-text">{t('catalog.filterCatalog')}</span>
               </div>
               <button type="button" className="catalog-horizontalborder-2-box-2" onClick={reset}>
                 <img className="catalog-horizontalborder-2-box-2-box" src="/svg/container-13os96a.svg" alt="" width="10" height="10" />
-                <span className="catalog-horizontalborder-2-box-2-text">RESET FILTERS</span>
+                <span className="catalog-horizontalborder-2-box-2-text">{t('catalog.resetFilters')}</span>
               </button>
             </div>
             <form className="catalog-search" role="search" onSubmit={onSearch}>
-              <label className="catalog-label" htmlFor="catalog-q">SEARCH</label>
+              <label className="catalog-label" htmlFor="catalog-q">{t('catalog.searchLabel')}</label>
               <div className="catalog-background-border-2 catalog-search-box">
                 <input
                   id="catalog-q"
@@ -198,16 +204,16 @@ export default function Catalog() {
                   name="q"
                   value={draft}
                   onChange={(e) => setDraft(e.target.value)}
-                  placeholder="Title or author, in English or বাংলা — or a book number (BK-0001)"
+                  placeholder={t('catalog.searchPlaceholder')}
                   autoComplete="off"
                   enterKeyHint="search"
                 />
-                <button type="submit" className="catalog-search-btn">SEARCH →</button>
+                <button type="submit" className="catalog-search-btn">{t('catalog.searchButton')}</button>
               </div>
             </form>
             <div className="catalog-3-dropdowns">
               <div className="catalog-category">
-                <label className="catalog-label" htmlFor="catalog-category">CATEGORY</label>
+                <label className="catalog-label" htmlFor="catalog-category">{t('catalog.filterCategory')}</label>
                 <div className="catalog-background-border-2">
                   <div className="catalog-options">
                     <img className="catalog-image-clip" src="/svg/image-clip-thkavg.svg" alt="" width="363" height="36" />
@@ -220,7 +226,7 @@ export default function Catalog() {
                 </div>
               </div>
               <div className="catalog-genre">
-                <label className="catalog-label" htmlFor="catalog-genre">GENRE</label>
+                <label className="catalog-label" htmlFor="catalog-genre">{t('catalog.filterGenre')}</label>
                 <div className="catalog-background-border-2">
                   <div className="catalog-options">
                     <img className="catalog-image-clip-2" src="/svg/image-clip-10seje7.svg" alt="" width="363" height="36" />
@@ -233,7 +239,7 @@ export default function Catalog() {
                 </div>
               </div>
               <div className="catalog-language">
-                <label className="catalog-label" htmlFor="catalog-language">LANGUAGE</label>
+                <label className="catalog-label" htmlFor="catalog-language">{t('catalog.filterLanguage')}</label>
                 <div className="catalog-background-border-2">
                   <div className="catalog-options">
                     <img className="catalog-image-clip" src="/svg/image-clip-thkavg.svg" alt="" width="363" height="36" />
@@ -248,7 +254,7 @@ export default function Catalog() {
             </div>
             <div className="catalog-active-scope">
               <div className="catalog-active-scope-box">
-                <span className="catalog-active-scope-box-text" aria-live="polite">{"Showing: "}{q && <>“{q}” · </>}<span className="catalog-span">Category: {current.category || 'All'}</span>{" · "}<span className="catalog-span">Genre: {current.genre || 'All'}</span>{" · "}<span className="catalog-span">Language: {current.language || 'All'}</span>{status === 'ready' && <>{" — "}<span className="catalog-span">{fmt(result.total)} {result.total === 1 ? 'book' : 'books'}</span></>}</span>
+                <span className="catalog-active-scope-box-text" aria-live="polite">{t('catalog.showingPrefix')}{q && <>“{q}” · </>}<span className="catalog-span">{t('catalog.categoryLabel')}: {current.category || t('catalog.all')}</span>{" · "}<span className="catalog-span">{t('catalog.genreLabel')}: {current.genre || t('catalog.all')}</span>{" · "}<span className="catalog-span">{t('catalog.languageLabel')}: {current.language || t('catalog.all')}</span>{status === 'ready' && <>{" — "}<span className="catalog-span">{fmt(result.total, lang)} {result.total === 1 ? t('catalog.book') : t('catalog.books')}</span></>}</span>
               </div>
             </div>
           </div>
@@ -256,25 +262,25 @@ export default function Catalog() {
         <section className="catalog-books-grid" ref={gridRef}>
           <div className={`catalog-books-grid-box${loading && rows.length ? ' is-loading' : ''}`} aria-busy={loading}>
             {rows.map((b, i) => <BookCardItem key={b.id} book={b} index={i} />)}
-            {loading && !rows.length && <p className="catalog-empty" role="status">Loading the catalogue…</p>}
+            {loading && !rows.length && <p className="catalog-empty" role="status">{t('catalog.loading')}</p>}
             {status === 'error' && (
-              <p className="catalog-empty" role="alert">The catalogue could not be loaded: {error} <button type="button" onClick={() => setRetry((n) => n + 1)}>Try again</button></p>
+              <p className="catalog-empty" role="alert">{t('catalog.errorPrefix', { error })} <button type="button" onClick={() => setRetry((n) => n + 1)}>{t('catalog.tryAgain')}</button></p>
             )}
             {status === 'ready' && !rows.length && (
               result.total > 0 || page > 1
-                ? <p className="catalog-empty">There are no books on page {page}. <button type="button" onClick={() => goPage(1)}>Go to page 1</button></p>
-                : <p className="catalog-empty">No books match {describeScope || 'this search'}. <button type="button" onClick={reset}>Reset filters</button></p>
+                ? <p className="catalog-empty">{t('catalog.noPageBooks', { page })} <button type="button" onClick={() => goPage(1)}>{t('catalog.goToPage1')}</button></p>
+                : <p className="catalog-empty">{t('catalog.noMatches', { scope: describeScope || t('catalog.noMatchesFallback') })} <button type="button" onClick={reset}>{t('catalog.resetFiltersLink')}</button></p>
             )}
           </div>
         </section>
         <section className="catalog-pagination">
           <div className="catalog-pagination-box">
             <nav className="catalog-nav-catalog-pagination" aria-label="Catalogue pages">
-              <button type="button" className="catalog-nav-catalog-pagination-box" disabled={page <= 1 || loading} onClick={() => goPage(page - 1)}>← PREVIOUS</button>
+              <button type="button" className="catalog-nav-catalog-pagination-box" disabled={page <= 1 || loading} onClick={() => goPage(page - 1)}>{t('catalog.previous')}</button>
               <div className="catalog-background-border-5">
-                <span className="catalog-background-border-5-text">Page {fmt(page)} of {fmt(totalPages)}</span>
+                <span className="catalog-background-border-5-text">{t('catalog.pageOf', { page: fmt(page, lang), total: fmt(totalPages, lang) })}</span>
               </div>
-              <button type="button" className="catalog-nav-catalog-pagination-box-2" disabled={page >= totalPages || loading} onClick={() => goPage(page + 1)}>NEXT →</button>
+              <button type="button" className="catalog-nav-catalog-pagination-box-2" disabled={page >= totalPages || loading} onClick={() => goPage(page + 1)}>{t('catalog.next')}</button>
             </nav>
           </div>
         </section>

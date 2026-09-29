@@ -1,13 +1,16 @@
 import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react';
-import { isNetworkError, NETWORK_ERROR, supabase } from './lib/supabase.js';
+import { isNetworkError, supabase } from './lib/supabase.js';
+import { translate } from './i18n/LanguageContext.jsx';
 
 // Member session backed by Supabase Auth (see supabase/CONTRACT.md §6).
 // Sign-in: identifier → rpc('resolve_login') → signInWithPassword → rpc('my_role').
 // Only role 'member' may use the website; staff accounts are signed straight out again.
 const AuthContext = createContext(null);
 
-export const GENERIC_LOGIN_ERROR = 'Incorrect membership number or password.';
-export const STAFF_LOGIN_ERROR = 'Staff accounts use Noholi OS.';
+// Kept as getters (not plain strings) so the message reflects whatever language is active
+// when the error actually happens, not whatever it was when this module first loaded.
+export const GENERIC_LOGIN_ERROR = () => translate('auth.genericLoginError');
+export const STAFF_LOGIN_ERROR = () => translate('auth.staffLoginError');
 
 /** "Mohammad Rafiqul Islam" → "Mohammad R." (the header's short form). */
 function shortNameOf(name) {
@@ -82,10 +85,10 @@ export function AuthProvider({ children }) {
   /** Throws an Error with a reader-facing message; resolves to the member row. */
   const signIn = useCallback(async (identifier, password) => {
     const id = String(identifier || '').trim();
-    if (!id || !password) throw new Error('Enter your membership number or email and your password.');
+    if (!id || !password) throw new Error(translate('auth.enterCredentials'));
     const { data: email, error: rErr } = await supabase.rpc('resolve_login', { identifier: id });
-    if (rErr && isNetworkError(rErr)) throw new Error(NETWORK_ERROR);
-    if (rErr || !email) throw new Error(GENERIC_LOGIN_ERROR);
+    if (rErr && isNetworkError(rErr)) throw new Error(translate('supabaseLib.networkError'));
+    if (rErr || !email) throw new Error(GENERIC_LOGIN_ERROR());
     let { error: sErr } = await supabase.auth.signInWithPassword({ email, password });
     // A staff email isn't a member login, so resolve_login maps it elsewhere. Try the address as
     // typed (any anon client can do this) so staff get the "use Noholi OS" answer below, and
@@ -93,23 +96,23 @@ export function AuthProvider({ children }) {
     if (sErr && id.includes('@') && id.toLowerCase() !== String(email).toLowerCase()) {
       ({ error: sErr } = await supabase.auth.signInWithPassword({ email: id, password }));
     }
-    if (sErr && isNetworkError(sErr)) throw new Error(NETWORK_ERROR);
-    if (sErr) throw new Error(GENERIC_LOGIN_ERROR);
+    if (sErr && isNetworkError(sErr)) throw new Error(translate('supabaseLib.networkError'));
+    if (sErr) throw new Error(GENERIC_LOGIN_ERROR());
     const mine = ++gen.current;
     let result;
     try {
       result = await loadMember();
     } catch (err) {
       await supabase.auth.signOut();
-      throw new Error(isNetworkError(err) ? NETWORK_ERROR : GENERIC_LOGIN_ERROR);
+      throw new Error(isNetworkError(err) ? translate('supabaseLib.networkError') : GENERIC_LOGIN_ERROR());
     }
     if (result.role === 'staff' || result.role === 'admin') {
       await supabase.auth.signOut();
-      throw new Error(STAFF_LOGIN_ERROR);
+      throw new Error(STAFF_LOGIN_ERROR());
     }
     if (result.role !== 'member' || !result.row) {
       await supabase.auth.signOut();
-      throw new Error(GENERIC_LOGIN_ERROR);
+      throw new Error(GENERIC_LOGIN_ERROR());
     }
     if (mine === gen.current) {
       setMemberRow(result.row);

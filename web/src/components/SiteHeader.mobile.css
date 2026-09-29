@@ -46,7 +46,7 @@
     display: block;
     width: 20px;
     height: 1.5px;
-    background-color: var(--ink);
+    background-color: var(--ink-fill);
     transition: transform 0.2s ease, background-color 0.2s ease;
   }
 
@@ -78,7 +78,7 @@
     padding: 8px 20px 24px;
     background-color: var(--paper-bright);
     border-bottom: 1px solid var(--parchment-line);
-    box-shadow: 0 16px 36px -6px rgba(40, 32, 20, 0.16);
+    box-shadow: 0 16px 36px -6px color-mix(in srgb, var(--ink-deep) 16%, transparent);
   }
 
   .mobile-menu-nav,
@@ -91,7 +91,7 @@
   .mobile-menu-link {
     display: block;
     padding: 12px 0;
-    border-bottom: 1px solid rgba(201, 191, 168, 0.6);
+    border-bottom: 1px solid color-mix(in srgb, var(--parchment-line) 60%, transparent);
     font-family: var(--font-sans);
     font-size: 16px;
     font-weight: 500;

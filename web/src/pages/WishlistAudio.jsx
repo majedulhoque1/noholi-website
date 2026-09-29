@@ -18,7 +18,7 @@ export default function WishlistAudio() {
   const { member } = useAuth();
   const [sort, setSort] = useState(0);
   // Audio wishlists and recording proposals have no backend yet: honest "coming soon" states.
-  const { status, submit } = useSubmission(REQUIRED, SOON_REQUEST, { ok: false });
+  const { status, submit } = useSubmission(REQUIRED, SOON_REQUEST(), { ok: false });
   const onSubmit = (e) => submit(e);
 
   return (

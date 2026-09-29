@@ -339,7 +339,7 @@
   width: 6px;
   flex-shrink: 0;
   height: 6px;
-  background-color: var(--ink);
+  background-color: var(--ink-fill);
   border-radius: 9999px;
 }
 
@@ -444,7 +444,7 @@
   font-size: 12px;
   font-weight: 400;
   line-height: 16px;
-  color: var(--parchment-line);
+  color: var(--stone);
   white-space: nowrap;
 }
 
@@ -468,7 +468,7 @@
   align-items: flex-start;
   gap: 32px;
   padding: 0 0 8px 0;
-  border-bottom: 1px solid rgba(201, 191, 168, 0.6);
+  border-bottom: 1px solid color-mix(in srgb, var(--parchment-line) 60%, transparent);
 }
 
 .borrow-section-1-personal-information {
@@ -560,7 +560,7 @@
   align-items: flex-start;
   padding: 2px 8px 2px 8px;
   background-color: var(--paper);
-  border: 1px solid rgba(122, 46, 39, 0.4);
+  border: 1px solid color-mix(in srgb, var(--oxblood) 40%, transparent);
 }
 
 .borrow-background-border-text {
@@ -835,7 +835,7 @@
   align-items: flex-start;
   gap: 3px;
   padding: 8px 0 0 0;
-  border-top: 1px solid rgba(201, 191, 168, 0.4);
+  border-top: 1px solid color-mix(in srgb, var(--parchment-line) 40%, transparent);
 }
 
 .borrow-mandatory-verification-nid-passp-box {
@@ -918,7 +918,7 @@
 }
 
 .borrow-input-8::placeholder {
-  color: rgba(74, 68, 56, 0.5);
+  color: color-mix(in srgb, var(--ink-soft) 50%, transparent);
   opacity: 1;
 }
 
@@ -1102,7 +1102,7 @@
 }
 
 .borrow-input-9::placeholder {
-  color: rgba(74, 68, 56, 0.5);
+  color: color-mix(in srgb, var(--ink-soft) 50%, transparent);
   opacity: 1;
 }
 
@@ -1122,7 +1122,7 @@
 }
 
 .borrow-input-10::placeholder {
-  color: rgba(74, 68, 56, 0.5);
+  color: color-mix(in srgb, var(--ink-soft) 50%, transparent);
   opacity: 1;
 }
 
@@ -1160,7 +1160,7 @@
 }
 
 .borrow-input-11::placeholder {
-  color: rgba(74, 68, 56, 0.5);
+  color: color-mix(in srgb, var(--ink-soft) 50%, transparent);
   opacity: 1;
 }
 
@@ -1229,7 +1229,7 @@
 }
 
 .borrow-input-12::placeholder {
-  color: rgba(74, 68, 56, 0.5);
+  color: color-mix(in srgb, var(--ink-soft) 50%, transparent);
   opacity: 1;
 }
 
@@ -1258,7 +1258,7 @@
 }
 
 .borrow-input-13::placeholder {
-  color: rgba(74, 68, 56, 0.5);
+  color: color-mix(in srgb, var(--ink-soft) 50%, transparent);
   opacity: 1;
 }
 
@@ -1304,7 +1304,7 @@
 }
 
 .borrow-input-14::placeholder {
-  color: rgba(74, 68, 56, 0.5);
+  color: color-mix(in srgb, var(--ink-soft) 50%, transparent);
   opacity: 1;
 }
 
@@ -1324,7 +1324,7 @@
 }
 
 .borrow-input-15::placeholder {
-  color: rgba(74, 68, 56, 0.5);
+  color: color-mix(in srgb, var(--ink-soft) 50%, transparent);
   opacity: 1;
 }
 
@@ -1344,7 +1344,7 @@
 }
 
 .borrow-input-16::placeholder {
-  color: rgba(74, 68, 56, 0.5);
+  color: color-mix(in srgb, var(--ink-soft) 50%, transparent);
   opacity: 1;
 }
 
@@ -1444,7 +1444,7 @@
 }
 
 .borrow-textarea::placeholder {
-  color: rgba(74, 68, 56, 0.5);
+  color: color-mix(in srgb, var(--ink-soft) 50%, transparent);
   opacity: 1;
 }
 
@@ -1455,7 +1455,7 @@
   justify-content: center;
   align-items: center;
   padding: 12px 24px 12px 24px;
-  background-color: var(--oxblood);
+  background-color: var(--oxblood-fill);
 }
 
 .borrow-submit-button-text {
@@ -1466,7 +1466,7 @@
   line-height: 20px;
   letter-spacing: 0.7px;
   text-transform: uppercase;
-  color: var(--paper);
+  color: var(--white);
   text-align: center;
   white-space: nowrap;
 }

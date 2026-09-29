@@ -64,7 +64,7 @@
 .privacy-kicker-bar {
   width: 32px;
   height: 1px;
-  background: var(--oxblood);
+  background: var(--oxblood-fill);
 }
 
 .privacy-title {

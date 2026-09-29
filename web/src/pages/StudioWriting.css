@@ -162,7 +162,7 @@
   width: 8px;
   flex-shrink: 0;
   height: 8px;
-  background-color: var(--oxblood-soft);
+  background-color: var(--oxblood-soft-fill);
 }
 
 .swriting-header-title-curatorial-prologue-box-box-2 {
@@ -429,7 +429,7 @@
   width: 6px;
   flex-shrink: 0;
   height: 6px;
-  background-color: var(--oxblood-soft);
+  background-color: var(--oxblood-soft-fill);
   border-radius: 9999px;
 }
 
@@ -944,7 +944,7 @@
   width: 8px;
   flex-shrink: 0;
   height: 8px;
-  background-color: var(--oxblood-soft);
+  background-color: var(--oxblood-soft-fill);
   border-radius: 9999px;
 }
 
@@ -995,7 +995,7 @@
   justify-content: center;
   align-items: center;
   padding: 2px 8px 2px 8px;
-  border: 1px solid rgba(0, 0, 0, 0);
+  border: 1px solid transparent;
   font-family: var(--font-garamond);
   font-size: 22px;
   font-weight: 600;
@@ -1012,7 +1012,7 @@
   justify-content: center;
   align-items: center;
   padding: 2px 8px 2px 8px;
-  border: 1px solid rgba(0, 0, 0, 0);
+  border: 1px solid transparent;
   font-family: var(--font-garamond);
   font-size: 22px;
   font-weight: 600;
@@ -1036,7 +1036,7 @@
   height: 20px;
   flex-shrink: 0;
   width: 1px;
-  background-color: var(--stone);
+  background-color: var(--stone-fill);
 }
 
 .swriting-left-toolset-box-4 {
@@ -1046,7 +1046,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  border: 1px solid rgba(0, 0, 0, 0);
+  border: 1px solid transparent;
   font-family: Helvetica, Arial, sans-serif;
   font-size: 16px;
   font-weight: 700;
@@ -1064,7 +1064,7 @@
   justify-content: center;
   align-items: center;
   padding: 0.5px 0 1.5px 0;
-  border: 1px solid rgba(0, 0, 0, 0);
+  border: 1px solid transparent;
   font-family: Tinos, "Times New Roman", Times, serif;
   font-size: 16px;
   font-weight: 400;
@@ -1193,7 +1193,7 @@
   justify-content: center;
   align-items: center;
   padding: 2px 4px 2px 4px;
-  border: 1px solid rgba(0, 0, 0, 0);
+  border: 1px solid transparent;
   font-family: Helvetica, Arial, 'Anek Bangla', sans-serif;
   font-variation-settings: 'wdth' 80;
   font-size: 14px;
@@ -1369,7 +1369,7 @@
   top: 5px;
   width: 718.66px;
   height: 680px;
-  border: 1px solid rgba(205, 197, 188, 0.3);
+  border: 1px solid color-mix(in srgb, var(--stone) 30%, transparent);
 }
 
 .swriting-canvas-footnote-format-directive {
@@ -1573,7 +1573,7 @@
   flex-direction: column;
   align-items: flex-start;
   padding: 2px 8px 2px 8px;
-  background-color: var(--oxblood-soft);
+  background-color: var(--oxblood-soft-fill);
 }
 
 .swriting-horizontalborder-2-box-text {
@@ -1727,8 +1727,8 @@
   align-items: center;
   gap: 8px;
   padding: 12px 32px 12px 32px;
-  background-color: var(--oxblood-soft);
-  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  background-color: var(--oxblood-soft-fill);
+  box-shadow: 0 1px 2px 0 color-mix(in srgb, var(--ink) 5%, transparent);
 }
 
 .swriting-submission-controls-box-2-box-2-box {
@@ -2073,7 +2073,7 @@
   width: 1px;
   height: 235px;
   z-index: -1;
-  background-color: var(--stone);
+  background-color: var(--stone-fill);
 }
 
 .swriting-step-1 {
@@ -2208,7 +2208,7 @@
   justify-content: center;
   align-items: center;
   padding: 4.5px 0 5.5px 0;
-  background-color: var(--oxblood-soft);
+  background-color: var(--oxblood-soft-fill);
 }
 
 .swriting-step-3-box-text {
@@ -2334,7 +2334,7 @@
   align-items: flex-start;
   gap: 2px;
   padding: 8px;
-  background-color: #ece8df;
+  background-color: var(--paper-tint);
   border-left: 2px solid var(--oxblood-soft);
 }
 

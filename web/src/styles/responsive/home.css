@@ -764,3 +764,11 @@
     line-height: 1.2;
   }
 }
+
+/* Bangla headline: the split-headline boxes are sized for the two English words. */
+html[lang='bn'] .home-headline-split-across-two-lines,
+html[lang='bn'] .home-headline-split-across-two-lines-2 {
+  width: auto;
+  max-width: 100%;
+  height: auto;
+}

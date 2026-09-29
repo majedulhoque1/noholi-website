@@ -73,7 +73,7 @@
   line-height: 16px;
   letter-spacing: 0.6px;
   text-transform: uppercase;
-  color: var(--parchment-line);
+  color: var(--stone);
   white-space: nowrap;
   min-height: 16px;
 }
@@ -332,7 +332,7 @@
   width: 8px;
   flex-shrink: 0;
   height: 8px;
-  background-color: var(--ink);
+  background-color: var(--ink-fill);
 }
 
 .book-status-indicator-card-box-2-text {
@@ -365,7 +365,7 @@
   align-items: center;
   gap: 8px;
   padding: 12px 16px 12px 16px;
-  background-color: var(--oxblood);
+  background-color: var(--oxblood-fill);
 }
 
 .book-borrowing-reservation-buttons-box-box {
@@ -384,7 +384,7 @@
   line-height: 16px;
   letter-spacing: 0.6px;
   text-transform: uppercase;
-  color: var(--paper);
+  color: var(--white);
   text-align: center;
   white-space: nowrap;
   min-height: 16px;
@@ -574,7 +574,7 @@
   display: flex;
   align-items: center;
   padding: 12px 20px 12px 20px;
-  background-color: rgba(201, 191, 168, 0.1);
+  background-color: color-mix(in srgb, var(--parchment-line) 10%, transparent);
   border-bottom: 1px solid var(--parchment-line);
 }
 
@@ -1562,8 +1562,8 @@
 .book-cover-frame { padding: 12px; }
 .book-cover-real { width: 100%; }
 .book-status-indicator-card-box-2-box.is-available { background-color: var(--green); }
-.book-status-indicator-card-box-2-box.is-loan { background-color: var(--oxblood); }
-.book-status-indicator-card-box-2-box.is-reading { background-color: var(--ink-soft); }
+.book-status-indicator-card-box-2-box.is-loan { background-color: var(--oxblood-fill); }
+.book-status-indicator-card-box-2-box.is-reading { background-color: var(--ink-soft-fill); }
 .book-borrowing-reservation-buttons-box.is-disabled {
   background-color: var(--paper-dim);
   border: 1px solid var(--parchment-line);

@@ -22,7 +22,7 @@
   align-items: flex-start;
   padding: 12px max(48px, calc((100% - 1184px) / 2)) 12px;
   background-color: var(--paper);
-  border-bottom: 1px solid rgba(201, 191, 168, 0.6);
+  border-bottom: 1px solid color-mix(in srgb, var(--parchment-line) 60%, transparent);
   height: 41px;
 }
 
@@ -67,7 +67,7 @@
   line-height: 16px;
   letter-spacing: 1.2px;
   text-transform: uppercase;
-  color: var(--parchment-line);
+  color: var(--stone);
   white-space: nowrap;
   min-height: 16px;
 }
@@ -165,7 +165,7 @@
   width: 8px;
   flex-shrink: 0;
   height: 8px;
-  background-color: var(--oxblood);
+  background-color: var(--oxblood-fill);
 }
 
 .audio-section-eyebrow-bilingual-titles-2-box-box-box-box-2 {
@@ -331,7 +331,7 @@
   flex-direction: column;
   align-items: flex-start;
   padding: 4px 12px 4px 12px;
-  background-color: var(--oxblood);
+  background-color: var(--oxblood-fill);
 }
 
 .audio-featured-audio-edition-banner-ar-2-box-text {
@@ -342,7 +342,7 @@
   line-height: 15px;
   letter-spacing: 1.5px;
   text-transform: uppercase;
-  color: var(--paper);
+  color: var(--white);
   white-space: nowrap;
   min-height: 15px;
 }
@@ -460,85 +460,85 @@
   justify-content: space-between;
   align-items: center;
   padding: 8px 4px 8px 4px;
-  border-top: 1px solid rgba(201, 191, 168, 0.6);
-  border-bottom: 1px solid rgba(201, 191, 168, 0.6);
+  border-top: 1px solid color-mix(in srgb, var(--parchment-line) 60%, transparent);
+  border-bottom: 1px solid color-mix(in srgb, var(--parchment-line) 60%, transparent);
 }
 
 .audio-archival-waveform-graphic-2-box {
   width: 4px;
   flex-shrink: 0;
   height: 12px;
-  background-color: var(--ink);
+  background-color: var(--ink-fill);
 }
 
 .audio-archival-waveform-graphic-2-box-2 {
   width: 4px;
   flex-shrink: 0;
   height: 24px;
-  background-color: var(--ink);
+  background-color: var(--ink-fill);
 }
 
 .audio-archival-waveform-graphic-2-box-3 {
   width: 4px;
   flex-shrink: 0;
   height: 16px;
-  background-color: var(--ink);
+  background-color: var(--ink-fill);
 }
 
 .audio-archival-waveform-graphic-2-box-4 {
   width: 4px;
   flex-shrink: 0;
   height: 36px;
-  background-color: var(--oxblood);
+  background-color: var(--oxblood-fill);
 }
 
 .audio-archival-waveform-graphic-2-box-5 {
   width: 4px;
   flex-shrink: 0;
   height: 28px;
-  background-color: var(--oxblood);
+  background-color: var(--oxblood-fill);
 }
 
 .audio-archival-waveform-graphic-2-box-6 {
   width: 4px;
   flex-shrink: 0;
   height: 40px;
-  background-color: var(--ink);
+  background-color: var(--ink-fill);
 }
 
 .audio-archival-waveform-graphic-2-box-7 {
   width: 4px;
   flex-shrink: 0;
   height: 20px;
-  background-color: var(--ink);
+  background-color: var(--ink-fill);
 }
 
 .audio-archival-waveform-graphic-2-box-8 {
   width: 4px;
   flex-shrink: 0;
   height: 32px;
-  background-color: var(--ink);
+  background-color: var(--ink-fill);
 }
 
 .audio-archival-waveform-graphic-2-box-9 {
   width: 4px;
   flex-shrink: 0;
   height: 44px;
-  background-color: var(--oxblood);
+  background-color: var(--oxblood-fill);
 }
 
 .audio-archival-waveform-graphic-2-box-10 {
   width: 4px;
   flex-shrink: 0;
   height: 24px;
-  background-color: var(--oxblood);
+  background-color: var(--oxblood-fill);
 }
 
 .audio-archival-waveform-graphic-2-box-11 {
   width: 4px;
   flex-shrink: 0;
   height: 28px;
-  background-color: var(--ink);
+  background-color: var(--ink-fill);
 }
 
 .audio-voice-anisur-rahman {
@@ -818,7 +818,7 @@
   top: 0;
   width: 190.95px;
   height: 6px;
-  background-color: var(--oxblood);
+  background-color: var(--oxblood-fill);
 }
 
 .audio-progress-bar-timestamps-box-2 {
@@ -877,7 +877,7 @@
   align-items: center;
   gap: 8px;
   padding: 8px 20px 8px 20px;
-  background-color: var(--oxblood);
+  background-color: var(--oxblood-fill);
 }
 
 .audio-transport-buttons-box-box-2-box {
@@ -903,7 +903,7 @@
   line-height: 16px;
   letter-spacing: 0.6px;
   text-transform: uppercase;
-  color: var(--paper);
+  color: var(--white);
   text-align: center;
   white-space: nowrap;
   min-height: 16px;
@@ -1029,7 +1029,7 @@
   justify-content: center;
   align-items: center;
   padding: 6px 12px 6px 12px;
-  background-color: var(--ink);
+  background-color: var(--ink-fill);
   border: 1px solid var(--ink);
   font-family: Arial, Helvetica, sans-serif;
   font-size: 12px;
@@ -1037,7 +1037,7 @@
   line-height: 16px;
   letter-spacing: 0.3px;
   text-transform: uppercase;
-  color: var(--paper);
+  color: var(--white);
   text-align: center;
   white-space: nowrap;
   min-height: 30px;
@@ -1307,7 +1307,7 @@
   align-items: flex-start;
   gap: 4px;
   padding: 12px 0 0 0;
-  border-top: 1px solid rgba(201, 191, 168, 0.6);
+  border-top: 1px solid color-mix(in srgb, var(--parchment-line) 60%, transparent);
 }
 
 .audio-paragraph {
@@ -1358,7 +1358,7 @@
   align-items: center;
   gap: 6px;
   padding: 8px 16px 8px 16px;
-  background-color: var(--oxblood);
+  background-color: var(--oxblood-fill);
 }
 
 .audio-horizontalborder-4-box-box {
@@ -1377,7 +1377,7 @@
   line-height: 16px;
   letter-spacing: 0.6px;
   text-transform: uppercase;
-  color: var(--paper);
+  color: var(--white);
   text-align: center;
   white-space: nowrap;
   min-height: 16px;
@@ -1476,7 +1476,7 @@
   align-items: center;
   gap: 5.99px;
   padding: 8px 16px 8px 16px;
-  background-color: var(--oxblood);
+  background-color: var(--oxblood-fill);
 }
 
 .audio-horizontalborder-4-box-3-box {
@@ -1495,7 +1495,7 @@
   line-height: 16px;
   letter-spacing: 0.6px;
   text-transform: uppercase;
-  color: var(--paper);
+  color: var(--white);
   text-align: center;
   white-space: nowrap;
   min-height: 16px;
@@ -1588,7 +1588,7 @@
   align-items: center;
   gap: 5.99px;
   padding: 8px 16px 8px 16px;
-  background-color: var(--oxblood);
+  background-color: var(--oxblood-fill);
 }
 
 .audio-horizontalborder-5-box-box {
@@ -1607,7 +1607,7 @@
   line-height: 16px;
   letter-spacing: 0.6px;
   text-transform: uppercase;
-  color: var(--paper);
+  color: var(--white);
   text-align: center;
   white-space: nowrap;
   min-height: 16px;
@@ -1862,8 +1862,8 @@
 .audio-empty button { background: none; border: 0; padding: 0; font: inherit; color: var(--oxblood); text-decoration: underline; cursor: pointer; }
 .audio-filter-buttons-sort-selection-box, .audio-filter-buttons-sort-selection-box-2,
 .audio-horizontalborder-box-box-3, .audio-transport-buttons-box-box-2 { cursor: pointer; }
-.audio-filter-buttons-sort-selection-box-2:hover, .audio-horizontalborder-box-box-3:hover { border-color: var(--ink); }
-.audio-horizontalborder-box-box-3.is-active { background-color: var(--ink); border-color: var(--ink); color: var(--paper); }
+.audio-filter-buttons-sort-selection-box-2:hover, .audio-horizontalborder-box-box-3:hover { border-color: var(--ink-fill); }
+.audio-horizontalborder-box-box-3.is-active { background-color: var(--ink-fill); border-color: var(--ink-fill); color: var(--white); }
 .audio-transport-skip { background: none; border: 0; padding: 0; line-height: 0; cursor: pointer; flex-shrink: 0; }
 .audio-transport-skip:hover { opacity: 0.7; }
 .audio-play-glyph { font-size: 9px; line-height: 10px; width: 10px; }

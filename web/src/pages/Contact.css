@@ -105,7 +105,7 @@
   line-height: 16px;
   letter-spacing: 1.68px;
   text-transform: uppercase;
-  color: var(--parchment-line);
+  color: var(--stone);
   white-space: nowrap;
   min-height: 16px;
 }
@@ -183,7 +183,7 @@
   height: 2px;
   flex-shrink: 0;
   width: 48px;
-  background-color: var(--oxblood);
+  background-color: var(--oxblood-fill);
 }
 
 .contact-title-context-block-box-box {
@@ -301,7 +301,7 @@
   align-items: flex-start;
   gap: 8px;
   padding: 0 0 20px 0;
-  border-bottom: 1px solid rgba(201, 191, 168, 0.6);
+  border-bottom: 1px solid color-mix(in srgb, var(--parchment-line) 60%, transparent);
 }
 
 .contact-item-email-box {
@@ -387,7 +387,7 @@
   align-items: center;
   gap: 6px;
   padding: 6px 12px 6px 12px;
-  background-color: var(--ink);
+  background-color: var(--ink-fill);
 }
 
 .contact-item-email-box-3-box-box {
@@ -413,7 +413,7 @@
   line-height: 16px;
   letter-spacing: 0.6px;
   text-transform: uppercase;
-  color: var(--paper);
+  color: var(--white);
   white-space: nowrap;
   min-height: 16px;
 }
@@ -464,7 +464,7 @@
   align-items: flex-start;
   gap: 8px;
   padding: 0 0 20px 0;
-  border-bottom: 1px solid rgba(201, 191, 168, 0.6);
+  border-bottom: 1px solid color-mix(in srgb, var(--parchment-line) 60%, transparent);
 }
 
 .contact-item-phone-box {
@@ -550,7 +550,7 @@
   align-items: center;
   gap: 6px;
   padding: 6px 12px 6px 12px;
-  background-color: var(--ink);
+  background-color: var(--ink-fill);
 }
 
 .contact-item-phone-box-3-box-box {
@@ -576,7 +576,7 @@
   line-height: 16px;
   letter-spacing: 0.6px;
   text-transform: uppercase;
-  color: var(--paper);
+  color: var(--white);
   white-space: nowrap;
   min-height: 16px;
 }
@@ -627,7 +627,7 @@
   align-items: flex-start;
   gap: 6px;
   padding: 0 0 20px 0;
-  border-bottom: 1px solid rgba(201, 191, 168, 0.6);
+  border-bottom: 1px solid color-mix(in srgb, var(--parchment-line) 60%, transparent);
 }
 
 .contact-item-physical-location-box {
@@ -871,7 +871,7 @@
   top: 0;
   width: 4px;
   height: 111px;
-  background-color: var(--oxblood);
+  background-color: var(--oxblood-fill);
 }
 
 .contact-right-column-clean-archival-inqu {
@@ -1029,7 +1029,7 @@
 }
 
 .contact-input::placeholder {
-  color: rgba(74, 68, 56, 0.7);
+  color: color-mix(in srgb, var(--ink-soft) 70%, transparent);
   opacity: 1;
 }
 
@@ -1066,7 +1066,7 @@
 }
 
 .contact-input-2::placeholder {
-  color: rgba(74, 68, 56, 0.7);
+  color: color-mix(in srgb, var(--ink-soft) 70%, transparent);
   opacity: 1;
 }
 
@@ -1185,7 +1185,7 @@
 }
 
 .contact-textarea::placeholder {
-  color: rgba(74, 68, 56, 0.7);
+  color: color-mix(in srgb, var(--ink-soft) 70%, transparent);
   opacity: 1;
 }
 
@@ -1196,7 +1196,7 @@
   justify-content: space-between;
   align-items: center;
   padding: 8px 0 0 0;
-  border-top: 1px solid rgba(201, 191, 168, 0.6);
+  border-top: 1px solid color-mix(in srgb, var(--parchment-line) 60%, transparent);
 }
 
 .contact-fine-print-dispatch-button-box {
@@ -1226,14 +1226,14 @@
   justify-content: center;
   align-items: center;
   padding: 12px 28px 12px 28px;
-  background-color: var(--oxblood);
+  background-color: var(--oxblood-fill);
   font-family: var(--font-sans);
   font-size: 12px;
   font-weight: 600;
   line-height: 16px;
   letter-spacing: 1.68px;
   text-transform: uppercase;
-  color: var(--paper);
+  color: var(--white);
   text-align: center;
   white-space: nowrap;
   min-height: 40px;
@@ -1245,9 +1245,9 @@
 .contact-subject-select-box:has(.contact-native-select:focus-visible) { outline: 2px solid var(--oxblood); outline-offset: 2px; }
 .contact-textarea { resize: vertical; }
 .contact-input:focus, .contact-input-2:focus, .contact-textarea:focus { border-color: var(--oxblood); }
-.contact-fine-print-dispatch-button-box-2:hover { background-color: var(--ink); }
+.contact-fine-print-dispatch-button-box-2:hover { background-color: var(--ink-fill); }
 .contact-item-email-box-3-box:hover, .contact-item-phone-box-3-box:hover { opacity: 0.85; }
-.contact-item-email-box-3-box-2:hover, .contact-item-phone-box-3-box-2:hover { border-color: var(--ink); }
+.contact-item-email-box-3-box-2:hover, .contact-item-phone-box-3-box-2:hover { border-color: var(--ink-fill); }
 .contact-form-status {
   margin: 0;
   padding: 10px 14px;

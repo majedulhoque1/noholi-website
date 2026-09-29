@@ -90,7 +90,7 @@
   line-height: 16px;
   letter-spacing: 1.2px;
   text-transform: uppercase;
-  color: var(--parchment-line);
+  color: var(--stone);
   white-space: nowrap;
   min-height: 16px;
 }
@@ -173,7 +173,7 @@
   width: 8px;
   flex-shrink: 0;
   height: 8px;
-  background-color: var(--oxblood);
+  background-color: var(--oxblood-fill);
 }
 
 .rules-editorial-header-section-box-box-box-2 {
@@ -560,7 +560,7 @@
   align-items: center;
   gap: 6px;
   padding: 12px 0 0 0;
-  border-top: 1px solid rgba(201, 191, 168, 0.6);
+  border-top: 1px solid color-mix(in srgb, var(--parchment-line) 60%, transparent);
 }
 
 .rules-horizontalborder-3-box {
@@ -710,7 +710,7 @@
   align-items: center;
   gap: 5.99px;
   padding: 12px 0 0 0;
-  border-top: 1px solid rgba(201, 191, 168, 0.6);
+  border-top: 1px solid color-mix(in srgb, var(--parchment-line) 60%, transparent);
 }
 
 .rules-horizontalborder-5-box {
@@ -847,7 +847,7 @@
   justify-content: space-between;
   align-items: center;
   padding: 32px 31.99px 32px 32px;
-  background-color: var(--ink);
+  background-color: var(--ink-fill);
   border-left: 4px solid var(--oxblood);
 }
 
@@ -884,7 +884,7 @@
   font-weight: 600;
   line-height: 28px;
   letter-spacing: 0.45px;
-  color: var(--paper);
+  color: var(--white);
   white-space: nowrap;
   min-height: 28px;
 }
@@ -904,7 +904,7 @@
   font-size: 14px;
   font-weight: 400;
   line-height: 20px;
-  color: rgba(247, 243, 234, 0.8);
+  color: color-mix(in srgb, var(--paper) 80%, transparent);
   white-space: nowrap;
   min-height: 40px;
 }
@@ -933,7 +933,7 @@
   line-height: 16px;
   letter-spacing: 1.2px;
   text-transform: uppercase;
-  color: var(--paper);
+  color: var(--white);
   white-space: nowrap;
   min-height: 16px;
 }
@@ -1520,14 +1520,14 @@
   flex-direction: column;
   align-items: flex-start;
   padding: 10px 20px 10px 20px;
-  background-color: var(--oxblood);
+  background-color: var(--oxblood-fill);
   font-family: var(--font-sans);
   font-size: 12px;
   font-weight: 600;
   line-height: 16px;
   letter-spacing: 0.6px;
   text-transform: uppercase;
-  color: var(--paper);
+  color: var(--white);
   white-space: nowrap;
   min-height: 36px;
 }

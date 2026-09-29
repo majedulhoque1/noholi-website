@@ -1,4 +1,5 @@
 import { createClient } from '@supabase/supabase-js';
+import { translate } from '../i18n/LanguageContext.jsx';
 
 // Public (anon) key only — safe to ship. What anon can read is limited by the
 // database itself (see supabase/CONTRACT.md); never put a service key here.
@@ -59,13 +60,19 @@ export function isNetworkError(err) {
   return err.status === 0 || /AuthRetryableFetchError|Failed to fetch|NetworkError|Load failed|AbortError|aborted/i.test(text);
 }
 
-export const NETWORK_ERROR = "Couldn't reach the Noholi server. Check your internet connection and try again.";
+// Getter (not a plain string): a plain constant would freeze in whatever language was active
+// the moment this module first loaded. Callers do `new Error(NETWORK_ERROR())` — see auth.jsx.
+export const NETWORK_ERROR = () => translate('supabaseLib.networkError');
 
-/** One readable line from a Supabase/PostgREST error. RPC messages are written for readers (CONTRACT.md). */
+/**
+ * One readable line from a Supabase/PostgREST error. RPC messages are written for readers
+ * (CONTRACT.md) and come back from Postgres in English only — this front end has no way to
+ * translate them, so only our own generic fallback is localized here.
+ */
 export function describeError(err) {
-  if (!err) return 'Something went wrong. Please try again.';
+  if (!err) return translate('supabaseLib.genericError');
   if (typeof err === 'string') return err;
-  const parts = [err.message || 'Something went wrong. Please try again.'];
+  const parts = [err.message || translate('supabaseLib.genericError')];
   if (err.details && !parts[0].includes(err.details)) parts.push(err.details);
   if (err.hint) parts.push(err.hint);
   return parts.join(' — ');

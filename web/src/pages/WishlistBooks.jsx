@@ -12,7 +12,7 @@ const REQUIRED = [
 export default function WishlistBooks() {
   const { member } = useAuth();
   // Wishlists and acquisition requests have no backend yet: honest "coming soon" states.
-  const { status, submit } = useSubmission(REQUIRED, SOON_REQUEST, { ok: false });
+  const { status, submit } = useSubmission(REQUIRED, SOON_REQUEST(), { ok: false });
   const onSubmit = (e) => submit(e);
 
   return (

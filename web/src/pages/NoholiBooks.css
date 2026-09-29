@@ -253,7 +253,7 @@
   display: flex;
   align-items: flex-start;
   padding: 8px 0 0 0;
-  border-top: 1px solid rgba(201, 191, 168, 0.6);
+  border-top: 1px solid color-mix(in srgb, var(--parchment-line) 60%, transparent);
 }
 
 .nbooks-background-border {
@@ -628,7 +628,7 @@
 .nbooks-cover-link { display: block; width: 100%; max-width: 200px; cursor: pointer; }
 .nbooks-cover {
   width: 100%;
-  box-shadow: 0 1px 0 rgba(26, 24, 21, 0.08), 0 6px 14px -8px rgba(26, 24, 21, 0.35);
+  box-shadow: 0 1px 0 color-mix(in srgb, var(--ink) 8%, transparent), 0 6px 14px -8px color-mix(in srgb, var(--ink) 35%, transparent);
 }
 
 .nbooks-title-link:hover { color: var(--oxblood); }

@@ -391,7 +391,7 @@
   justify-content: space-between;
   align-items: center;
   padding: 16px;
-  background-color: var(--white);
+  background-color: var(--surface);
   border: 1px solid var(--stone);
 }
 
@@ -428,7 +428,7 @@
   flex-direction: column;
   align-items: flex-start;
   padding: 2px 8px 2px 8px;
-  background-color: #ece8df;
+  background-color: var(--paper-tint);
 }
 
 .wlbooks-book-1-box-box-box-box-text {
@@ -449,7 +449,7 @@
   flex-direction: column;
   align-items: flex-start;
   padding: 2px 8px 2px 8px;
-  background-color: rgba(255, 218, 213, 0.5);
+  background-color: color-mix(in srgb, var(--error-bg) 50%, transparent);
 }
 
 .wlbooks-overlay-text {
@@ -518,7 +518,7 @@
   justify-content: center;
   align-items: center;
   padding: 8px 12px 8px 12px;
-  background-color: var(--oxblood-soft);
+  background-color: var(--oxblood-soft-fill);
   font-family: var(--font-work);
   font-size: 11px;
   font-weight: 600;
@@ -556,7 +556,7 @@
   justify-content: space-between;
   align-items: center;
   padding: 16px;
-  background-color: var(--white);
+  background-color: var(--surface);
   border: 1px solid var(--stone);
 }
 
@@ -593,7 +593,7 @@
   flex-direction: column;
   align-items: flex-start;
   padding: 2px 8px 2px 8px;
-  background-color: #ece8df;
+  background-color: var(--paper-tint);
 }
 
 .wlbooks-book-2-box-box-box-box-text {
@@ -662,7 +662,7 @@
   justify-content: center;
   align-items: center;
   padding: 8px 12px 8px 12px;
-  background-color: var(--oxblood-soft);
+  background-color: var(--oxblood-soft-fill);
   font-family: var(--font-work);
   font-size: 11px;
   font-weight: 600;
@@ -758,7 +758,7 @@
   flex-direction: column;
   align-items: flex-start;
   padding: 2px 8px 2px 8px;
-  background-color: rgba(255, 218, 214, 0.6);
+  background-color: color-mix(in srgb, var(--error-bg) 60%, transparent);
 }
 
 .wlbooks-overlay-2-text {
@@ -769,7 +769,7 @@
   line-height: 14px;
   letter-spacing: 0.55px;
   text-transform: uppercase;
-  color: #ba1a1a;
+  color: var(--error);
   white-space: nowrap;
 }
 
@@ -865,7 +865,7 @@
   justify-content: space-between;
   align-items: center;
   padding: 16px;
-  background-color: var(--white);
+  background-color: var(--surface);
   border: 1px solid var(--stone);
 }
 
@@ -902,7 +902,7 @@
   flex-direction: column;
   align-items: flex-start;
   padding: 2px 8px 2px 8px;
-  background-color: #ece8df;
+  background-color: var(--paper-tint);
 }
 
 .wlbooks-book-4-box-box-box-box-text {
@@ -1021,7 +1021,7 @@
   justify-content: space-between;
   align-items: center;
   padding: 16px;
-  background-color: var(--white);
+  background-color: var(--surface);
   border: 1px solid var(--stone);
 }
 
@@ -1058,7 +1058,7 @@
   flex-direction: column;
   align-items: flex-start;
   padding: 2px 8px 2px 8px;
-  background-color: #ece8df;
+  background-color: var(--paper-tint);
 }
 
 .wlbooks-book-5-box-box-box-box-text {
@@ -1127,7 +1127,7 @@
   justify-content: center;
   align-items: center;
   padding: 8px 12px 8px 12px;
-  background-color: var(--oxblood-soft);
+  background-color: var(--oxblood-soft-fill);
   font-family: var(--font-work);
   font-size: 11px;
   font-weight: 600;
@@ -1174,7 +1174,7 @@
   align-items: flex-start;
   gap: 12px;
   padding: 16px;
-  background-color: var(--white);
+  background-color: var(--surface);
   border: 2px solid var(--oxblood-soft);
 }
 
@@ -1321,7 +1321,7 @@
 }
 
 .wlbooks-input::placeholder {
-  color: rgba(75, 70, 63, 0.7);
+  color: color-mix(in srgb, var(--ink-muted) 70%, transparent);
   opacity: 1;
 }
 
@@ -1343,7 +1343,7 @@
 }
 
 .wlbooks-input-2::placeholder {
-  color: rgba(75, 70, 63, 0.7);
+  color: color-mix(in srgb, var(--ink-muted) 70%, transparent);
   opacity: 1;
 }
 
@@ -1382,7 +1382,7 @@
 }
 
 .wlbooks-input-3::placeholder {
-  color: rgba(75, 70, 63, 0.7);
+  color: color-mix(in srgb, var(--ink-muted) 70%, transparent);
   opacity: 1;
 }
 
@@ -1403,7 +1403,7 @@
 }
 
 .wlbooks-input-4::placeholder {
-  color: rgba(75, 70, 63, 0.7);
+  color: color-mix(in srgb, var(--ink-muted) 70%, transparent);
   opacity: 1;
 }
 
@@ -1435,7 +1435,7 @@
 }
 
 .wlbooks-textarea::placeholder {
-  color: rgba(75, 70, 63, 0.7);
+  color: color-mix(in srgb, var(--ink-muted) 70%, transparent);
   opacity: 1;
 }
 
@@ -1455,7 +1455,7 @@
   justify-content: center;
   align-items: center;
   padding: 8px 16px 8px 16px;
-  background-color: var(--oxblood-soft);
+  background-color: var(--oxblood-soft-fill);
 }
 
 .wlbooks-form-2-box-4-box-box {
@@ -1557,7 +1557,7 @@
   gap: 4px;
   padding: 8px;
   background-color: var(--paper-bright);
-  border: 1px solid rgba(205, 197, 188, 0.6);
+  border: 1px solid color-mix(in srgb, var(--stone) 60%, transparent);
 }
 
 .wlbooks-item-1-box {
@@ -1593,7 +1593,7 @@
   flex-direction: column;
   align-items: flex-start;
   padding: 2px 15.25px 2px 8px;
-  background-color: rgba(255, 218, 213, 0.5);
+  background-color: color-mix(in srgb, var(--error-bg) 50%, transparent);
 }
 
 .wlbooks-under-acquisition-review {
@@ -1664,7 +1664,7 @@
   gap: 4px;
   padding: 8px;
   background-color: var(--paper-bright);
-  border: 1px solid rgba(205, 197, 188, 0.6);
+  border: 1px solid color-mix(in srgb, var(--stone) 60%, transparent);
 }
 
 .wlbooks-item-2-box {
@@ -1700,7 +1700,7 @@
   flex-direction: column;
   align-items: flex-start;
   padding: 2px 36.61px 2px 8px;
-  background-color: #e6e2d9;
+  background-color: var(--paper-tint);
 }
 
 .wlbooks-approved-for-next-purchase-cycle {

@@ -98,7 +98,7 @@
   line-height: 16px;
   letter-spacing: 1.2px;
   text-transform: uppercase;
-  color: var(--parchment-line);
+  color: var(--stone);
   white-space: nowrap;
   min-height: 16px;
 }
@@ -140,7 +140,7 @@
   width: 8px;
   flex-shrink: 0;
   height: 8px;
-  background-color: var(--oxblood);
+  background-color: var(--oxblood-fill);
 }
 
 .about-archival-framing-ribbon-breadcru-box-box-2-box-2 {
@@ -202,7 +202,7 @@
   width: 32px;
   flex-shrink: 0;
   height: 1px;
-  background-color: var(--oxblood);
+  background-color: var(--oxblood-fill);
 }
 
 .about-editorial-header-box-box-box-box {
@@ -1416,7 +1416,7 @@
   width: 6px;
   flex-shrink: 0;
   height: 6px;
-  background-color: var(--oxblood);
+  background-color: var(--oxblood-fill);
 }
 
 .about-horizontalborder-6-box-text {
@@ -1447,14 +1447,14 @@
   justify-content: center;
   align-items: center;
   padding: 14px 24px 14px 24px;
-  background-color: var(--oxblood);
+  background-color: var(--oxblood-fill);
   font-family: var(--font-newsreader);
   font-size: 12px;
   font-weight: 600;
   line-height: 16px;
   letter-spacing: 0.6px;
   text-transform: uppercase;
-  color: var(--paper);
+  color: var(--white);
   text-align: center;
   white-space: nowrap;
   min-height: 44px;

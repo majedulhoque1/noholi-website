@@ -1,25 +1,27 @@
 import { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import BookCover, { availability } from '../components/BookCover.jsx';
-import { bookPath, getNoholiBooks } from '../lib/books.js';
+import { bookPath, displayAuthor, displayTitle, getNoholiBooks } from '../lib/books.js';
 import { describeError } from '../lib/supabase.js';
+import { useLang } from '../i18n/LanguageContext.jsx';
 import './NoholiBooks.css';
 
 const PAGE_SIZE = 24;
 // Three grid-column positions (1 / 3 / 5 in the design's 5-track grid, cols 2 & 4 are gutters),
 // cycled by index — same trick Catalog.jsx uses so any number of cards wraps into new rows.
 const CARD_CLASS = ['nbooks-card-1', 'nbooks-card-2', 'nbooks-card-3'];
-const fmt = (n) => Number(n || 0).toLocaleString('en-US');
+const fmt = (n, lang) => Number(n || 0).toLocaleString(lang === 'bn' ? 'bn-BD' : 'en-US');
 
 // Card contents only — the caller supplies the outer positional wrapper (CARD_CLASS[i % 3]),
 // which is `display:flex; flex-direction:column; justify-content:space-between`, so this
 // fragment's two children (the body box and the availability footer) are siblings, and the
 // footer stays pinned to the card's bottom regardless of how tall the body is.
 function NoholiBookCard({ book }) {
+  const { t, lang } = useLang();
   const path = bookPath(book);
-  const title = book.title || book.title_bangla;
-  const bn = book.title_bangla && book.title_bangla !== title ? book.title_bangla : '';
-  const author = book.author || book.author_bangla;
+  const title = lang === 'bn' ? displayTitle(book) : book.title || book.title_bangla;
+  const bn = lang !== 'bn' && book.title_bangla && book.title_bangla !== title ? book.title_bangla : '';
+  const author = lang === 'bn' ? displayAuthor(book) : book.author || book.author_bangla;
   const av = availability(book);
   return (
     <>
@@ -36,14 +38,14 @@ function NoholiBookCard({ book }) {
           )}
           {author && (
             <div className="nbooks-card-details-box-2">
-              <span className="nbooks-by-author-name">by {author}</span>
+              <span className="nbooks-by-author-name">{t('nbooks.byAuthor', { author })}</span>
             </div>
           )}
         </div>
         {book.genre && (
           <div className="nbooks-metadata-genre-only">
             <div className="nbooks-background-border">
-              <span className="nbooks-background-border-text">Genre: {book.genre}</span>
+              <span className="nbooks-background-border-text">{t('nbooks.genreLabel', { genre: book.genre })}</span>
             </div>
           </div>
         )}
@@ -53,9 +55,9 @@ function NoholiBookCard({ book }) {
           <div className="nbooks-availability-note-2-box">
             <span className={`nbooks-availability-note-2-box-text is-${av.state}`}>{av.text}</span>
           </div>
-          <Link to={path} className="nbooks-availability-note-2-box-2" aria-label={`View details: ${title}`}>
+          <Link to={path} className="nbooks-availability-note-2-box-2" aria-label={t('nbooks.viewDetailsAria', { title })}>
             <div className="nbooks-availability-note-2-box-2-box">
-              <span className="nbooks-availability-note-2-box-2-box-text">View</span>
+              <span className="nbooks-availability-note-2-box-2-box-text">{t('nbooks.view')}</span>
             </div>
             <img className="nbooks-availability-note-2-box-2-box-2" src="/svg/container-1iubppx.svg" alt="" width="8" height="4" />
           </Link>
@@ -90,6 +92,7 @@ function NoholiBookSkeleton() {
 // Generated from Figma frame "Noholi Library — Noholi Books (Before Login)" (36:267) by tools/gen.py, then hand-edited.
 // Runs on the real catalogue: books where publisher = 'Noholi' exactly (Noholi Press's own imprint).
 export default function NoholiBooks() {
+  const { t, lang } = useLang();
   const [rows, setRows] = useState([]);
   const [total, setTotal] = useState(0);
   const [page, setPage] = useState(1);
@@ -144,16 +147,16 @@ export default function NoholiBooks() {
         <section className="nbooks-page-header-intro">
           <div className="nbooks-page-header-intro-box">
             <div className="nbooks-page-header-intro-box-box">
-              <span className="nbooks-publications">PUBLICATIONS</span>
+              <span className="nbooks-publications">{t('nbooks.publications')}</span>
             </div>
-            <h1 className="nbooks-heading-1">Noholi Books</h1>
+            <h1 className="nbooks-heading-1">{t('nbooks.heading')}</h1>
             <div className="nbooks-page-header-intro-box-box-2">
               <div className="nbooks-page-header-intro-box-box-2-box">
-                <span className="nbooks-original-titles-published-by-noh">Original titles published by Noholi Press.</span>
+                <span className="nbooks-original-titles-published-by-noh">{t('nbooks.intro')}</span>
               </div>
             </div>
             {status === 'ready' && (
-              <div className="nbooks-count-line">{fmt(total)} {total === 1 ? 'title' : 'titles'}</div>
+              <div className="nbooks-count-line">{fmt(total, lang)} {total === 1 ? t('nbooks.title') : t('nbooks.titles')}</div>
             )}
           </div>
         </section>
@@ -161,8 +164,8 @@ export default function NoholiBooks() {
         {status === 'error' ? (
           <section className="nbooks-published-titles-grid">
             <p className="nbooks-empty" role="alert">
-              These titles could not be loaded: {error}{' '}
-              <button type="button" onClick={() => setRetry((n) => n + 1)}>Try again</button>
+              {t('nbooks.errorPrefix', { error })}{' '}
+              <button type="button" onClick={() => setRetry((n) => n + 1)}>{t('nbooks.tryAgain')}</button>
             </p>
           </section>
         ) : loading ? (
@@ -175,7 +178,7 @@ export default function NoholiBooks() {
           </section>
         ) : rows.length === 0 ? (
           <section className="nbooks-published-titles-grid">
-            <p className="nbooks-empty">No Noholi Press titles are in the catalogue yet.</p>
+            <p className="nbooks-empty">{t('nbooks.empty')}</p>
           </section>
         ) : (
           <>
@@ -189,7 +192,7 @@ export default function NoholiBooks() {
             {hasMore && (
               <div className="nbooks-load-more">
                 <button type="button" className="nbooks-load-more-btn" onClick={loadMore} disabled={loadingMore}>
-                  {loadingMore ? 'Loading…' : `Load more (${fmt(total - rows.length)} remaining)`}
+                  {loadingMore ? t('nbooks.loadingMore') : t('nbooks.loadMore', { n: fmt(total - rows.length, lang) })}
                 </button>
               </div>
             )}

@@ -105,7 +105,7 @@
   line-height: 14px;
   letter-spacing: 1.1px;
   text-transform: uppercase;
-  color: var(--black);
+  color: var(--text-strong);
   white-space: nowrap;
   min-height: 14px;
 }
@@ -135,7 +135,7 @@
   flex-direction: column;
   align-items: flex-start;
   padding: 2px 8px 2px 8px;
-  background-color: #ece8df;
+  background-color: var(--paper-tint);
 }
 
 .blogpost-category-pill-folio-registry-fla-box-text {
@@ -183,7 +183,7 @@
   font-weight: 600;
   line-height: 60.48px;
   letter-spacing: -1.4px;
-  color: var(--black);
+  color: var(--text-strong);
   white-space: pre;
   min-height: 128.94px;
 }
@@ -264,7 +264,7 @@
   line-height: 18px;
   letter-spacing: 1.04px;
   text-decoration: underline;
-  color: var(--black);
+  color: var(--text-strong);
   white-space: nowrap;
   min-height: 18px;
 }
@@ -584,7 +584,7 @@
   font-size: 13px;
   font-weight: 400;
   line-height: 18px;
-  color: var(--black);
+  color: var(--text-strong);
   white-space: pre;
   min-height: 18px;
 }
@@ -595,7 +595,7 @@
   font-size: 13px;
   font-weight: 400;
   line-height: 18px;
-  color: var(--black);
+  color: var(--text-strong);
   white-space: nowrap;
   min-height: 18px;
 }
@@ -641,7 +641,7 @@
   line-height: 14px;
   letter-spacing: 0.55px;
   text-transform: uppercase;
-  color: var(--black);
+  color: var(--text-strong);
   min-height: 14px;
 }
 
@@ -687,7 +687,7 @@
   line-height: 14px;
   letter-spacing: 1.1px;
   text-transform: uppercase;
-  color: var(--black);
+  color: var(--text-strong);
   min-height: 14px;
 }
 
@@ -875,7 +875,7 @@
   align-items: flex-start;
   gap: 8px;
   padding: 15.25px 12px 16px 24px;
-  background-color: rgba(247, 243, 234, 0.6);
+  background-color: color-mix(in srgb, var(--paper) 60%, transparent);
   border-left: 2px solid var(--oxblood);
 }
 
@@ -895,7 +895,7 @@
   font-weight: 600;
   font-style: italic;
   line-height: 30.25px;
-  color: var(--black);
+  color: var(--text-strong);
   white-space: pre;
   min-height: 91px;
 }
@@ -1013,7 +1013,7 @@
   font-size: 22px;
   font-weight: 500;
   line-height: 30px;
-  color: var(--paper);
+  color: var(--white);
   text-align: center;
   white-space: nowrap;
   min-height: 30px;
@@ -1077,7 +1077,7 @@
   font-size: 22px;
   font-weight: 600;
   line-height: 30px;
-  color: var(--black);
+  color: var(--text-strong);
   min-height: 30px;
 }
 
@@ -1134,7 +1134,7 @@
   line-height: 14px;
   letter-spacing: 0.55px;
   text-transform: uppercase;
-  color: var(--black);
+  color: var(--text-strong);
   white-space: nowrap;
   min-height: 14px;
 }
@@ -1190,7 +1190,7 @@
   line-height: 18px;
   letter-spacing: 0.65px;
   text-transform: uppercase;
-  color: var(--black);
+  color: var(--text-strong);
   white-space: nowrap;
   min-height: 36px;
 }
@@ -1220,7 +1220,7 @@
   line-height: 18px;
   letter-spacing: 0.65px;
   text-transform: uppercase;
-  color: var(--paper-bright);
+  color: var(--white);
   text-align: center;
   white-space: nowrap;
   min-height: 36px;
@@ -1283,7 +1283,7 @@
   font-size: 22px;
   font-weight: 600;
   line-height: 30px;
-  color: var(--black);
+  color: var(--text-strong);
   min-height: 30px;
 }
 
@@ -1307,7 +1307,7 @@
   font-size: 17px;
   font-weight: 400;
   line-height: 28px;
-  color: var(--black);
+  color: var(--text-strong);
   min-height: 28px;
 }
 
@@ -1353,7 +1353,7 @@
   flex-direction: column;
   align-items: flex-start;
   padding: 8px;
-  background-color: #ece8df;
+  background-color: var(--paper-tint);
   border: 1px solid var(--stone);
 }
 
@@ -1397,7 +1397,7 @@
   font-size: 26px;
   font-weight: 600;
   line-height: 26px;
-  color: var(--black);
+  color: var(--text-strong);
   text-align: center;
   white-space: nowrap;
   min-height: 26px;
@@ -1432,7 +1432,7 @@
   align-items: flex-start;
   gap: 24px;
   padding: 32px 0 0 0;
-  border-top: 2px solid var(--black);
+  border-top: 2px solid var(--text-strong);
 }
 
 .blogpost-related-dispatches-section-box {
@@ -1471,7 +1471,7 @@
   font-size: 28px;
   font-weight: 500;
   line-height: 36px;
-  color: var(--black);
+  color: var(--text-strong);
   white-space: nowrap;
   min-height: 36px;
 }
@@ -1548,7 +1548,7 @@
   justify-content: space-between;
   align-items: center;
   padding: 0 0 8px 0;
-  border-bottom: 1px solid rgba(205, 197, 188, 0.6);
+  border-bottom: 1px solid color-mix(in srgb, var(--stone) 60%, transparent);
 }
 
 .blogpost-horizontalborder-3-box {
@@ -1603,7 +1603,7 @@
   font-size: 22px;
   font-weight: 600;
   line-height: 30px;
-  color: var(--black);
+  color: var(--text-strong);
   white-space: pre;
   min-height: 60px;
 }
@@ -1711,7 +1711,7 @@
   line-height: 14px;
   letter-spacing: 0.55px;
   text-transform: uppercase;
-  color: var(--black);
+  color: var(--text-strong);
   white-space: nowrap;
   min-height: 14px;
 }

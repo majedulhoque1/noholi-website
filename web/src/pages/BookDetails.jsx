@@ -2,21 +2,23 @@ import { useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { useAuth } from '../auth.jsx';
 import BookCover, { availability } from '../components/BookCover.jsx';
-import { bookSlug, getBookBySlug } from '../lib/books.js';
+import { bookSlug, displayAuthor, displayTitle, getBookBySlug } from '../lib/books.js';
 import { describeError } from '../lib/supabase.js';
+import { useLang } from '../i18n/LanguageContext.jsx';
 import './BookDetails.css';
 
 const dash = (v) => (v === null || v === undefined || String(v).trim() === '' ? '—' : v);
 
 function Breadcrumb({ label }) {
+  const { t } = useLang();
   return (
     <div className="book-breadcrumb-navigation">
       <nav className="book-nav-breadcrumb">
-        <Link to="/" className="book-nav-breadcrumb-box">HOME</Link>
+        <Link to="/" className="book-nav-breadcrumb-box">{t('book.home')}</Link>
         <div className="book-nav-breadcrumb-box-2">
           <span className="book-nav-breadcrumb-box-2-text">/</span>
         </div>
-        <Link to="/catalog" className="book-nav-breadcrumb-box">BROWSE</Link>
+        <Link to="/catalog" className="book-nav-breadcrumb-box">{t('book.browse')}</Link>
         <div className="book-nav-breadcrumb-box-2">
           <span className="book-nav-breadcrumb-box-2-text">/</span>
         </div>
@@ -47,6 +49,7 @@ function Row({ name, label, value, lang }) {
 export default function BookDetails() {
   // Members get the after-login actions (Figma frame 36:2863); guests are sent to log in.
   const { member } = useAuth() || {};
+  const { t, lang } = useLang();
   const { slug = '' } = useParams();
   const [state, setState] = useState({ status: 'loading', book: null, error: '' });
   const [retry, setRetry] = useState(0);
@@ -70,16 +73,16 @@ export default function BookDetails() {
 
   if (state.status !== 'ready') {
     const missing = state.status === 'missing';
-    const heading = state.status === 'loading' ? 'Loading…' : missing ? 'Book not found' : 'This book could not be loaded';
+    const heading = state.status === 'loading' ? t('book.loading') : missing ? t('book.bookNotFound') : t('book.couldNotBeLoaded');
     return (
       <div className="book">
         <section className="book-main-content">
-          <Breadcrumb label={missing ? 'NOT FOUND' : '…'} />
+          <Breadcrumb label={missing ? t('book.notFound') : '…'} />
           <section className="book-main-detail-section book-state" aria-busy={state.status === 'loading'}>
             <h1 className="book-heading-1">{heading}</h1>
             {missing && (
               <p className="book-state-text">
-                We couldn’t find this book in the Noholi Library catalogue. The link may be out of date, or the title may have been withdrawn.
+                {t('book.notFoundText')}
               </p>
             )}
             {state.status === 'error' && (
@@ -87,9 +90,9 @@ export default function BookDetails() {
             )}
             {state.status !== 'loading' && (
               <div className="book-state-actions">
-                <Link to="/catalog" className="book-border-box-2">BROWSE THE CATALOGUE</Link>
+                <Link to="/catalog" className="book-border-box-2">{t('book.browseCatalogue')}</Link>
                 {state.status === 'error' && (
-                  <button type="button" className="book-border-box-2" onClick={() => setRetry((n) => n + 1)}>TRY AGAIN</button>
+                  <button type="button" className="book-border-box-2" onClick={() => setRetry((n) => n + 1)}>{t('book.tryAgain')}</button>
                 )}
               </div>
             )}
@@ -101,15 +104,15 @@ export default function BookDetails() {
 
   const book = state.book;
   const canonical = bookSlug(book);
-  const title = book.title || book.title_bangla;
-  const bnTitle = book.title_bangla && book.title_bangla !== title ? book.title_bangla : '';
-  const author = book.author || book.author_bangla;
-  const bnAuthor = book.author_bangla && book.author_bangla !== author ? book.author_bangla : '';
+  const title = lang === 'bn' ? displayTitle(book) : book.title || book.title_bangla;
+  const bnTitle = lang !== 'bn' && book.title_bangla && book.title_bangla !== title ? book.title_bangla : '';
+  const author = lang === 'bn' ? displayAuthor(book) : book.author || book.author_bangla;
+  const bnAuthor = lang !== 'bn' && book.author_bangla && book.author_bangla !== author ? book.author_bangla : '';
   const av = availability(book);
   const crumb = bnTitle ? `${title} (${bnTitle})` : title;
   const borrowTo = `/borrow/${canonical}`;
   const total = Number(book.total_copies) || 0;
-  const copies = total ? `${total} (${Math.max(0, Number(book.available_copies) || 0)} available)` : null;
+  const copies = total ? t('book.copiesAvailable', { total, available: Math.max(0, Number(book.available_copies) || 0) }) : null;
 
   return (
     <div className="book">
@@ -123,7 +126,7 @@ export default function BookDetails() {
               </div>
               <div className="book-status-indicator-card">
                 <div className="book-status-indicator-card-box">
-                  <span className="book-status-indicator-card-box-text">COLLECTION STATUS</span>
+                  <span className="book-status-indicator-card-box-text">{t('book.collectionStatus')}</span>
                 </div>
                 <div className="book-status-indicator-card-box-2" aria-live="polite">
                   <div className={`book-status-indicator-card-box-2-box is-${av.state}`} />
@@ -133,28 +136,28 @@ export default function BookDetails() {
               <div className="book-borrowing-reservation-buttons">
                 {!av.canBorrow ? (
                   <span className="book-borrowing-reservation-buttons-box is-disabled" role="button" aria-disabled="true" title={av.reason}>
-                    <span className="book-borrowing-reservation-buttons-box-text">{av.state === 'reading' ? 'READING ROOM ONLY' : 'ALL COPIES ARE ON LOAN'}</span>
+                    <span className="book-borrowing-reservation-buttons-box-text">{av.state === 'reading' ? t('book.readingRoomOnly') : t('book.allOnLoan')}</span>
                   </span>
                 ) : member ? (
                   <>
                     <Link to={borrowTo} className="book-borrowing-reservation-buttons-box">
                       <img className="book-member-icon" src="/svg/icon-borrow-member.svg" alt="" width="14.42" height="11.2" />
-                      <span className="book-borrowing-reservation-buttons-box-text">BORROW VOLUME</span>
+                      <span className="book-borrowing-reservation-buttons-box-text">{t('book.borrowVolume')}</span>
                     </Link>
                     <Link to={borrowTo} className="book-borrowing-reservation-buttons-box-2">
                       <img className="book-member-icon" src="/svg/icon-reserve-member.svg" alt="" width="8" height="11.2" />
-                      <span className="book-borrowing-reservation-buttons-box-2-text">RESERVE COPY</span>
+                      <span className="book-borrowing-reservation-buttons-box-2-text">{t('book.reserveCopy')}</span>
                     </Link>
                   </>
                 ) : (
                   <>
                     <Link to="/login" state={{ from: borrowTo }} className="book-borrowing-reservation-buttons-box">
                       <img className="book-borrowing-reservation-buttons-box-box" src="/svg/container-adla7j.svg" alt="" width="14" height="17" />
-                      <span className="book-borrowing-reservation-buttons-box-text">LOG IN TO BORROW</span>
+                      <span className="book-borrowing-reservation-buttons-box-text">{t('book.logInToBorrow')}</span>
                     </Link>
                     <Link to="/login" state={{ from: borrowTo }} className="book-borrowing-reservation-buttons-box-2">
                       <img className="book-borrowing-reservation-buttons-box-2-box" src="/svg/container-boxnrc.svg" alt="" width="11" height="14" />
-                      <span className="book-borrowing-reservation-buttons-box-2-text">LOG IN TO RESERVE</span>
+                      <span className="book-borrowing-reservation-buttons-box-2-text">{t('book.logInToReserve')}</span>
                     </Link>
                   </>
                 )}
@@ -163,8 +166,8 @@ export default function BookDetails() {
                 <div className="book-policy-notice-box">
                   <span className={`book-standard-loan-terms-apply-see-ru${av.canBorrow ? "" : " is-blocked"}`}>
                     {av.canBorrow
-                      ? <>Standard loan terms apply — see Rules page for details. Members may borrow or{' '}<br className="soft-br" />reserve titles in person at the circulation desk.</>
-                      : <>{av.reason}{' '}{av.state === 'reading' ? 'You are welcome to read it at the library.' : 'Please check back later, or ask at the circulation desk.'}</>}
+                      ? t('book.standardLoanTerms')
+                      : <>{av.reason}{' '}{av.state === 'reading' ? t('book.readAtLibrary') : t('book.checkBackLater')}</>}
                   </span>
                 </div>
               </div>
@@ -179,7 +182,7 @@ export default function BookDetails() {
                 )}
                 {author && (
                   <div className="book-title-author-header-box-2">
-                    <span className="book-by-a-r-chowdhury">{"By "}<span className="book-span">{author}</span>{bnAuthor && <span className="book-span-bn" lang="bn"> · {bnAuthor}</span>}</span>
+                    <span className="book-by-a-r-chowdhury">{t('book.byAuthor')}<span className="book-span">{author}</span>{bnAuthor && <span className="book-span-bn" lang="bn"> · {bnAuthor}</span>}</span>
                   </div>
                 )}
               </div>
@@ -187,63 +190,63 @@ export default function BookDetails() {
                 <div className="book-details-table-2">
                   <div className="book-overlay-horizontalborder">
                     <div className="book-overlay-horizontalborder-box">
-                      <span className="book-overlay-horizontalborder-box-text">BOOK DETAILS</span>
+                      <span className="book-overlay-horizontalborder-box-text">{t('book.bookDetails')}</span>
                     </div>
                   </div>
                   <div className="book-details-table-2-box">
-                    <Row name="english-title" label="ENGLISH TITLE" value={book.title} />
-                    <Row name="bangla-title" label="BANGLA TITLE" value={book.title_bangla} lang="bn" />
-                    <Row name="author" label="AUTHOR" value={[book.author, bnAuthor].filter(Boolean).join(' · ') || book.author_bangla} />
-                    <Row name="category" label="CATEGORY" value={book.category} />
-                    <Row name="genre" label="GENRE" value={book.genre} />
-                    <Row name="language" label="LANGUAGE" value={book.language} />
-                    <Row name="publication" label="PUBLISHER" value={book.publisher} />
-                    <Row name="year" label="YEAR" value={book.year_of_publication} />
-                    <Row name="edition" label="EDITION" value={book.edition} />
-                    <Row name="copies" label="COPIES" value={copies} />
-                    <Row name="condition" label="CONDITION" value={book.condition} />
-                    <Row name="pages" label="PAGES" value={book.pages} />
-                    {book.isbn && <Row name="pages" label="ISBN" value={book.isbn} />}
-                    <Row name="pages" label="BOOK NUMBER" value={book.id} />
+                    <Row name="english-title" label={t('book.englishTitle')} value={book.title} />
+                    <Row name="bangla-title" label={t('book.banglaTitle')} value={book.title_bangla} lang="bn" />
+                    <Row name="author" label={t('book.author')} value={[book.author, bnAuthor].filter(Boolean).join(' · ') || book.author_bangla} />
+                    <Row name="category" label={t('book.category')} value={book.category} />
+                    <Row name="genre" label={t('book.genre')} value={book.genre} />
+                    <Row name="language" label={t('book.language')} value={book.language} />
+                    <Row name="publication" label={t('book.publisher')} value={book.publisher} />
+                    <Row name="year" label={t('book.year')} value={book.year_of_publication} />
+                    <Row name="edition" label={t('book.edition')} value={book.edition} />
+                    <Row name="copies" label={t('book.copies')} value={copies} />
+                    <Row name="condition" label={t('book.condition')} value={book.condition} />
+                    <Row name="pages" label={t('book.pages')} value={book.pages} />
+                    {book.isbn && <Row name="pages" label={t('book.isbn')} value={book.isbn} />}
+                    <Row name="pages" label={t('book.bookNumber')} value={book.id} />
                   </div>
                 </div>
               </div>
             </div>
           </div>
           <div className="book-borrowing-guidelines-section">
-            <h3 className="book-heading-3">Borrowing Guidelines</h3>
+            <h3 className="book-heading-3">{t('book.borrowingGuidelines')}</h3>
             <div className="book-borrowing-guidelines-section-box">
               <div className="book-guideline-1">
-                <h4 className="book-heading-4">MEMBER CARD</h4>
+                <h4 className="book-heading-4">{t('book.memberCard')}</h4>
                 <div className="book-guideline-1-box">
-                  <span className="book-a-valid-noholi-library-membershi">A valid Noholi Library membership card must be{' '}<br className="soft-br" />presented at the circulation desk to borrow titles.</span>
+                  <span className="book-a-valid-noholi-library-membershi">{t('book.memberCardText')}</span>
                 </div>
               </div>
               <div className="book-guideline-2">
-                <h4 className="book-heading-4">BORROWING & RESERVATIONS</h4>
+                <h4 className="book-heading-4">{t('book.borrowingReservations')}</h4>
                 <div className="book-guideline-2-box">
-                  <span className="book-members-can-borrow-circulating-v">Members can request any available volume online{' '}<br className="soft-br" />and collect it from the circulation desk.</span>
+                  <span className="book-members-can-borrow-circulating-v">{t('book.borrowingReservationsText')}</span>
                 </div>
               </div>
               <div className="book-guideline-3">
-                <h4 className="book-heading-4">LOAN TERMS & RENEWALS</h4>
+                <h4 className="book-heading-4">{t('book.loanTerms')}</h4>
                 <div className="book-guideline-3-box">
-                  <span className="book-standard-loan-terms-apply-see-ru-2">Standard loan terms apply — see Rules page for{' '}<br className="soft-br" />details. Inquiries and renewals can be requested at{' '}<br className="soft-br" />the desk.</span>
+                  <span className="book-standard-loan-terms-apply-see-ru-2">{t('book.loanTermsText')}</span>
                 </div>
               </div>
             </div>
           </div>
           <section className="book-section">
-            <h3 className="book-heading-3-2">Reviews & Ratings</h3>
-            <p className="book-no-reviews">No reader reviews yet.</p>
+            <h3 className="book-heading-3-2">{t('book.reviewsAndRatings')}</h3>
+            <p className="book-no-reviews">{t('book.noReviews')}</p>
             <div className="book-border">
               <div className="book-border-box">
-                <span className="book-border-box-text">Have you read this title?</span>
+                <span className="book-border-box-text">{t('book.haveYouRead')}</span>
               </div>
               {member ? (
-                <Link to="/studio/book-review" className="book-border-box-2 book-border-box-2--member">WRITE A REVIEW</Link>
+                <Link to="/studio/book-review" className="book-border-box-2 book-border-box-2--member">{t('book.writeAReview')}</Link>
               ) : (
-                <Link to="/login" className="book-border-box-2">LOG IN TO WRITE A REVIEW</Link>
+                <Link to="/login" className="book-border-box-2">{t('book.logInToReview')}</Link>
               )}
             </div>
           </section>

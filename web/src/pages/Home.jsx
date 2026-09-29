@@ -1,9 +1,10 @@
 import { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import BookCover from '../components/BookCover.jsx';
-import { BOOK_COLUMNS, bookPath } from '../lib/books.js';
+import { BOOK_COLUMNS, bookPath, displayAuthor, displayTitle } from '../lib/books.js';
 import { todayDhaka } from '../lib/dhakaDate.js';
 import { supabase } from '../lib/supabase.js';
+import { useLang } from '../i18n/LanguageContext.jsx';
 import './Home.css';
 
 const SHELF = 5;
@@ -28,6 +29,7 @@ async function loadFeatured() {
 // Generated from Figma frame "Noholi Library — Home & Featured Books Band (Before Login)" (36:3245) by tools/gen.py, then hand-edited.
 export default function Home() {
   const navigate = useNavigate();
+  const { t, lang } = useLang();
   const [featured, setFeatured] = useState(null);
   useEffect(() => {
     let live = true;
@@ -54,33 +56,52 @@ export default function Home() {
                     <div className="home-background-css-transform-box" />
                   </div>
                   <div className="home-eyebrow-label-2-box">
-                    <span className="home-eyebrow-label-2-box-text">COMMUNITY LIBRARY & PRESS · DHAKA</span>
+                    <span className="home-eyebrow-label-2-box-text">{t('home.eyebrow')}</span>
                   </div>
                 </div>
               </div>
               <div className="home-headline-split-across-two-lines">
                 <div className="home-headline-split-across-two-lines-2">
-                  <span className="home-headline-split-across-two-lines-2-text">ST</span>
-                  <span className="home-headline-split-across-two-lines-2-text-2">RIES</span>
-                  <span className="home-headline-split-across-two-lines-2-text-3">LIVE HERE</span>
-                  <div className="home-headline-split-across-two-lines-2-box">
-                    <span className="home-headline-split-across-two-lines-2-box-text">O</span>
-                    <div className="home-headline-split-across-two-lines-2-box-box" />
-                  </div>
+                  {lang === 'bn' ? (
+                    <span
+                      style={{
+                        position: 'static',
+                        display: 'block',
+                        fontFamily: 'var(--font-bengali)',
+                        fontSize: 'clamp(2.25rem, 10vw, 3.5rem)',
+                        fontWeight: 800,
+                        lineHeight: 1.15,
+                        color: 'var(--ink)',
+                        whiteSpace: 'normal',
+                      }}
+                    >
+                      {t('home.headlineLine1')} {t('home.headlineLine2')}
+                    </span>
+                  ) : (
+                    <>
+                      <span className="home-headline-split-across-two-lines-2-text">ST</span>
+                      <span className="home-headline-split-across-two-lines-2-text-2">RIES</span>
+                      <span className="home-headline-split-across-two-lines-2-text-3">LIVE HERE</span>
+                      <div className="home-headline-split-across-two-lines-2-box">
+                        <span className="home-headline-split-across-two-lines-2-box-text">O</span>
+                        <div className="home-headline-split-across-two-lines-2-box-box" />
+                      </div>
+                    </>
+                  )}
                 </div>
               </div>
               <div className="home-supporting-line-in-ink-wash-brow">
                 <div className="home-supporting-line-in-ink-wash-brow-2">
-                  <span className="home-a-community-reading-room-and-ind">A community reading room and independent press for Bengali{' '}<br className="soft-br" />literature.</span>
+                  <span className="home-a-community-reading-room-and-ind">{t('home.supportingLine')}</span>
                 </div>
               </div>
               <div className="home-search-bar-with-arrow-button">
                 <form className="home-form" role="search" onSubmit={onSearch}>
                   <img className="home-form-box" src="/svg/container-xljvoh.svg" alt="" width="33" height="61" />
-                  <input className="home-input" type="search" name="q" aria-label="Search the catalog" placeholder="Search by title, author, or subject" />
+                  <input className="home-input" type="search" name="q" aria-label={t('home.searchAria')} placeholder={t('home.searchPlaceholder')} />
                   <button type="submit" className="home-form-box-2">
                     <div className="home-form-box-2-box">
-                      <span className="home-form-box-2-box-text">SEARCH</span>
+                      <span className="home-form-box-2-box-text">{t('home.searchButton')}</span>
                     </div>
                     <div className="home-form-box-2-box">
                       <span className="home-form-box-2-box-text-2">→</span>
@@ -159,7 +180,7 @@ export default function Home() {
             <div className="home-section-2-box-box-box" />
             <span className="home-section-2-box-box-text">FROM THE SHELVES</span>
           </div>
-          <h2 className="home-heading-2">Featured Books</h2>
+          <h2 className="home-heading-2">{t('home.featuredHeading')}</h2>
           <div className="home-section-2-box-box-2" aria-busy={!featured}>
             {(featured || SLOTS).map((book, i) => {
               const n = i + 1;
@@ -168,8 +189,8 @@ export default function Home() {
                   {book && <BookCover book={book} className="home-cover" />}
                 </div>
               );
-              const title = book ? book.title || book.title_bangla : "";
-              const author = book ? book.author || book.author_bangla : "";
+              const title = book ? (lang === 'bn' ? displayTitle(book) : book.title || book.title_bangla) : "";
+              const author = book ? (lang === 'bn' ? displayAuthor(book) : book.author || book.author_bangla) : "";
               const inner = (
                 <>
                   <div className={`home-book-${n}-box`}>
@@ -184,18 +205,18 @@ export default function Home() {
                 </>
               );
               return book
-                ? <Link key={book.id} to={bookPath(book)} className={`home-book-${n}`} aria-label={`${title}${author ? ` by ${author}` : ""}`}>{inner}</Link>
+                ? <Link key={book.id} to={bookPath(book)} className={`home-book-${n}`} aria-label={author ? t('home.bookByAuthor', { title, author }) : title}>{inner}</Link>
                 : <div key={i} className={`home-book-${n} home-book-skeleton`} aria-hidden="true">{inner}</div>;
             })}
           </div>
           <div className="home-section-2-box-box-3">
-            <Link to="/catalog" className="home-section-2-box-box-3-box">View full catalog →</Link>
+            <Link to="/catalog" className="home-section-2-box-box-3-box">{t('home.viewFullCatalog')}</Link>
           </div>
         </div>
       </section>
       <section className="home-refined-footer">
         <div className="home-refined-footer-box">
-          <h2 className="home-heading-2-2">Popular Genres</h2>
+          <h2 className="home-heading-2-2">{t('home.popularGenres')}</h2>
           <div className="home-refined-footer-box-box">
             <Link to="/catalog?genre=fiction" className="home-fiction">
               <div className="home-fiction-box">
@@ -206,7 +227,7 @@ export default function Home() {
                 </div>
               </div>
               <div className="home-fiction-box-2">
-                <span className="home-fiction-box-2-text">Fiction</span>
+                <span className="home-fiction-box-2-text">{t('home.genreFiction')}</span>
               </div>
             </Link>
             <Link to="/catalog?genre=academic" className="home-academic">
@@ -218,13 +239,13 @@ export default function Home() {
                 </div>
               </div>
               <div className="home-academic-box-2">
-                <span className="home-academic-box-2-text">Academic</span>
+                <span className="home-academic-box-2-text">{t('home.genreAcademic')}</span>
               </div>
             </Link>
             <Link to="/catalog?genre=history" className="home-history">
               <img className="home-history-box" src="/svg/icon-1s0tsx7.svg" alt="" width="44" height="56" />
               <div className="home-history-box-2">
-                <span className="home-history-box-2-text">History</span>
+                <span className="home-history-box-2-text">{t('home.genreHistory')}</span>
               </div>
             </Link>
             <Link to="/catalog?genre=science" className="home-science">
@@ -237,7 +258,7 @@ export default function Home() {
                 </div>
               </div>
               <div className="home-science-box-2">
-                <span className="home-science-box-2-text">Science</span>
+                <span className="home-science-box-2-text">{t('home.genreScience')}</span>
               </div>
             </Link>
             <Link to="/catalog?genre=children" className="home-children">
@@ -249,7 +270,7 @@ export default function Home() {
                 </div>
               </div>
               <div className="home-children-box-2">
-                <span className="home-children-box-2-text">Children</span>
+                <span className="home-children-box-2-text">{t('home.genreChildren')}</span>
               </div>
             </Link>
             <Link to="/catalog?genre=biography" className="home-biography">
@@ -261,13 +282,13 @@ export default function Home() {
                 </div>
               </div>
               <div className="home-biography-box-2">
-                <span className="home-biography-box-2-text">Biography</span>
+                <span className="home-biography-box-2-text">{t('home.genreBiography')}</span>
               </div>
             </Link>
             <Link to="/catalog?genre=mystery" className="home-mystery">
               <img className="home-mystery-box" src="/svg/icon-fzwrxt.svg" alt="" width="44" height="56" />
               <div className="home-mystery-box-2">
-                <span className="home-mystery-box-2-text">Mystery</span>
+                <span className="home-mystery-box-2-text">{t('home.genreMystery')}</span>
               </div>
             </Link>
             <Link to="/catalog?genre=romance" className="home-romance">
@@ -281,7 +302,7 @@ export default function Home() {
                 </div>
               </div>
               <div className="home-romance-box-2">
-                <span className="home-romance-box-2-text">Romance</span>
+                <span className="home-romance-box-2-text">{t('home.genreRomance')}</span>
               </div>
             </Link>
             <Link to="/catalog?genre=fantasy" className="home-fantasy">
@@ -295,13 +316,13 @@ export default function Home() {
                 </div>
               </div>
               <div className="home-fantasy-box-2">
-                <span className="home-fantasy-box-2-text">Fantasy</span>
+                <span className="home-fantasy-box-2-text">{t('home.genreFantasy')}</span>
               </div>
             </Link>
             <Link to="/catalog?genre=self-help" className="home-self-help">
               <img className="home-self-help-box" src="/svg/icon-kjr41q.svg" alt="" width="44" height="56" />
               <div className="home-self-help-box-2">
-                <span className="home-self-help-box-2-text">Self-Help</span>
+                <span className="home-self-help-box-2-text">{t('home.genreSelfHelp')}</span>
               </div>
             </Link>
           </div>
@@ -311,16 +332,16 @@ export default function Home() {
         <div className="home-join-cta-section-box">
           <img className="home-community-two-people-icon-in-ink" src="/svg/community-two-people-icon-in-ink-fkqycw.svg" alt="" width="40" height="56" />
           <div className="home-join-cta-section-box-box">
-            <h2 className="home-heading-2-3">Join Noholi Library</h2>
+            <h2 className="home-heading-2-3">{t('home.joinHeading')}</h2>
           </div>
           <div className="home-join-cta-section-box-box-2">
             <div className="home-join-cta-section-box-box-2-box">
-              <span className="home-join-cta-section-box-box-2-box-text">Get access to borrowing, reservations, and more.</span>
+              <span className="home-join-cta-section-box-box-2-box-text">{t('home.joinText')}</span>
             </div>
           </div>
           <div className="home-join-cta-section-box-box-3">
-            <Link to="/become-a-member" className="home-join-cta-section-box-box-3-box">BECOME A MEMBER</Link>
-            <Link to="/login" className="home-join-cta-section-box-box-3-box-2">LOG IN</Link>
+            <Link to="/become-a-member" className="home-join-cta-section-box-box-3-box">{t('home.becomeMember')}</Link>
+            <Link to="/login" className="home-join-cta-section-box-box-3-box-2">{t('home.logIn')}</Link>
           </div>
         </div>
       </section>
