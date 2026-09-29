@@ -2,7 +2,18 @@ import { createClient } from '@supabase/supabase-js';
 import type { Database } from './types';
 
 const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL;
-const SUPABASE_PUBLISHABLE_KEY = import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY;
+// The website names this VITE_SUPABASE_ANON_KEY; accept either so one hosting setup fits both apps.
+const SUPABASE_PUBLISHABLE_KEY =
+  import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY || import.meta.env.VITE_SUPABASE_ANON_KEY;
+
+if (!SUPABASE_URL || !SUPABASE_PUBLISHABLE_KEY) {
+  // Without this the app dies on a blank white page; say what is wrong instead.
+  const missing = [!SUPABASE_URL && 'VITE_SUPABASE_URL', !SUPABASE_PUBLISHABLE_KEY && 'VITE_SUPABASE_PUBLISHABLE_KEY'].filter(Boolean).join(', ');
+  document.body.innerHTML =
+    `<p style="font:16px system-ui;padding:40px;max-width:560px">Noholi OS is not configured: ${missing} ` +
+    `is missing from the hosting environment variables. Add it and redeploy.</p>`;
+  throw new Error(`Missing ${missing}`);
+}
 
 
 function isNewSupabaseApiKey(value: string): boolean {
