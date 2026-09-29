@@ -65,11 +65,13 @@
   position: absolute;
   top: 100%;
   left: 0;
-  width: 146px;
+  min-width: 160px;
+  padding: 6px 0;
   display: flex;
   flex-direction: column;
   background-color: var(--paper);
-  box-shadow: 0 4px 4px color-mix(in srgb, var(--ink) 25%, transparent);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.18);
+  border: 1px solid var(--parchment-line);
 }
 
 .nav-menu--right {
@@ -79,7 +81,7 @@
 
 .nav-menu-item {
   display: block;
-  padding: 8px 0 9px;
+  padding: 8px 18px 9px;
   font-family: var(--font-sans);
   font-size: 14px;
   font-weight: 500;
@@ -210,7 +212,7 @@
   padding-top: 14px;
   background-color: var(--paper);
   border: 1px solid var(--parchment-line);
-  box-shadow: 0 4px 12px -2px color-mix(in srgb, var(--ink-deep) 8%, transparent), 0 16px 36px -6px color-mix(in srgb, var(--ink-deep) 16%, transparent);
+  box-shadow: 0 4px 12px -2px rgba(0, 0, 0, 0.08), 0 16px 36px -6px rgba(0, 0, 0, 0.18);
 }
 
 .account-menu::before {
@@ -329,4 +331,9 @@
   letter-spacing: 0.6px;
   text-transform: uppercase;
   color: var(--oxblood);
+}
+
+/* Dark mode: the dropdown chevrons are dark SVGs — show them light. */
+:root[data-theme='dark'] .nav-dropdown img {
+  filter: invert(1) brightness(0.9);
 }
