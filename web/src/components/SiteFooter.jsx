@@ -1,6 +1,9 @@
 import { Link } from 'react-router-dom';
 import './SiteFooter.css';
 
+// Noholi OS (staff console). Override with VITE_ADMIN_URL when it moves to a custom domain.
+const ADMIN_URL = import.meta.env.VITE_ADMIN_URL || 'https://noholi-admin.pages.dev';
+
 // "MainFooter" / "Footer - FULL FOOTER" in Figma — identical on every page.
 export default function SiteFooter() {
   return (
@@ -28,6 +31,7 @@ export default function SiteFooter() {
         </div>
         <div className="site-footer-bottom">
           <p>© 2026 Noholi Library. All rights reserved.</p>
+          <a href={ADMIN_URL} className="site-footer-admin" rel="nofollow">Staff login</a>
         </div>
       </div>
     </footer>
