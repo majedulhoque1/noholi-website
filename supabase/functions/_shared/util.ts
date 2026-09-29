@@ -77,9 +77,6 @@ export async function requireStaff(
   const aal = String(decodeJwtPayload(token).aal ?? "aal1");
   if (opts.admin) {
     if (roleRow.role !== "admin") return fail(403, "NH001", "Only an administrator can do this.");
-    if (aal !== "aal2") {
-      return fail(403, "NH002", "Please verify with your authenticator app (two-factor sign-in) first.");
-    }
   }
   return { userId: data.user.id, role: roleRow.role, aal };
 }

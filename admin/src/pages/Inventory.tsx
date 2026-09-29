@@ -194,6 +194,7 @@ export default function Inventory() {
       key: "thumb",
       label: "",
       className: "w-10",
+      mobile: "hidden",
       render: (b) => (
         <div className="h-10 w-7 rounded-sm bg-secondary flex items-center justify-center shrink-0 overflow-hidden">
           {b.coverUrl ? (
@@ -208,6 +209,7 @@ export default function Inventory() {
       key: "title",
       label: "Title",
       className: "max-w-[240px]",
+      mobile: "title",
       render: (b) => (
         <div className="min-w-0">
           <p className="font-medium text-foreground truncate">{b.title}</p>
@@ -222,6 +224,7 @@ export default function Inventory() {
       key: "author",
       label: "Author",
       className: "max-w-[170px]",
+      mobile: "subtitle",
       render: (b) => (
         <div className="min-w-0">
           <p className="text-muted-foreground truncate">{b.author || "—"}</p>
@@ -229,16 +232,17 @@ export default function Inventory() {
         </div>
       ),
     },
-    { key: "category", label: "Category", className: "text-muted-foreground max-w-[120px] truncate", render: (b) => b.category || "—" },
-    { key: "condition", label: "Condition", className: "text-muted-foreground max-w-[90px] truncate", render: (b) => b.condition || "—" },
-    { key: "total", label: "Total", className: "text-center font-mono text-[12px]", headerClassName: "text-center", render: (b) => b.totalCopies },
-    { key: "issued", label: "Issued", className: "text-center font-mono text-[12px]", headerClassName: "text-center", render: (b) => b.issuedCopies },
-    { key: "reserved", label: "Reserved", className: "text-center font-mono text-[12px]", headerClassName: "text-center", render: (b) => b.reservedCopies },
+    { key: "category", label: "Category", className: "text-muted-foreground max-w-[120px] truncate", mobile: "hidden", render: (b) => b.category || "—" },
+    { key: "condition", label: "Condition", className: "text-muted-foreground max-w-[90px] truncate", mobile: "hidden", render: (b) => b.condition || "—" },
+    { key: "total", label: "Total", className: "text-center font-mono text-[12px]", headerClassName: "text-center", mobile: "meta", render: (b) => b.totalCopies },
+    { key: "issued", label: "Issued", className: "text-center font-mono text-[12px]", headerClassName: "text-center", mobile: "hidden", render: (b) => b.issuedCopies },
+    { key: "reserved", label: "Reserved", className: "text-center font-mono text-[12px]", headerClassName: "text-center", mobile: "hidden", render: (b) => b.reservedCopies },
     {
       key: "available",
       label: "Available",
       className: "text-center font-mono text-[12px]",
       headerClassName: "text-center",
+      mobile: "meta",
       render: (b) => (
         <span className={cn(isLowStock(b) && "text-warning font-semibold")}>
           {b.availableCopies}
@@ -251,11 +255,13 @@ export default function Inventory() {
       label: "Price",
       className: "text-right font-mono text-[12px] whitespace-nowrap",
       headerClassName: "text-right",
+      mobile: "hidden",
       render: (b) => (b.price === null ? <span className="text-muted-foreground">—</span> : formatTaka(b.price)),
     },
     {
       key: "status",
       label: "Status",
+      mobile: "badge",
       render: (b) => (
         <div className="flex flex-wrap gap-1">
           {b.archivedAt ? (
@@ -274,6 +280,7 @@ export default function Inventory() {
             label: "",
             headerClassName: "text-right",
             className: "text-right",
+            mobile: "actions" as const,
             render: (b: Book) => (
               <RowActions
                 primary={[
@@ -329,35 +336,37 @@ export default function Inventory() {
         Copy counts are kept by the system: lending changes Issued and Reserved, Adjust Stock changes Total.
       </p>
 
-      <div className="flex items-center gap-2 flex-wrap">
+      <div className="flex flex-col gap-2 md:flex-row md:items-center md:flex-wrap">
         <SearchBar
           value={search}
           onChange={setSearch}
           placeholder="Search title or author (English / বাংলা), ISBN, ID…"
-          className="flex-1 min-w-[220px] max-w-sm"
+          className="w-full md:flex-1 md:min-w-[220px] md:max-w-sm"
         />
 
-        <Select value={genreFilter} onValueChange={setGenreFilter}>
-          <SelectTrigger className="w-[160px] h-8 text-[12px]" aria-label="Genre">
-            <SelectValue placeholder="Genre" />
-          </SelectTrigger>
-          <SelectContent>
-            {["All", ...facets.genres].map((g) => (
-              <SelectItem key={g} value={g} className="text-[12px]">{g === "All" ? "All genres" : g}</SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
+        <div className="flex gap-2">
+          <Select value={genreFilter} onValueChange={setGenreFilter}>
+            <SelectTrigger className="flex-1 md:flex-none h-10 md:h-8 text-[13px] md:text-[12px] md:w-[160px]" aria-label="Genre">
+              <SelectValue placeholder="Genre" />
+            </SelectTrigger>
+            <SelectContent>
+              {["All", ...facets.genres].map((g) => (
+                <SelectItem key={g} value={g} className="text-[12px]">{g === "All" ? "All genres" : g}</SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
 
-        <Select value={categoryFilter} onValueChange={setCategoryFilter}>
-          <SelectTrigger className="w-[160px] h-8 text-[12px]" aria-label="Category">
-            <SelectValue placeholder="Category" />
-          </SelectTrigger>
-          <SelectContent>
-            {["All", ...facets.categories].map((c) => (
-              <SelectItem key={c} value={c} className="text-[12px]">{c === "All" ? "All categories" : c}</SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
+          <Select value={categoryFilter} onValueChange={setCategoryFilter}>
+            <SelectTrigger className="flex-1 md:flex-none h-10 md:h-8 text-[13px] md:text-[12px] md:w-[160px]" aria-label="Category">
+              <SelectValue placeholder="Category" />
+            </SelectTrigger>
+            <SelectContent>
+              {["All", ...facets.categories].map((c) => (
+                <SelectItem key={c} value={c} className="text-[12px]">{c === "All" ? "All categories" : c}</SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </div>
 
         <FilterChips
           options={["All", ...(facets.languages.length ? facets.languages : ["Bangla", "English"])]}
@@ -368,11 +377,11 @@ export default function Inventory() {
           options={[...STATUSES]}
           value={statusFilter}
           onChange={(v) => setStatusFilter(v as StatusFilter)}
-          className="ml-auto"
+          className="md:ml-auto"
         />
       </div>
 
-      <div className="flex items-center gap-1 flex-wrap">
+      <div className="flex items-center gap-1.5 overflow-x-auto scrollbar-none snap-x snap-mandatory">
         {(Object.keys(FLAG_LABELS) as InventoryFlag[]).map((f) => {
           const count =
             f === "missing-price" ? stats.missingPrice
@@ -386,7 +395,7 @@ export default function Inventory() {
               onClick={() => toggleFlag(f)}
               aria-pressed={on}
               className={cn(
-                "px-2.5 py-1 rounded text-[12px] font-medium transition-colors",
+                "shrink-0 snap-start min-h-[36px] px-3 py-1.5 rounded text-[12px] font-medium transition-colors whitespace-nowrap",
                 on ? "bg-primary text-primary-foreground" : "bg-secondary text-muted-foreground hover:text-foreground",
               )}
             >
@@ -395,18 +404,27 @@ export default function Inventory() {
           );
         })}
         {hasFilters && (
-          <button onClick={resetFilters} className="ml-1 text-[12px] text-muted-foreground hover:text-foreground underline">
+          <button onClick={resetFilters} className="shrink-0 ml-1 px-1 min-h-[36px] text-[12px] text-muted-foreground hover:text-foreground underline">
             Reset
           </button>
         )}
       </div>
 
-      <div className="flex items-center justify-between text-[12px] text-muted-foreground">
+      <div className="flex flex-col gap-1.5 sm:flex-row sm:items-center sm:justify-between text-[12px] text-muted-foreground">
         <span className="flex items-center gap-1.5">
-          {loading && <Loader2 className="h-3 w-3 animate-spin" />}
-          {total === 0
-            ? "No books"
-            : `Showing ${((page - 1) * PAGE_SIZE + 1).toLocaleString()}–${Math.min(page * PAGE_SIZE, total).toLocaleString()} of ${total.toLocaleString()} books`}
+          {loading && <Loader2 className="h-3 w-3 animate-spin shrink-0" />}
+          {total === 0 ? (
+            "No books"
+          ) : (
+            <>
+              <span className="sm:hidden">
+                {`${((page - 1) * PAGE_SIZE + 1).toLocaleString()}–${Math.min(page * PAGE_SIZE, total).toLocaleString()} of ${total.toLocaleString()}`}
+              </span>
+              <span className="hidden sm:inline">
+                {`Showing ${((page - 1) * PAGE_SIZE + 1).toLocaleString()}–${Math.min(page * PAGE_SIZE, total).toLocaleString()} of ${total.toLocaleString()} books`}
+              </span>
+            </>
+          )}
         </span>
         <Pager page={page} pageCount={pageCount} onPage={setPage} />
       </div>
@@ -471,15 +489,30 @@ export default function Inventory() {
 function Pager({ page, pageCount, onPage }: { page: number; pageCount: number; onPage: (p: number) => void }) {
   if (pageCount <= 1) return null;
   return (
-    <div className="flex items-center gap-1">
-      <Button variant="outline" size="icon" className="h-7 w-7" disabled={page <= 1} onClick={() => onPage(page - 1)} aria-label="Previous page">
-        <ChevronLeft className="h-3.5 w-3.5" />
+    <div className="flex items-center gap-1 shrink-0">
+      <Button
+        variant="outline"
+        size="icon"
+        className="h-11 w-11 md:h-7 md:w-7"
+        disabled={page <= 1}
+        onClick={() => onPage(page - 1)}
+        aria-label="Previous page"
+      >
+        <ChevronLeft className="h-4 w-4 md:h-3.5 md:w-3.5" />
       </Button>
-      <span className="text-[12px] text-muted-foreground px-1.5 tabular-nums">
-        Page {page} of {pageCount}
+      <span className="text-[12px] text-muted-foreground px-1.5 tabular-nums whitespace-nowrap">
+        <span className="md:hidden">{page}/{pageCount}</span>
+        <span className="hidden md:inline">Page {page} of {pageCount}</span>
       </span>
-      <Button variant="outline" size="icon" className="h-7 w-7" disabled={page >= pageCount} onClick={() => onPage(page + 1)} aria-label="Next page">
-        <ChevronRight className="h-3.5 w-3.5" />
+      <Button
+        variant="outline"
+        size="icon"
+        className="h-11 w-11 md:h-7 md:w-7"
+        disabled={page >= pageCount}
+        onClick={() => onPage(page + 1)}
+        aria-label="Next page"
+      >
+        <ChevronRight className="h-4 w-4 md:h-3.5 md:w-3.5" />
       </Button>
     </div>
   );

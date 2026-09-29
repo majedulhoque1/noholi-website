@@ -1,6 +1,6 @@
 # Noholi catalogue import report
 
-Generated 2026-09-28T20:54:48.513Z by `import-books.mjs --load` from `source/all-book-list.xlsx` (sheet `BookList`). Rules: `mappings.json`.
+Generated 2026-09-29T07:33:02.863Z by `import-books.mjs --load` from `source/all-book-list.xlsx` (sheet `BookList`). Rules: `mappings.json`.
 
 ## Totals
 

@@ -18,10 +18,9 @@ interface AuthContextType {
   loading: boolean;
   /** Staff role of the signed-in account; null while signed out. */
   role: UserRole | null;
-  /** True only for admins whose session passed TOTP (aal2). */
+  /** True for accounts with the admin role (two-factor sign-in was removed 2026-09-29). */
   isAdmin: boolean;
   /** Admin account that still needs to complete MFA this session. */
-  needsMfa: boolean;
   signIn: (email: string, password: string) => Promise<{ error: string | null }>;
   signOut: () => Promise<void>;
   refreshRole: () => Promise<void>;
@@ -36,7 +35,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [session, setSession] = useState<Session | null>(null);
   const [role, setRole] = useState<UserRole | null>(null);
   const [isAdmin, setIsAdmin] = useState(false);
-  const [needsMfa, setNeedsMfa] = useState(false);
   const [loading, setLoading] = useState(true);
   const timeoutRef = useRef<ReturnType<typeof setTimeout>>();
 
@@ -45,7 +43,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setSession(null);
     setRole(null);
     setIsAdmin(false);
-    setNeedsMfa(false);
   }, []);
 
   const handleSignOut = useCallback(async () => {
@@ -71,7 +68,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setUser(sess.user);
     setRole(r.role);
     setIsAdmin(r.is_admin);
-    setNeedsMfa(r.role === "admin" && r.aal !== "aal2");
     return null;
   }, [clearState]);
 
@@ -139,7 +135,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   return (
     <AuthContext.Provider
-      value={{ user, session, loading, role, isAdmin, needsMfa, signIn, signOut: handleSignOut, refreshRole }}
+      value={{ user, session, loading, role, isAdmin, signIn, signOut: handleSignOut, refreshRole }}
     >
       {children}
     </AuthContext.Provider>

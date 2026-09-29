@@ -61,3 +61,14 @@
     font-feature-settings: "cv02", "cv03", "cv04", "cv11";
   }
 }
+
+@layer utilities {
+  /* Hides the scrollbar on horizontally-scrollable chip rows / tab strips while keeping them scrollable. */
+  .scrollbar-none {
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+  .scrollbar-none::-webkit-scrollbar {
+    display: none;
+  }
+}

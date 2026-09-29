@@ -1,5 +1,5 @@
-import { useEffect, useState } from "react";
-import { Loader2, ShieldCheck, ShieldAlert } from "lucide-react";
+import { useState } from "react";
+import { Loader2 } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -7,7 +7,6 @@ import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/hooks/use-auth";
 import { supabase } from "@/integrations/supabase/client";
-import { MfaSetup } from "@/components/settings/MfaSetup";
 import { formatDhaka } from "@/lib/dhaka-date";
 
 function Row({ label, children }: { label: string; children: React.ReactNode }) {
@@ -29,19 +28,11 @@ const getPasswordStrength = (pw: string): { label: string; color: string } => {
 
 export function AccountSettings() {
   const { toast } = useToast();
-  const { user, role, isAdmin, needsMfa } = useAuth();
-  const [hasFactor, setHasFactor] = useState<boolean | null>(null);
-  const [showMfa, setShowMfa] = useState(false);
+  const { user, role } = useAuth();
   const [newPw, setNewPw] = useState("");
   const [confirmPw, setConfirmPw] = useState("");
   const [savingPw, setSavingPw] = useState(false);
   const [pwError, setPwError] = useState("");
-
-  useEffect(() => {
-    supabase.auth.mfa.listFactors().then(({ data }) => {
-      setHasFactor(!!data?.all.some((f) => f.factor_type === "totp" && f.status === "verified"));
-    });
-  }, [isAdmin]);
 
   const handleChangePassword = async () => {
     setPwError("");
@@ -77,26 +68,8 @@ export function AccountSettings() {
 
       <Card>
         <CardHeader className="pb-3">
-          <CardTitle className="text-base flex items-center gap-2">
-            {isAdmin ? <ShieldCheck className="h-4 w-4 text-success" /> : <ShieldAlert className="h-4 w-4 text-muted-foreground" />}
-            Two-factor sign-in (authenticator app)
-          </CardTitle>
-          <CardDescription className="text-xs">Required for administrators before policy, staff and fine-waiver actions work.</CardDescription>
-        </CardHeader>
-        <CardContent className="space-y-3">
-          <div className="rounded-md border border-border px-3">
-            <Row label="Authenticator app">{hasFactor == null ? "…" : hasFactor ? "Set up" : "Not set up"}</Row>
-            <Row label="This session">{isAdmin ? "Verified" : needsMfa ? "Not verified yet" : role === "admin" ? "—" : "Not needed for staff"}</Row>
-          </div>
-          {needsMfa && !showMfa && <Button size="sm" onClick={() => setShowMfa(true)}>{hasFactor ? "Verify now" : "Set up authenticator"}</Button>}
-          {needsMfa && showMfa && <MfaSetup onVerified={() => setHasFactor(true)} />}
-        </CardContent>
-      </Card>
-
-      <Card>
-        <CardHeader className="pb-3">
           <CardTitle className="text-base">Change password</CardTitle>
-          <CardDescription className="text-xs">At least 8 characters.{role === "admin" && hasFactor ? " Administrators must be two-factor verified to change it." : ""}</CardDescription>
+          <CardDescription className="text-xs">At least 8 characters.</CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
           <form className="max-w-sm space-y-3" onSubmit={(e) => { e.preventDefault(); handleChangePassword(); }}>

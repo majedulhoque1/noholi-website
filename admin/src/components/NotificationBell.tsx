@@ -83,7 +83,7 @@ export function NotificationBell() {
   return (
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
-        <button aria-label={`Notifications (${unreadCount} unread)`} className="relative h-8 w-8 flex items-center justify-center rounded-md hover:bg-secondary transition-colors">
+        <button aria-label={`Notifications (${unreadCount} unread)`} className="relative h-11 w-11 md:h-8 md:w-8 flex items-center justify-center rounded-md hover:bg-secondary transition-colors">
           <Bell className="h-4 w-4 text-muted-foreground" />
           {unreadCount > 0 && (
             <span className="absolute -top-0.5 -right-0.5 h-4 min-w-[16px] flex items-center justify-center rounded-full bg-destructive text-destructive-foreground text-[10px] font-bold px-1 leading-none">
@@ -92,7 +92,7 @@ export function NotificationBell() {
           )}
         </button>
       </PopoverTrigger>
-      <PopoverContent align="end" sideOffset={8} className="w-[360px] p-0">
+      <PopoverContent align="end" sideOffset={8} className="w-[360px] max-w-[calc(100vw-2rem)] p-0">
         <div className="flex items-center justify-between px-4 py-3 border-b border-border">
           <h4 className="text-sm font-semibold text-foreground">Notifications</h4>
           {unreadCount > 0 && (

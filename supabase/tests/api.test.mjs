@@ -201,17 +201,13 @@ const memberTokens = [];
 {
   const byStaff = await fn("create-staff-login", { email: `new-${R}@test.local`, role: "staff" }, staff);
   check(byStaff.status === 403, "staff cannot create staff logins", byStaff.data);
-  const aal1 = await fn("create-staff-login", { email: `new-${R}@test.local`, role: "staff" }, adminAal1);
-  check(aal1.status === 403 && aal1.data?.error?.code === "NH002", "admin without MFA cannot create staff logins", aal1.data);
-  const ok = await fn("create-staff-login", { email: `new-${R}@test.local`, role: "staff" }, adminAal2);
-  check(ok.ok && ok.data.temp_password, "admin with MFA creates a staff login", ok.data);
+  const ok = await fn("create-staff-login", { email: `new-${R}@test.local`, role: "staff" }, adminAal1);
+  check(ok.ok && ok.data.temp_password, "admin (no MFA needed) creates a staff login", ok.data);
   const t = await signIn(`new-${R}@test.local`, ok.data.temp_password);
   const isStaff = await rpc("is_staff", {}, t);
   check(isStaff.data === true, "the new staff login is staff", isStaff.data);
-  const waive1 = await rpc("update_settings", { p_loan_days: 14 }, adminAal1);
-  check(!waive1.ok && waive1.data?.code === "NH002", "admin aal1 refused on update_settings (HTTP)", waive1.data);
-  const set2 = await rpc("update_settings", { p_loan_days: 14 }, adminAal2);
-  check(set2.ok, "admin aal2 can update_settings (HTTP)", set2.data);
+  const set1 = await rpc("update_settings", { p_loan_days: 14 }, adminAal1);
+  check(set1.ok, "admin at aal1 can update_settings (HTTP)", set1.data);
 }
 
 // ------------------------------------------------------------------ 4. concurrency

@@ -2,32 +2,8 @@ import { useState } from "react";
 import { useLocation, Link } from "react-router-dom";
 import { NAV_ITEMS, type UserRole } from "@/lib/navigation";
 import { useAuth } from "@/hooks/use-auth";
-import {
-  LayoutDashboard,
-  BookOpen,
-  ArrowLeftRight,
-  Users,
-  Gift,
-  BadgeDollarSign,
-  BarChart3,
-  Settings,
-  ChevronLeft,
-  ChevronRight,
-  LogOut,
-  Mail,
-} from "lucide-react";
-
-const ICON_MAP: Record<string, React.ElementType> = {
-  Dashboard: LayoutDashboard,
-  Inventory: BookOpen,
-  Lending: ArrowLeftRight,
-  Members: Users,
-  "Book Donations": Gift,
-  Messages: Mail,
-  Fines: BadgeDollarSign,
-  Reports: BarChart3,
-  Settings: Settings,
-};
+import { NAV_ICON_MAP as ICON_MAP } from "@/components/nav-icons";
+import { ChevronLeft, ChevronRight, LogOut } from "lucide-react";
 
 interface AppSidebarProps {
   role: UserRole;
@@ -42,7 +18,7 @@ export function AppSidebar({ role }: AppSidebarProps) {
 
   return (
     <aside
-      className={`flex flex-col bg-sidebar text-sidebar-foreground border-r border-sidebar-border transition-all duration-200 ${
+      className={`hidden md:flex md:flex-col bg-sidebar text-sidebar-foreground border-r border-sidebar-border transition-all duration-200 ${
         collapsed ? "w-14" : "w-56"
       }`}
     >

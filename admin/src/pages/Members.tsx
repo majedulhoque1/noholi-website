@@ -136,6 +136,7 @@ export default function MembersPage() {
       key: "avatar",
       label: "",
       className: "w-10",
+      mobile: "hidden",
       render: (m) => (
         <div className="h-8 w-8 rounded-full bg-secondary flex items-center justify-center shrink-0 overflow-hidden">
           {m.avatar ? (
@@ -146,17 +147,25 @@ export default function MembersPage() {
         </div>
       ),
     },
-    { key: "memberId", label: "ID", className: "text-muted-foreground font-mono text-[12px]", render: (m) => m.memberId },
-    { key: "name", label: "Name", className: "font-medium text-foreground", render: (m) => m.name },
-    { key: "nid", label: "NID", className: "text-muted-foreground font-mono text-[12px] whitespace-nowrap", render: (m) => maskNid(m.nid) || "—" },
+    { key: "memberId", label: "ID", className: "text-muted-foreground font-mono text-[12px]", mobile: "subtitle", render: (m) => m.memberId },
+    { key: "name", label: "Name", className: "font-medium text-foreground", mobile: "title", render: (m) => m.name },
+    { key: "nid", label: "NID", className: "text-muted-foreground font-mono text-[12px] whitespace-nowrap", mobile: "hidden", render: (m) => maskNid(m.nid) || "—" },
     {
       key: "contact",
       label: "Contact",
+      mobile: "hidden",
       render: (m) => <ContactInfo email={m.email || undefined} phone={m.phone || undefined} />,
+    },
+    {
+      key: "phoneMeta",
+      label: "Phone",
+      mobile: "meta",
+      render: (m) => (m.phone ? <a href={`tel:${m.phone}`} className="hover:underline" onClick={(e) => e.stopPropagation()}>{m.phone}</a> : "—"),
     },
     {
       key: "activeLoans",
       label: "Loans",
+      mobile: "meta",
       render: (m) => (
         <span className="whitespace-nowrap">
           {m.activeLoans}
@@ -164,16 +173,18 @@ export default function MembersPage() {
         </span>
       ),
     },
-    { key: "holds", label: "Holds", render: (m) => m.activeHolds || "—" },
+    { key: "holds", label: "Holds", mobile: "hidden", render: (m) => m.activeHolds || "—" },
     {
       key: "fines",
       label: "Fines (৳)",
+      mobile: "meta",
       render: (m) => (m.fines > 0 ? <span className="text-destructive">{formatTaka(m.fines)}</span>
         : m.accruingFines > 0 ? <span className="text-warning" title="Running late fee on an overdue loan">{formatTaka(m.accruingFines)}*</span> : "—"),
     },
     {
       key: "merit",
       label: "Merit",
+      mobile: "hidden",
       render: (m) => (
         <div className="min-w-0">
           <StatusBadge variant={m.meritGrade === "Not Assigned" ? "muted" : "default"}>{m.meritGrade}</StatusBadge>
@@ -184,6 +195,7 @@ export default function MembersPage() {
     {
       key: "status",
       label: "Status",
+      mobile: "badge",
       render: (m) => (
         <div className="flex flex-col items-start gap-0.5">
           {m.archivedAt ? <StatusBadge variant="muted">Archived</StatusBadge> : <StatusBadge variant={STATUS_VARIANT[m.status]}>{m.status}</StatusBadge>}
@@ -196,6 +208,7 @@ export default function MembersPage() {
       label: "",
       headerClassName: "text-right",
       className: "text-right",
+      mobile: "actions" as const,
       render: (m: Member) => (
         <RowActions
           primary={[

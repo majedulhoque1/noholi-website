@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from "react";
-import { Loader2, Lock, UserPlus, UserMinus, ShieldCheck } from "lucide-react";
+import { Loader2, Lock, UserPlus, UserMinus } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -28,7 +28,7 @@ const when = (iso: string | null) => (iso ? formatDhaka(iso, { day: "numeric", m
 
 export function StaffSettings() {
   const { toast } = useToast();
-  const { user, isAdmin, needsMfa } = useAuth();
+  const { user, isAdmin } = useAuth();
   const [staff, setStaff] = useState<StaffRow[] | null>(null);
   const [error, setError] = useState("");
   const [email, setEmail] = useState("");
@@ -60,7 +60,6 @@ export function StaffSettings() {
       loginId: r.data.email,
       loginLabel: "Email (they sign in to Noholi OS with this)",
       password: r.data.temp_password,
-      note: r.data.role === "admin" ? "Administrators also set up an authenticator app at first sign-in." : undefined,
     });
   };
 
@@ -77,7 +76,6 @@ export function StaffSettings() {
   const columns: Column<StaffRow>[] = [
     { key: "email", label: "Email", className: "font-medium text-foreground", render: (s) => <>{s.email}{s.user_id === user?.id && <span className="text-muted-foreground font-normal"> (you)</span>}</> },
     { key: "role", label: "Role", render: (s) => <StatusBadge variant={s.role === "admin" ? "accent" : "default"}>{s.role === "admin" ? "Administrator" : "Staff"}</StatusBadge> },
-    { key: "mfa", label: "Authenticator", render: (s) => (s.mfa_enabled ? <span className="inline-flex items-center gap-1 text-success text-[12px]"><ShieldCheck className="h-3.5 w-3.5" />Set up</span> : <span className="text-muted-foreground text-[12px]">Not set up</span>) },
     { key: "last", label: "Last sign-in", className: "text-[12px] text-muted-foreground whitespace-nowrap", render: (s) => when(s.last_sign_in_at) },
     { key: "created", label: "Added", className: "text-[12px] text-muted-foreground whitespace-nowrap", render: (s) => formatDhaka(s.created_at) },
     ...(isAdmin ? [{
@@ -116,7 +114,7 @@ export function StaffSettings() {
           {!isAdmin ? (
             <p className="flex items-start gap-2 text-[12px] text-muted-foreground">
               <Lock className="h-3.5 w-3.5 mt-0.5 shrink-0" />
-              {needsMfa ? "Verify two-factor sign-in (banner at the top) to add or remove staff." : "Only an administrator can add or remove staff."}
+              Only an administrator can add or remove staff.
             </p>
           ) : (
             <form className="flex flex-wrap items-end gap-3" onSubmit={(e) => { e.preventDefault(); handleAdd(); }}>

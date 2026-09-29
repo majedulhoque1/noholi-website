@@ -1,4 +1,4 @@
-// POST { email, role: "staff" | "admin" }  (admin JWT with aal2 required)
+// POST { email, role: "staff" | "admin" }  (admin JWT required)
 // -> { user_id, email, role, temp_password }
 import { adminClient, corsHeaders, serve, fail, json, MEMBER_EMAIL_DOMAIN, readJson, requireStaff, tempPassword } from "../_shared/util.ts";
 

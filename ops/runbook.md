@@ -1,5 +1,7 @@
 # Noholi ops runbook
 
+> **2026-09-29: two-factor sign-in (TOTP) for admins was removed** at the library owner's request (migration `20260929000400_admin_without_mfa.sql`). The admin role alone now unlocks admin tools. Any TOTP/aal2 steps below are obsolete. To bring it back, restore the aal2 checks in `is_admin()`, `private.require_admin()` and `requireStaff()` (edge functions) and the OS MFA components from git history.
+
 For the developer or maintainer who inherits the Noholi system. Library staff have their own guide: `ops/staff-guide.md`.
 
 Every statement here comes from the code and docs in this repo. Anything that can only be checked in a live

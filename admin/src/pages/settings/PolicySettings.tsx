@@ -33,7 +33,7 @@ type Settings = Record<NumKey, number> & { closed_weekdays: number[]; timezone: 
 
 export function PolicySettings() {
   const { toast } = useToast();
-  const { isAdmin, needsMfa } = useAuth();
+  const { isAdmin } = useAuth();
   const [saved, setSaved] = useState<Settings | null>(null);
   const [form, setForm] = useState<Record<NumKey, string>>({} as Record<NumKey, string>);
   const [closed, setClosed] = useState<number[]>([]);
@@ -83,9 +83,7 @@ export function PolicySettings() {
         <div className="flex items-start gap-2 rounded border border-border bg-secondary/60 p-3 text-[12px] text-muted-foreground">
           <Lock className="h-3.5 w-3.5 mt-0.5 shrink-0" />
           <span>
-            {needsMfa
-              ? "Read-only until you verify two-factor sign-in (see the banner at the top)."
-              : "Read-only. Only an administrator (with two-factor sign-in) can change the library policy."}
+            Read-only. Only an administrator can change the library policy.
           </span>
         </div>
       )}

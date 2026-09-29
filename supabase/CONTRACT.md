@@ -16,7 +16,7 @@ Everything here is enforced in Postgres (constraints, RLS, grants, RPC checks), 
 | **anon** | no JWT (publishable/anon key only) | safe `books` columns, `search_books`, `catalog_facets`, `resolve_login`, `get_public_settings`, `public-intake` |
 | **member** | signed in, `members.auth_user_id = auth.uid()` (and not archived) | read-only: own `members` row, own `loans`, `borrow_requests`, `fines`, `fine_payments`, `fine_waivers`, `loan_status_v`, `member_summary_v`; all books (not archived); `settings`. Writes only through member RPCs. |
 | **staff** | row in `staff_roles` (`role = 'staff'` or `'admin'`) | read everything; direct edits on a few tables (section 2); all staff RPCs |
-| **admin** | `staff_roles.role = 'admin'` **and** JWT `aal = 'aal2'` (TOTP MFA verified this session) | staff rights + `waive_fine`, `update_settings`, `remove_staff`, `purge_rejected_applications`, `create-staff-login` |
+| **admin** | `staff_roles.role = 'admin'` (no MFA requirement since migration 20260929000400) | staff rights + `waive_fine`, `update_settings`, `remove_staff`, `purge_rejected_applications`, `create-staff-login` |
 
 Members and staff share the Postgres role `authenticated`; RLS and the RPC guards tell them apart.
 A staff account is never a member. The OS must sign out any account where `my_role().role` is not `staff`/`admin`.
@@ -28,7 +28,7 @@ RPC errors come back from PostgREST as `{ code, message, details, hint }` (HTTP 
 | code | meaning | typical message |
 |---|---|---|
 | `NH001` | not allowed (wrong role / not signed in) | "Only library staff can do this." / "Only an administrator can do this." / "Please sign in with your member account." |
-| `NH002` | admin action without MFA (aal1) | "Please verify with your authenticator app (two-factor sign-in) first." |
+| `NH002` | *(retired 2026-09-29 — admin no longer needs MFA)* | |
 | `NH003` | not found (or not yours) | "Loan LN-0001 was not found." |
 | `NH004` | invalid input | "Please give a reason for voiding this loan." |
 | `NH005` | no copies available | "No copies of "X" are available right now." |
@@ -142,7 +142,7 @@ Balance = `amount − amount_paid` while Unpaid/Partially Paid.
 `id` bigint, `name`, `email`, `phone`, `subject`, `message`, `status` `'New'|'Read'|'Archived'`, `ip_hash`, `created_at`. At least one of email/phone. **R staff; W staff**: UPDATE `status` only. Created through `public-intake`.
 
 ### `staff_roles`
-`user_id` (→ auth.users), `role` `'admin'|'staff'`, `created_at`, `created_by`. R staff. DELETE admin+MFA (not self) — prefer `remove_staff`. Created by `create-staff-login`.
+`user_id` (→ auth.users), `role` `'admin'|'staff'`, `created_at`, `created_by`. R staff. DELETE admin (not self) — prefer `remove_staff`. Created by `create-staff-login`.
 
 ### `audit_log`
 `id`, `actor` uuid (null = system/cron), `actor_role` `'admin'|'staff'|'member'|'system'`, `action` (RPC name, or `insert|update|delete` for direct table edits), `entity` (table), `entity_id`, `before` jsonb, `after` jsonb, `at`. R staff. Every staff RPC and every direct staff edit of books/members/donations/applications/messages writes a row.
@@ -182,7 +182,7 @@ Call with `supabase.rpc(name, args)`. Argument names are exactly as listed. Ever
 | RPC | returns |
 |---|---|
 | `my_role()` | `{ role: 'admin'|'staff'|'member'|'none', aal, is_admin, member_id, must_change_password }` — route on this after sign-in |
-| `is_staff()`, `is_admin()` | boolean (`is_admin` needs aal2) |
+| `is_staff()`, `is_admin()` | boolean |
 | `current_member_id()` | text or null |
 | `next_open_day(p_date)`, `fine_for(p_due, p_on, p_price)` | helpers |
 
@@ -217,7 +217,7 @@ Member blocked (`NH007`) when: status ≠ Active, any Active loan past due (Dhak
 | `add_donation_to_inventory` | `_donation_id` | text new book id | NH003, NH008 (already added / not Approved). Creates a 1-copy book with `donation_id` set; donation → Added to Inventory with `assigned_accession_id`. |
 | `list_staff` | – | rows `{ user_id, email, role, created_at, last_sign_in_at, mfa_enabled }` | staff |
 
-### Admin (role admin + aal2)
+### Admin (role admin)
 | RPC | args | returns | errors |
 |---|---|---|---|
 | `waive_fine` | `p_fine_id`, `p_reason` (required) | `{ fine, waiver }` | NH001, NH002, NH004, NH003, NH008. Waives the remaining balance; status Waived. |
@@ -242,10 +242,10 @@ Use `supabase.functions.invoke(name, { body })`; the client adds the user's JWT.
 - reset: sets a new temp password, `must_change_password = true`. 409 `NH008` if the member has no login yet.
 - 400 `NH004` bad id · 401 `NH001` no/expired JWT · 403 `NH001` not staff · 404 `NH003` member not found/archived.
 
-### `create-staff-login` (admin + aal2)
+### `create-staff-login` (admin)
 - Body: `{ email, role: "staff" | "admin" }` → 200 `{ user_id, email, role, temp_password }` (shown once).
-- 403 `NH001` not admin · 403 `NH002` admin without MFA · 409 `NH009` email exists · 400 `NH004` bad email/role (member-domain emails refused).
-- The new staff member signs in with the temp password; admins must enrol TOTP (`supabase.auth.mfa.enroll`) before admin actions work.
+- 403 `NH001` not admin · 409 `NH009` email exists · 400 `NH004` bad email/role (member-domain emails refused).
+- The new staff member signs in with the temp password.
 
 ### `public-intake` (anon, no JWT needed)
 - Application: `{ type: "application", name, phone, email?, street?, city?, district?, postal_code?, has_photo?: true, website: "" }`

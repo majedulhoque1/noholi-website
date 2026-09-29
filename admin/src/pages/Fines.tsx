@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Eye, Ban, DollarSign, Loader2, ShieldCheck } from "lucide-react";
+import { Eye, Ban, DollarSign, Loader2 } from "lucide-react";
 import { PageHeader } from "@/components/PageHeader";
 import { SearchBar } from "@/components/SearchBar";
 import { FilterChips } from "@/components/FilterChips";
@@ -24,7 +24,7 @@ const isPayable = (f: Fine) => f.status === "Unpaid" || f.status === "Partially 
 
 export default function FinesPage() {
   const canWrite = useCanWrite();
-  const { isAdmin, needsMfa } = useAuth();
+  const { isAdmin } = useAuth();
   const { toast } = useToast();
   const { fines, loading, error, totals, recordPayment, waiveFine } = useFines();
 
@@ -126,7 +126,7 @@ export default function FinesPage() {
                     : [{ label: "View details", icon: Eye, onClick: () => setDetailFine(f) }]
                 }
                 secondary={[
-                  // waive_fine is admin-only and needs two-factor sign-in (aal2).
+                  // waive_fine is admin-only.
                   ...(isPayable(f) && isAdmin
                     ? [{ label: "Waive fine", icon: Ban, onClick: () => setWaiveTarget(f), variant: "destructive" as const }]
                     : []),
@@ -156,13 +156,7 @@ export default function FinesPage() {
       />
 
       <p className="text-[12px] text-muted-foreground">
-        A fine becomes payable when an overdue book is returned or marked lost. Books still out show the amount accruing so far.
-        {needsMfa && (
-          <span className="inline-flex items-center gap-1 ml-1.5 text-warning">
-            <ShieldCheck className="h-3 w-3" /> Verify with your authenticator app to waive fines.
-          </span>
-        )}
-      </p>
+        A fine becomes payable when an overdue book is returned or marked lost. Books still out show the amount accruing so far.      </p>
 
       <div className="flex items-center gap-2 flex-wrap">
         <SearchBar

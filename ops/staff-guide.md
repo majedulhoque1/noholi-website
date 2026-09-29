@@ -8,7 +8,7 @@ This guide is for library staff. It explains the everyday jobs in Noholi OS, the
 - Members can't use Noholi OS. They use the library website.
 
 The menu on the left has: **Dashboard, Inventory, Lending, Members, Book Donations, Messages, Fines, Settings**.
-Administrators who have verified two-factor sign-in also see **Reports**.
+Administrators also see **Reports**.
 
 Small icons in a table row show their name when you hold the mouse over them.
 The **⋮** (three dots) button at the end of a row opens more actions.
@@ -69,7 +69,7 @@ If the member asked for this book on the website, don't use Issue Book. Use the 
 
 Good to know:
 - A book that is still out and late shows a fine that is still **accruing**, marked "not payable yet". You can take the money only after the book is returned (or marked lost).
-- Only an **administrator** can cancel (waive) a fine: ⋮ → **Waive fine**, with a reason. Administrators must have verified two-factor sign-in first.
+- Only an **administrator** can cancel (waive) a fine: ⋮ → **Waive fine**, with a reason.
 
 ### A book is lost
 1. In **Lending**, open the loan's **⋮** menu and choose **Mark Lost**. Add a note if you like, then click **Mark Lost**.
@@ -170,7 +170,7 @@ Open **Settings** in the menu. It has five sections: **Policy, Account, Staff, A
 
 ### Policy
 - Everyone can see the library rules here.
-- Only an **administrator with verified two-factor sign-in** can change them.
+- Only an **administrator** can change them.
 - To change them: edit the numbers (Loan length, Items per member, Late fine, Default book value, Hold grace,
   Pickup window, Self-renewals, Renewal length). Under **Opening days**, tick the days the library is **closed**. Then click **Save policy**.
 - New values apply from now on. Existing due dates don't change.
@@ -193,28 +193,6 @@ Every action by staff (loans, returns, payments, edits, settings) is recorded he
 
 ### Backup
 Backups happen every night by themselves. There's nothing to do on this screen.
-
----
-
-## Set up your 2FA (admins)
-
-Administrators must use two-factor sign-in, a 6-digit code from an app on your phone. Until you do, the admin tools stay locked:
-policy, staff, and waiving fines. Normal desk work still works.
-
-**First time**
-1. Install an authenticator app on your phone, for example Google Authenticator, Microsoft Authenticator or 2FAS.
-2. Sign in to Noholi OS. A **Two-factor sign-in** box opens by itself.
-   If you closed it, click **Verify now** in the yellow bar at the top, or go to **Settings → Account → Set up authenticator**.
-3. In the app, add a new account and scan the QR code. If you can't scan it, type the key shown under "Can't scan?".
-4. Type the 6-digit code from the app and click **Verify**.
-5. You'll see "Verified. Admin tools are unlocked for this session."
-
-**Every time after that**
-Each time you sign in, the box asks for the current 6-digit code. Type it and click **Verify**.
-If the code is refused, check that the time on your phone is correct and use the newest code.
-
-**Lost or new phone?** You can't reset this yourself. Ask the technical maintainer to remove your old authenticator.
-Then sign in and set it up again. Tip: the library should always have **two** administrators.
 
 ---
 

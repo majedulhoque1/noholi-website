@@ -81,17 +81,12 @@ select throws_ok($$ update public.books set issued_copies = 0 where id = 'BK-900
 select lives_ok($$ update public.books set location = 'Shelf Z' where id = 'BK-9001' $$, 'staff can edit book details');
 reset role;
 
--- ---------------------------------------------------------------- admin without / with MFA
+-- ---------------------------------------------------------------- admin (no MFA required since 2026-09-29)
 select set_config('request.jwt.claims', '{"sub":"00000000-0000-0000-0000-00000000000a","role":"authenticated","aal":"aal1"}', true);
 set local role authenticated;
-select throws_ok($$ select public.waive_fine('FN-9001', 'kind') $$, 'NH002', null, 'admin at aal1 is refused (MFA required)');
-select throws_ok($$ select public.update_settings(p_loan_days => 21) $$, 'NH002', null, 'admin at aal1 cannot update settings');
-select is(public.is_admin(), false, 'is_admin() is false without aal2');
-reset role;
-select set_config('request.jwt.claims', '{"sub":"00000000-0000-0000-0000-00000000000a","role":"authenticated","aal":"aal2"}', true);
-set local role authenticated;
-select is(public.is_admin(), true, 'is_admin() is true with aal2');
-select lives_ok($$ select public.waive_fine('FN-9001', 'Hardship') $$, 'admin with aal2 can waive');
+select is(public.is_admin(), true, 'is_admin() is true for an admin at aal1 (no MFA gate)');
+select throws_ok($$ select public.waive_fine('FN-9001', '  ') $$, 'NH004', null, 'admin at aal1 reaches the waiver rules (blank reason refused)');
+select lives_ok($$ select public.waive_fine('FN-9001', 'Hardship') $$, 'admin at aal1 can waive');
 select is((select status from public.fines where id = 'FN-9001'), 'Waived', 'fine is Waived');
 reset role;
 
