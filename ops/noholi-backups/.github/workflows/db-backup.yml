@@ -1,4 +1,4 @@
-# Daily encrypted backup of the Noholi Supabase database to Cloudflare R2.
+# Daily encrypted backup of the Noholi Supabase database AND storage files to Cloudflare R2.
 # Lives in the PRIVATE noholi-backups repo (Noholi GitHub org). See README.md.
 # A failed run sends GitHub's standard "workflow failed" email to the repo admins.
 name: db-backup
@@ -12,6 +12,10 @@ on:
         description: "Update status/latest.json (the OS Backup screen)"
         type: boolean
         default: true
+      include_covers:
+        description: "Also back up the covers bucket (normally Sundays only)"
+        type: boolean
+        default: false
 
 permissions:
   contents: read
@@ -59,9 +63,10 @@ jobs:
           echo "deb [signed-by=/usr/share/postgresql-common/pgdg/apt.postgresql.org.asc] https://apt.postgresql.org/pub/repos/apt $(lsb_release -cs)-pgdg main" \
             | sudo tee /etc/apt/sources.list.d/pgdg.list >/dev/null
           sudo apt-get update -qq
-          sudo apt-get install -y -qq postgresql-client-17 age
+          sudo apt-get install -y -qq postgresql-client-17 age jq
           /usr/lib/postgresql/17/bin/pg_dump --version
           age --version
+          jq --version
           aws --version
 
       # (c) pg_dump via the Supavisor SESSION pooler (direct host is IPv6-only; runners are IPv4)
@@ -82,14 +87,37 @@ jobs:
           WRITE_STATUS: ${{ github.event_name == 'schedule' && '1' || (inputs.write_status && '1' || '0') }}
         run: bash scripts/backup.sh
 
-      - name: Summary
-        if: success()
+      - name: Summary (database)
+        if: steps.backup.outcome == 'success'
         run: |
           {
-            echo "### Backup OK"
+            echo "### Database backup OK"
             echo "- object: \`${{ steps.backup.outputs.object_key }}\`"
             echo "- size: ${{ steps.backup.outputs.size_bytes }} bytes (encrypted)"
+            echo "### Storage"
           } >> "$GITHUB_STEP_SUMMARY"
+
+      # (g) Storage FILES are not in pg_dump. member-photos (private member ID photos) every
+      # night; covers (public, mostly re-creatable from the import) on Sundays or on demand.
+      # Runs even if the DB step failed, so one failure does not also skip the photos.
+      # The service-role key is given to this step only.
+      - name: Storage files, encrypt, upload
+        if: ${{ !cancelled() }}
+        env:
+          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+          AGE_RECIPIENT: ${{ secrets.AGE_RECIPIENT }}
+          R2_ACCOUNT_ID: ${{ secrets.R2_ACCOUNT_ID }}
+          R2_ACCESS_KEY_ID: ${{ secrets.R2_ACCESS_KEY_ID }}
+          R2_SECRET_ACCESS_KEY: ${{ secrets.R2_SECRET_ACCESS_KEY }}
+          R2_BUCKET: ${{ secrets.R2_BUCKET }}
+          WRITE_STATUS: ${{ github.event_name == 'schedule' && '1' || (inputs.write_status && '1' || '0') }}
+          INCLUDE_COVERS: ${{ inputs.include_covers && '1' || '0' }}
+        run: |
+          set -euo pipefail
+          STORAGE_BUCKET=member-photos bash scripts/backup-storage.sh
+          if [ "$(date -u +%u)" = 7 ] || [ "$INCLUDE_COVERS" = 1 ]; then
+            STORAGE_BUCKET=covers bash scripts/backup-storage.sh
+          fi
 
 # No heartbeat commit: GitHub only auto-disables scheduled workflows after 60 days
 # without activity in PUBLIC repositories. This repo must stay PRIVATE (see README),

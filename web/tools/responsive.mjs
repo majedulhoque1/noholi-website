@@ -10,6 +10,7 @@
 //
 // usage: node tools/responsive.mjs http://localhost:5191
 import { chromium } from 'playwright';
+import { memberSession } from './_login-member.mjs';
 import fs from 'node:fs';
 
 const base = process.argv[2];
@@ -26,7 +27,7 @@ const add = (bp, sel, decls) => {
 
 for (const [routes, member] of [[PUBLIC, false], [MEMBER, true]]) {
   const ctx = await b.newContext({ viewport: { width: 1280, height: 900 } });
-  if (member) await ctx.addInitScript(() => localStorage.setItem('noholi.member', '1'));
+  if (member) await ctx.addInitScript(await memberSession());
   const p = await ctx.newPage();
   for (const r of routes) {
     await p.goto(base + r, { waitUntil: 'networkidle' });

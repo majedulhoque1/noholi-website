@@ -3,11 +3,31 @@ import { createClient, type SupabaseClient } from "npm:@supabase/supabase-js@2";
 
 export const MEMBER_EMAIL_DOMAIN = "members.noholi.app";
 
+// ALLOWED_ORIGIN: comma-separated list (website + OS), or unset for "*".
+// The origin header is set per request by serve() below, echoing the caller when it is on the list.
+const ALLOWED_ORIGINS = (Deno.env.get("ALLOWED_ORIGIN") ?? "").split(",").map((o) => o.trim().replace(/\/$/, "")).filter(Boolean);
+
 export const corsHeaders: Record<string, string> = {
-  "Access-Control-Allow-Origin": Deno.env.get("ALLOWED_ORIGIN") ?? "*",
   "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
   "Access-Control-Allow-Methods": "POST, OPTIONS",
 };
+
+function allowOrigin(req: Request): string {
+  if (ALLOWED_ORIGINS.length === 0) return "*";
+  const origin = req.headers.get("Origin") ?? "";
+  return ALLOWED_ORIGINS.includes(origin) ? origin : ALLOWED_ORIGINS[0];
+}
+
+/** Deno.serve with CORS: answers preflight and stamps Access-Control-Allow-Origin on every response. */
+export function serve(handler: (req: Request) => Response | Promise<Response>): void {
+  Deno.serve(async (req) => {
+    const cors = { ...corsHeaders, "Access-Control-Allow-Origin": allowOrigin(req), Vary: "Origin" };
+    if (req.method === "OPTIONS") return new Response("ok", { headers: cors });
+    const res = await handler(req);
+    for (const [k, v] of Object.entries(cors)) res.headers.set(k, v);
+    return res;
+  });
+}
 
 export function json(body: unknown, status = 200): Response {
   return new Response(JSON.stringify(body), {

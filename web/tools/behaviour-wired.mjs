@@ -1,9 +1,10 @@
 // Click-through of the controls wired in the 2026-09-28 bug pass.
 import { chromium } from 'playwright';
+import { memberSession } from './_login-member.mjs';
 const [base] = process.argv.slice(2);
 const b = await chromium.launch();
 const ctx = await b.newContext({ viewport: { width: 1280, height: 900 }, permissions: ['clipboard-read', 'clipboard-write'] });
-await ctx.addInitScript(() => localStorage.setItem('noholi.member', '1'));
+await ctx.addInitScript(await memberSession());
 const p = await ctx.newPage(); const errs = [];
 p.on('pageerror', (e) => errs.push(e.message)); p.on('console', (m) => m.type() === 'error' && errs.push(m.text()));
 // visible cards in on-screen order (sorting reorders with CSS `order`, not the DOM)

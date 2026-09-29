@@ -1,12 +1,13 @@
 // For each route at several widths: does the page scroll sideways? which elements stick out?
 import { chromium } from 'playwright';
+import { memberSession } from './_login-member.mjs';
 const base = process.argv[2];
 const widths = (process.argv[3] || '390,768,1024').split(',').map(Number);
 const only = process.argv[4];
 const routes = ['/', '/login', '/catalog', '/books/the-river-path', '/noholi-books', '/become-a-member', '/contact', '/about', '/rules', '/gallery', '/e-books', '/read/the-river-path', '/audio-books', '/audio-books/the-river-path', '/blogs', '/blogs/the-solitary-hour', '/creative-writings', '/creative-writings/the-scent-of-wet-clay', '/book-reviews', '/book-reviews/padma-nadir-majhi', '/member/dashboard', '/member/profile', '/member/edit', '/member/password', '/borrow/the-river-path', '/studio/blog', '/studio/creative-writing', '/studio/book-review', '/wishlist/books', '/wishlist/e-books', '/wishlist/audio-books'].filter(r => !only || r === only);
 const b = await chromium.launch();
 const ctx = await b.newContext();
-await ctx.addInitScript(() => localStorage.setItem('noholi.member', '1'));
+await ctx.addInitScript(await memberSession());
 const p = await ctx.newPage();
 const summary = {};
 for (const w of widths) {

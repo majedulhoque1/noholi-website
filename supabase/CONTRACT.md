@@ -254,7 +254,7 @@ Use `supabase.functions.invoke(name, { body })`; the client adds the user's JWT.
 - Contact: `{ type: "contact", name, email? , phone?, subject?, message, website: "" }` (email or phone required) → 200 `{ ok: true, type, id }`.
 - `website` is a honeypot: keep the input visually hidden and empty. If filled, the reply is `{ ok: true, id: null }` and nothing is stored.
 - 400 `NH004` validation (message is user-readable) · 429 `NH429` throttle: 3 per phone per 24 h, 5 per IP per 24 h (per form type; IP = first `x-forwarded-for` entry, stored only as a salted SHA-256), 30 per hour site-wide.
-- Env: `INTAKE_IP_SALT` (optional; falls back to the service key), `ALLOWED_ORIGIN` (CORS, default `*` — set to the site origin in prod).
+- Env: `INTAKE_IP_SALT` (optional; falls back to the service key), `ALLOWED_ORIGIN` (CORS: comma-separated list of allowed origins, website + OS; default `*`).
 
 ---
 

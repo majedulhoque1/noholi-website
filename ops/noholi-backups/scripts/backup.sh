@@ -85,8 +85,9 @@ trap 'rm -rf "$WORK"' EXIT
 OUT="$WORK/noholi.dump.age"
 
 # --- dump | encrypt ----------------------------------------------------------
-# Schemas: public (all app data) + auth (logins, incl. auth.users) + storage (bucket
-# definitions and policies). Excluded data:
+# Schemas: public (all app data) + private (helper functions that public column defaults
+# and triggers call, login_markers, intake_events) + auth (logins, incl. auth.users) +
+# storage (bucket definitions and policies). Excluded data:
 #   storage.objects      file metadata only; the files themselves are NOT in pg_dump
 #   auth.sessions / refresh_tokens / flow_state / one_time_tokens   live secrets, useless after restore
 #   auth.audit_log_entries   grows forever, not needed to restore service
@@ -96,6 +97,7 @@ pgdump \
   --compress=6 \
   --no-password \
   --schema=public \
+  --schema=private \
   --schema=auth \
   --schema=storage \
   --exclude-table-data='storage.objects' \
@@ -135,7 +137,7 @@ if [ "$WRITE_STATUS" = 1 ]; then
   "sha256": "${SHA}",
   "encryption": "age",
   "format": "pg_dump custom",
-  "schemas": ["public", "auth", "storage"],
+  "schemas": ["public", "private", "auth", "storage"],
   "run_url": "${RUN_URL}"
 }
 JSON

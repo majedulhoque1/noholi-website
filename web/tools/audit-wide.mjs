@@ -1,11 +1,12 @@
 // Wide-viewport audit: screenshots + text escaping bordered/filled boxes + siblings overlapping.
 import { chromium } from 'playwright';
+import { memberSession } from './_login-member.mjs';
 const [base, outDir, widthsArg, only] = process.argv.slice(2);
 const widths = (widthsArg || '1920').split(',').map(Number);
 const routes = ['/', '/login', '/catalog', '/books/the-river-path', '/noholi-books', '/become-a-member', '/contact', '/about', '/rules', '/gallery', '/e-books', '/read/the-river-path', '/audio-books', '/audio-books/the-river-path', '/blogs', '/blogs/the-solitary-hour', '/creative-writings', '/creative-writings/the-scent-of-wet-clay', '/book-reviews', '/book-reviews/padma-nadir-majhi', '/member/dashboard', '/member/profile', '/member/edit', '/member/password', '/borrow/the-river-path', '/studio/blog', '/studio/creative-writing', '/studio/book-review', '/wishlist/books', '/wishlist/e-books', '/wishlist/audio-books'].filter(r => !only || only.split(',').includes(r));
 const b = await chromium.launch();
 const ctx = await b.newContext();
-await ctx.addInitScript(() => localStorage.setItem('noholi.member', '1'));
+await ctx.addInitScript(await memberSession());
 const p = await ctx.newPage();
 for (const w of widths) {
   await p.setViewportSize({ width: w, height: 1000 });

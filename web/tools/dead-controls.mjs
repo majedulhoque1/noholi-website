@@ -1,9 +1,10 @@
 // Every route (member view): list controls that look clickable but do nothing — no handler, no href, no form.
 import { chromium } from 'playwright';
+import { memberSession } from './_login-member.mjs';
 const [base] = process.argv.slice(2);
 const routes = ['/', '/login', '/catalog', '/books/the-river-path', '/noholi-books', '/become-a-member', '/contact', '/about', '/rules', '/gallery', '/e-books', '/read/the-river-path', '/audio-books', '/audio-books/the-river-path', '/blogs', '/blogs/the-solitary-hour', '/creative-writings', '/creative-writings/the-scent-of-wet-clay', '/book-reviews', '/book-reviews/padma-nadir-majhi', '/member/dashboard', '/member/profile', '/member/edit', '/member/password', '/borrow/the-river-path', '/studio/blog', '/studio/creative-writing', '/studio/book-review', '/wishlist/books', '/wishlist/e-books', '/wishlist/audio-books'];
 const b = await chromium.launch(); const ctx = await b.newContext({ viewport: { width: 1280, height: 900 } });
-await ctx.addInitScript(() => localStorage.setItem('noholi.member', '1'));
+await ctx.addInitScript(await memberSession());
 const p = await ctx.newPage(); let total = 0;
 for (const r of routes) {
   await p.goto(base + r, { waitUntil: 'networkidle' });

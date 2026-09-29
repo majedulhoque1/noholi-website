@@ -10,9 +10,9 @@
 // { ok: true, id: null } and store nothing.
 // Throttle (inside the DB, atomic): 3 per phone per 24h, 5 per IP per 24h
 // (per form type), 30 per hour across the whole site -> HTTP 429, code NH429.
-import { adminClient, corsHeaders, fail, json, readJson, sha256Hex } from "../_shared/util.ts";
+import { adminClient, corsHeaders, serve, fail, json, readJson, sha256Hex } from "../_shared/util.ts";
 
-Deno.serve(async (req) => {
+serve(async (req) => {
   if (req.method === "OPTIONS") return new Response("ok", { headers: corsHeaders });
   if (req.method !== "POST") return fail(405, "NH004", "Use POST.");
 

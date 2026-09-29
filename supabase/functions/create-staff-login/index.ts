@@ -1,8 +1,8 @@
 // POST { email, role: "staff" | "admin" }  (admin JWT with aal2 required)
 // -> { user_id, email, role, temp_password }
-import { adminClient, corsHeaders, fail, json, MEMBER_EMAIL_DOMAIN, readJson, requireStaff, tempPassword } from "../_shared/util.ts";
+import { adminClient, corsHeaders, serve, fail, json, MEMBER_EMAIL_DOMAIN, readJson, requireStaff, tempPassword } from "../_shared/util.ts";
 
-Deno.serve(async (req) => {
+serve(async (req) => {
   if (req.method === "OPTIONS") return new Response("ok", { headers: corsHeaders });
   if (req.method !== "POST") return fail(405, "NH004", "Use POST.");
 

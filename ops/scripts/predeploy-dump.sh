@@ -19,8 +19,9 @@ if [ ! -f "$ENV_FILE" ]; then
   exit 1
 fi
 set -a
+# Strip CR: an .env.ops saved by a Windows editor would otherwise put "\r" at the end of every value.
 # shellcheck disable=SC1090
-. "$ENV_FILE"
+. <(tr -d '\r' < "$ENV_FILE")
 set +a
 
 export BACKUP_PREFIX=predeploy

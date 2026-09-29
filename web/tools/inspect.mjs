@@ -1,8 +1,9 @@
 // Print the box + key styles of an element, its parent chain (3 up) and children, at a given width.
 import { chromium } from 'playwright';
+import { memberSession } from './_login-member.mjs';
 const [base, route, width, sel, member] = process.argv.slice(2);
 const b = await chromium.launch(); const ctx = await b.newContext({ viewport: { width: +width, height: 900 } });
-if (member) await ctx.addInitScript(() => localStorage.setItem('noholi.member', '1'));
+if (member) await ctx.addInitScript(await memberSession());
 const p = await ctx.newPage(); await p.goto(base + route, { waitUntil: 'load' }); await p.waitForTimeout(300);
 console.log(await p.evaluate((sel) => {
   const d = (el) => { const cs = getComputedStyle(el), r = el.getBoundingClientRect();

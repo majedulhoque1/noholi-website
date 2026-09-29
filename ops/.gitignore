@@ -7,3 +7,5 @@
 *.dump.age
 *key*.txt
 restore-work/
+*.tar
+*.tar.age

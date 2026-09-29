@@ -1,6 +1,7 @@
 // Screenshot a route at 1280px and diff it against the Figma render.
 // usage: node tools/compare.mjs <baseUrl> <route> <render-file-substring> [member]
 import { chromium } from 'playwright';
+import { memberSession } from './_login-member.mjs';
 import { PNG } from 'pngjs';
 import pixelmatch from 'pixelmatch';
 import fs from 'node:fs';
@@ -16,7 +17,7 @@ const name = route.replace(/\W+/g, '_') || 'home';
 
 const browser = await chromium.launch();
 const page = await browser.newPage({ viewport: { width: 1280, height: 900 } });
-if (member) await page.addInitScript(() => localStorage.setItem('noholi.member', '1'));
+if (member) await page.addInitScript(await memberSession());
 await page.goto(base + route, { waitUntil: 'load' }); await page.waitForTimeout(400);
 await page.evaluate(() => document.fonts.ready);
 const shotPath = path.join(out, name + '.png');
