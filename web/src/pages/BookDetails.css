@@ -1239,7 +1239,8 @@
   font-weight: 400;
   line-height: 22.75px;
   color: var(--ink-soft);
-  white-space: pre;
+  white-space: pre-wrap;
+  overflow-wrap: break-word;
   min-height: 46px;
 }
 
@@ -1272,7 +1273,8 @@
   font-weight: 400;
   line-height: 22.75px;
   color: var(--ink-soft);
-  white-space: pre;
+  white-space: pre-wrap;
+  overflow-wrap: break-word;
   min-height: 46px;
 }
 
@@ -1305,7 +1307,8 @@
   font-weight: 400;
   line-height: 22.75px;
   color: var(--ink-soft);
-  white-space: pre;
+  white-space: pre-wrap;
+  overflow-wrap: break-word;
   min-height: 69px;
 }
 
