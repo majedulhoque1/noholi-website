@@ -1,6 +1,6 @@
 import { Link, useNavigate } from "@tanstack/react-router";
 import { ChevronDown, Mail, MapPin, Menu, Moon, Phone, Search, Sun, User } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -513,39 +513,57 @@ function MobileNav() {
   );
 }
 
+/**
+ * Publishes the header's live height as `--hdr` on <html>, so sticky bars below it (catalogue
+ * filters, rules contents) sit flush under it at every breakpoint.
+ */
+function useHeaderHeightVar() {
+  const ref = useRef<HTMLElement>(null);
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const root = document.documentElement;
+    const set = () => root.style.setProperty("--hdr", `${Math.round(el.offsetHeight)}px`);
+    set();
+    const ro = new ResizeObserver(set);
+    ro.observe(el);
+    return () => ro.disconnect();
+  }, []);
+  return ref;
+}
+
 export function SiteHeader() {
   const { t, loggedIn } = useApp();
+  const ref = useHeaderHeightVar();
   return (
-    <header className="sticky top-0 z-40 border-b border-border bg-background/92 backdrop-blur">
-      {library.confirmed && (
-        <div className="bg-foreground text-background">
-          <div className="container-page flex h-9 items-center gap-5 text-xs">
-            <a
-              href={library.mapsUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="hidden items-center gap-1.5 hover:opacity-80 md:inline-flex"
-            >
-              <MapPin className="h-3.5 w-3.5 opacity-70" />
-              {library.addressShort}
-            </a>
-            <a
-              href={library.phoneHref}
-              className="inline-flex items-center gap-1.5 hover:opacity-80"
-            >
-              <Phone className="h-3.5 w-3.5 opacity-70" />
-              {library.phoneDisplay}
-            </a>
-            <a
-              href={`mailto:${library.email}`}
-              className="hidden items-center gap-1.5 hover:opacity-80 sm:inline-flex"
-            >
-              <Mail className="h-3.5 w-3.5 opacity-70" />
-              {library.email}
-            </a>
-          </div>
+    <header
+      ref={ref}
+      className="sticky top-0 z-40 border-b border-border bg-background/92 backdrop-blur"
+    >
+      <div className="bg-foreground text-background">
+        <div className="container-page flex h-9 items-center gap-5 text-xs">
+          <a
+            href={library.mapsUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="hidden items-center gap-1.5 hover:opacity-80 md:inline-flex"
+          >
+            <MapPin className="h-3.5 w-3.5 opacity-70" />
+            {library.addressShort}
+          </a>
+          <a href={library.phoneHref} className="inline-flex items-center gap-1.5 hover:opacity-80">
+            <Phone className="h-3.5 w-3.5 opacity-70" />
+            {library.phoneDisplay}
+          </a>
+          <a
+            href={`mailto:${library.email}`}
+            className="hidden items-center gap-1.5 hover:opacity-80 sm:inline-flex"
+          >
+            <Mail className="h-3.5 w-3.5 opacity-70" />
+            {library.email}
+          </a>
         </div>
-      )}
+      </div>
       <div className="container-page flex h-16 items-center gap-4 md:h-[72px]">
         <Link to="/" aria-label="Noholi home" className="shrink-0">
           <Logo />

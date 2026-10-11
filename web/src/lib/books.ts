@@ -157,15 +157,65 @@ export type SearchParams = {
   genre?: string | null;
   category?: string | null;
   language?: string | null;
+  /** Multi-select filters: a book matches when it equals ANY value of a list; lists combine with AND. */
+  genres?: readonly string[] | null;
+  categories?: readonly string[] | null;
+  languages?: readonly string[] | null;
+  availability?: readonly AvailabilityBucket[] | null;
   page?: number;
   pageSize?: number;
+  sort?: BookSort | null;
 };
+
+/**
+ * The availability filter's buckets (supabase/CONTRACT.md §4): `reading` = reading room only;
+ * `borrowed` = all copies on loan; `limited` = exactly one free copy of several; `available` = the rest
+ * with a free copy.
+ */
+export const AVAILABILITY_BUCKETS = ["available", "limited", "borrowed", "reading"] as const;
+export type AvailabilityBucket = (typeof AVAILABILITY_BUCKETS)[number];
+
+/** Drops blanks and duplicates; null when nothing is left, so the RPC argument can be omitted. */
+const cleanList = (v: readonly string[] | null | undefined): string[] | null => {
+  const out = [...new Set((v ?? []).map((x) => x.trim()).filter(Boolean))];
+  return out.length ? out : null;
+};
+
+/** Array filter arguments for the catalogue RPCs; empty lists are left out entirely. */
+function listArgs(p: Pick<SearchParams, "genres" | "categories" | "languages" | "availability">) {
+  const args: {
+    genres?: string[];
+    categories?: string[];
+    languages?: string[];
+    availability?: string[];
+  } = {};
+  const genres = cleanList(p.genres);
+  const categories = cleanList(p.categories);
+  const languages = cleanList(p.languages);
+  const availability = cleanList(p.availability);
+  if (genres) args.genres = genres;
+  if (categories) args.categories = categories;
+  if (languages) args.languages = languages;
+  if (availability) args.availability = availability;
+  return args;
+}
+
+/** Orders `search_books` accepts (supabase/CONTRACT.md §4); "relevance" is the server default. */
+export const BOOK_SORTS = [
+  "relevance",
+  "title",
+  "title-desc",
+  "author",
+  "newest",
+  "oldest",
+] as const;
+export type BookSort = (typeof BOOK_SORTS)[number];
 
 export type SearchResult = { rows: BookSearchRow[]; total: number };
 
 /**
- * Server-side search (English and Bangla, relevance then title). `search_books` has no sort
- * option. Returns { rows, total }; `total` is the match count across all pages.
+ * Server-side search (English and Bangla). Ordered by relevance unless `sort` says otherwise.
+ * Returns { rows, total }; `total` is the match count across all pages.
  */
 export async function searchBooks(
   {
@@ -173,8 +223,13 @@ export async function searchBooks(
     genre = null,
     category = null,
     language = null,
+    genres = null,
+    categories = null,
+    languages = null,
+    availability = null,
     page = 1,
     pageSize = 24,
+    sort = null,
   }: SearchParams = {},
   opts: { client?: SupabaseClient; signal?: AbortSignal } = {},
 ): Promise<SearchResult> {
@@ -186,6 +241,9 @@ export async function searchBooks(
     language: language || null,
     page,
     page_size: pageSize,
+    // Omitted for relevance so the call also works before the sort migration is applied.
+    ...(sort && sort !== "relevance" ? { sort } : {}),
+    ...listArgs({ genres, categories, languages, availability }),
   });
   if (opts.signal) req = req.abortSignal(opts.signal);
   const { data, error } = await req;
@@ -203,6 +261,45 @@ export async function catalogFacets(
   const { data, error } = await client.rpc("catalog_facets");
   if (error) throw error;
   return { ...EMPTY_FACETS, ...((data as Partial<CatalogFacets> | null) ?? {}) };
+}
+
+/**
+ * Live counts beside each filter option. Each facet's counts apply `q` and the OTHER facets'
+ * selections but not its own. A value missing from a map has 0 books.
+ */
+export type FacetCounts = {
+  total: number;
+  genres: Record<string, number>;
+  categories: Record<string, number>;
+  languages: Record<string, number>;
+  availability: Record<AvailabilityBucket, number>;
+};
+
+export async function catalogFacetCounts(
+  params: Pick<SearchParams, "q" | "genres" | "categories" | "languages" | "availability"> = {},
+  opts: { client?: SupabaseClient; signal?: AbortSignal } = {},
+): Promise<FacetCounts> {
+  const client = opts.client ?? supabasePublic;
+  let req = client.rpc("catalog_facet_counts", {
+    q: params.q?.trim() ? params.q.trim() : null,
+    ...listArgs(params),
+  });
+  if (opts.signal) req = req.abortSignal(opts.signal);
+  const { data, error } = await req;
+  if (error) throw error;
+  const d = (data ?? {}) as Partial<FacetCounts>;
+  return {
+    total: d.total ?? 0,
+    genres: d.genres ?? {},
+    categories: d.categories ?? {},
+    languages: d.languages ?? {},
+    availability: {
+      available: d.availability?.available ?? 0,
+      limited: d.availability?.limited ?? 0,
+      borrowed: d.availability?.borrowed ?? 0,
+      reading: d.availability?.reading ?? 0,
+    },
+  };
 }
 
 // The facet list changes only when staff edit the catalogue, so reuse it for a few minutes
