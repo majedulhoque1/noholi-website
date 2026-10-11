@@ -1,5 +1,6 @@
-import { Link } from "@tanstack/react-router";
+import { Link, useNavigate } from "@tanstack/react-router";
 import { Button } from "@/components/ui/button";
+import { MemberButton, reasons } from "@/components/member-gate";
 import { fmtDate, Stars } from "@/components/noholi";
 import { articles } from "@/lib/data";
 import { useApp } from "@/lib/store";
@@ -55,6 +56,36 @@ export function ReviewsSection({ itemId }: { itemId: string; title?: string }) {
               </div>
             </Link>
           ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+/**
+ * Reviews block for a live catalogue book. Reader reviews have no backend yet, so this is an honest
+ * empty state with the reference's structure; the button goes to the (coming-soon) reviews page.
+ */
+export function BookReviewsSection() {
+  const { t } = useApp();
+  const nav = useNavigate();
+  return (
+    <section className="container-page mt-16" aria-labelledby="reviews-h">
+      <div className="grid gap-8 rule-top pt-5 lg:grid-cols-[260px_minmax(0,1fr)] lg:gap-16">
+        <div>
+          <div className="eyebrow">{t("ux.book.reviewsEyebrow")}</div>
+          <h2 id="reviews-h" className="mt-2 text-3xl">
+            {t("ux.book.reviews")}
+          </h2>
+          <p className="mt-4 text-sm text-muted-foreground">{t("ux.book.noReviews")}</p>
+          <MemberButton
+            reason={reasons.review}
+            onAllowed={() => nav({ to: "/account/reviews" })}
+            variant="outline"
+            className="mt-6"
+          >
+            {t("ux.book.writeReview")}
+          </MemberButton>
         </div>
       </div>
     </section>

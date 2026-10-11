@@ -218,7 +218,7 @@ export function WishButton({
   className?: string;
   label?: boolean;
 }) {
-  const { inWish, toggleWish } = useApp();
+  const { inWish, toggleWish, t } = useApp();
   const on = inWish(id);
   return (
     <button
@@ -229,7 +229,7 @@ export function WishButton({
         toggleWish(id);
       }}
       aria-pressed={on}
-      aria-label={on ? "Remove from wishlist" : "Add to wishlist"}
+      aria-label={on ? t("ux.wish.remove") : t("ux.wish.add")}
       className={cn(
         "inline-flex items-center gap-2 text-sm transition-colors hover:text-accent",
         on && "text-accent",
@@ -237,7 +237,7 @@ export function WishButton({
       )}
     >
       <Heart className={cn("h-4 w-4", on && "fill-current")} />
-      {label && (on ? "In wishlist" : "Add to wishlist")}
+      {label && (on ? t("ux.wish.in") : t("ux.wish.add"))}
     </button>
   );
 }

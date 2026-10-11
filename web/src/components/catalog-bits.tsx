@@ -1,5 +1,5 @@
 import { Link } from "@tanstack/react-router";
-import { Cover } from "@/components/noholi";
+import { Cover, WishButton } from "@/components/noholi";
 import {
   bookAvailability,
   coverUrl,
@@ -93,18 +93,22 @@ export function LiveBookCard({
       <Link to="/book/$id" params={{ id: book.id }} className="block" tabIndex={-1} aria-hidden>
         <LiveCover book={book} eager={eager} />
       </Link>
-      <div className="mt-4 min-w-0">
-        <Link
-          to="/book/$id"
-          params={{ id: book.id }}
-          className="line-clamp-2 break-words font-display text-lg leading-tight hover:text-accent"
-          lang={/[ঀ-৿]/.test(title) ? "bn" : undefined}
-        >
-          {title}
-        </Link>
-        <div className="mt-1 truncate text-sm text-muted-foreground">
-          {displayAuthor(book, lang)}
+      <div className="mt-4 grid grid-cols-[minmax(0,1fr)_auto] gap-2">
+        <div className="min-w-0">
+          <Link
+            to="/book/$id"
+            params={{ id: book.id }}
+            className="line-clamp-2 break-words font-display text-lg leading-tight hover:text-accent"
+            lang={/[ঀ-৿]/.test(title) ? "bn" : undefined}
+          >
+            {title}
+          </Link>
+          <div className="mt-1 truncate text-sm text-muted-foreground">
+            {displayAuthor(book, lang)}
+          </div>
         </div>
+        {/* Wishlist is "coming soon": the heart only gives honest feedback, it never saves. */}
+        <WishButton id={book.id} className="mt-1 h-fit text-muted-foreground" />
       </div>
       {showMeta && (
         <div className="mt-2 flex min-w-0 flex-wrap items-center gap-x-3 gap-y-1 text-xs text-muted-foreground">

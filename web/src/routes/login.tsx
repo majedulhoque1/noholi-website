@@ -95,7 +95,21 @@ function Login() {
               />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="pw">{t("auth.login.passwordLabel")}</Label>
+              <div className="flex justify-between">
+                <Label htmlFor="pw">{t("auth.login.passwordLabel")}</Label>
+                <a
+                  href="#forgot"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    const el = document.getElementById("forgot");
+                    el?.scrollIntoView({ behavior: "smooth", block: "center" });
+                    el?.focus({ preventScroll: true });
+                  }}
+                  className="text-xs underline underline-offset-4"
+                >
+                  {t("ux.login.forgotLink")}
+                </a>
+              </div>
               <Input
                 id="pw"
                 type="password"
@@ -115,7 +129,7 @@ function Login() {
               {busy ? t("auth.login.loggingIn") : t("auth.login.submit")}
             </Button>
           </form>
-          <p className="mt-6 text-sm text-muted-foreground">
+          <p id="forgot" tabIndex={-1} className="mt-6 text-sm text-muted-foreground outline-none">
             {t("auth.login.forgot")}{" "}
             <Link to="/contact" className="underline underline-offset-4 hover:text-foreground">
               {t("auth.login.contactLibrary")}

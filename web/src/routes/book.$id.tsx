@@ -10,6 +10,9 @@ import { ArrowLeft, BookOpen, Clock } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { LiveAvailability, LiveBookCard, LiveCover } from "@/components/catalog-bits";
 import { MemberButton, reasons } from "@/components/member-gate";
+import { WishButton } from "@/components/noholi";
+import { BookReviewsSection } from "@/components/reviews";
+import { SoonTag } from "@/components/soon-tag";
 import {
   altAuthor,
   altTitle,
@@ -140,9 +143,13 @@ function BookError({ error }: ErrorComponentProps) {
 
 function BookPage() {
   const { book, related, relatedError } = Route.useLoaderData();
-  const { t, lang } = useApp();
+  const { t, lang, requireMember } = useApp();
   const nav = useNavigate();
   const a = bookAvailability(book);
+  // The first sentence of the borrowing note reads like the reference's bold fee line.
+  const noteMatch = /^(.*?[.।])\s*(.*)$/.exec(t("catalog.borrowNote"));
+  const borrowFree = noteMatch ? noteMatch[1] : t("catalog.borrowNote");
+  const borrowRest = noteMatch ? noteMatch[2] : "";
 
   const title = displayTitle(book, lang);
   const subTitle = altTitle(book, lang);
@@ -257,9 +264,32 @@ function BookPage() {
                 {a.state === "reading" ? t("catalog.readingRoomBtn") : t("catalog.unavailableBtn")}
               </Button>
             )}
+            <span className="ml-2 inline-flex items-center gap-2">
+              <WishButton id={book.id} label />
+              <SoonTag />
+            </span>
+          </div>
+          <div className="mt-4 flex flex-wrap gap-x-5 gap-y-1 text-sm">
+            <button
+              type="button"
+              onClick={() => requireMember(reasons.review, () => nav({ to: "/account/reviews" }))}
+              className="underline underline-offset-4 hover:text-accent"
+            >
+              {t("ux.book.writeReview")}
+            </button>
+            <button
+              type="button"
+              onClick={() =>
+                requireMember(reasons.recommend, () => nav({ to: "/account/recommend" }))
+              }
+              className="text-muted-foreground underline underline-offset-4 hover:text-accent"
+            >
+              {t("ux.book.recommend")}
+            </button>
           </div>
           <p className="mt-4 text-sm text-muted-foreground">
-            {t("catalog.borrowNote")}{" "}
+            <span className="font-medium text-foreground">{borrowFree}</span>
+            {borrowRest && ` ${borrowRest}`}{" "}
             <Link to="/library/rules" className="underline underline-offset-4 hover:text-accent">
               {t("catalog.rulesLink")}
             </Link>
@@ -278,10 +308,10 @@ function BookPage() {
               </div>
             ))}
           </dl>
-
-          <p className="mt-10 text-sm text-muted-foreground">{t("catalog.reviewsSoon")}</p>
         </div>
       </section>
+
+      <BookReviewsSection />
 
       {(related.length > 0 || relatedError) && (
         <section className="container-page mt-10">

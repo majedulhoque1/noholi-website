@@ -3,6 +3,7 @@ import { auth } from "./auth";
 import { catalog } from "./catalog";
 import { lending } from "./lending";
 import { forms } from "./forms";
+import { extras } from "./extras";
 
 export type Lang = "en" | "bn";
 
@@ -12,8 +13,8 @@ export type Lang = "en" | "bn";
  * e.g. "lending.dueOn"); a duplicate silently takes the later module, so grep before adding.
  */
 export const dict = {
-  en: { ...core.en, ...auth.en, ...catalog.en, ...lending.en, ...forms.en },
-  bn: { ...core.bn, ...auth.bn, ...catalog.bn, ...lending.bn, ...forms.bn },
+  en: { ...core.en, ...auth.en, ...catalog.en, ...lending.en, ...forms.en, ...extras.en },
+  bn: { ...core.bn, ...auth.bn, ...catalog.bn, ...lending.bn, ...forms.bn, ...extras.bn },
 };
 
 export type TKey = keyof typeof dict.en;

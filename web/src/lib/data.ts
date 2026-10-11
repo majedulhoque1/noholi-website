@@ -934,7 +934,7 @@ export const library = {
    * pin below (the legacy site had only "[Address]" / "[Phone]" / "[Hours — to confirm]"
    * placeholders). While false, the footer, contact page and map show "coming soon" instead.
    */
-  confirmed: false,
+  confirmed: true,
   name: "Noholi Library",
   nameBn: "নহলি পাঠাগার",
   address: ["House 808, Road 11 Avenue 6", "Pallabi, Dhaka 1216", "Bangladesh"],

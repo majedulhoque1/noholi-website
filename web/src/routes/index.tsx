@@ -9,6 +9,8 @@ import {
   displayAuthor,
   displayTitle,
   fmtNum,
+  catalogFacetCounts,
+  catalogFacetsCached,
   getNoholiBooks,
   getShelfBooks,
   hasBengali,
@@ -29,18 +31,29 @@ const settled = async (p: Promise<BookRow[]>): Promise<Shelf> => {
   }
 };
 
+const statCols = ["", "grid-cols-1", "grid-cols-2", "grid-cols-3"];
+
 export const Route = createFileRoute("/")({
   // Live shelves: failures come back as error strings, so a failed fetch never looks like an empty shelf.
   loader: async () => {
-    const [shelf, noholi, total] = await Promise.all([
+    const [shelf, noholi, total, facets, available] = await Promise.all([
       settled(getShelfBooks(10)),
       settled(getNoholiBooks(5)),
       searchBooks({ pageSize: 1 }).then(
         (r) => r.total,
         () => null,
       ),
+      // Real counts of the live catalogue; anything unavailable just hides its cell.
+      catalogFacetsCached().then(
+        (f) => ({ languages: f.languages.length }),
+        () => null,
+      ),
+      catalogFacetCounts().then(
+        (c) => c.availability.available + c.availability.limited,
+        () => null,
+      ),
     ]);
-    return { shelf, noholi, total };
+    return { shelf, noholi, total, facets, available };
   },
   head: () => ({
     meta: [
@@ -64,7 +77,15 @@ export const Route = createFileRoute("/")({
 
 function Home() {
   const { t, lang, play, loggedIn } = useApp();
-  const { shelf, noholi: noholiShelf, total } = Route.useLoaderData();
+  const { shelf, noholi: noholiShelf, total, facets, available } = Route.useLoaderData();
+  // Real numbers only: a cell whose number is unavailable (or zero) is left out.
+  const stats = (
+    [
+      [total, t("ux.home.statBooks")],
+      [available, t("ux.home.statAvailable")],
+      [facets?.languages ?? null, t("ux.home.statLanguages")],
+    ] as [number | null, string][]
+  ).filter((s): s is [number, string] => s[0] !== null && s[0] > 0);
   const hero = shelf.rows.slice(0, 4);
   const featured = shelf.rows.slice(4, 10);
   const spines = shelf.rows.slice(5, 8);
@@ -76,7 +97,7 @@ function Home() {
   return (
     <>
       {/* Hero */}
-      <section className="container-page pt-8 md:pt-12">
+      <section className="container-page pt-8 max-lg:overflow-x-clip md:pt-12">
         <div className="grid items-center gap-10 lg:grid-cols-12 lg:gap-6">
           <div className="lg:col-span-6">
             <div className="eyebrow mb-4">Est. Pallabi, Dhaka · নহলি পাঠাগার</div>
@@ -93,7 +114,10 @@ function Home() {
               {t("heroBody")}
             </p>
             <div className="mt-8 max-w-lg">
-              <SearchBox inputClassName="h-14 border-foreground/30 text-base" />
+              <SearchBox
+                placeholder={t("ux.search.placeholder")}
+                inputClassName="h-14 border-foreground/30 text-base"
+              />
               <div className="mt-4 flex flex-wrap gap-3">
                 <Button size="lg" variant="outline" asChild>
                   <Link to="/library/books">
@@ -114,10 +138,16 @@ function Home() {
                 )}
               </div>
             </div>
-            {total !== null && total > 0 && (
-              <dl className="mt-10 max-w-lg border-t border-border pt-5">
-                <dt className="font-display text-3xl">{fmtNum(total, lang)}</dt>
-                <dd className="mt-1 text-xs text-muted-foreground">{t("catalog.homeBooksStat")}</dd>
+            {stats.length > 0 && (
+              <dl
+                className={`mt-10 grid max-w-lg gap-6 border-t border-border pt-5 ${statCols[stats.length]}`}
+              >
+                {stats.map(([n, label]) => (
+                  <div key={label} className="min-w-0">
+                    <dt className="font-display text-3xl">{fmtNum(n, lang)}</dt>
+                    <dd className="mt-1 text-xs text-muted-foreground">{label}</dd>
+                  </div>
+                ))}
               </dl>
             )}
           </div>

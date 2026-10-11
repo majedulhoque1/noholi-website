@@ -43,8 +43,86 @@ export function WriteupNav() {
   );
 }
 
-export function FeatureArticle({ a }: { a: Article }) {
+/**
+ * The picture slot of a write-up. A photo when the piece has one; otherwise a designed
+ * placeholder, never an empty box: a review shows its book on a lit backdrop, and other
+ * pieces set their opening lines as type.
+ */
+function ArticleMedia({
+  a,
+  className,
+  feature,
+}: {
+  a: Article;
+  className?: string;
+  feature?: boolean;
+}) {
   const book = a.bookId ? getBook(a.bookId) : undefined;
+  const frame = cn("relative overflow-hidden bg-secondary", className);
+  if (a.image) {
+    return (
+      <div className={frame}>
+        <img
+          src={a.image}
+          alt=""
+          loading={feature ? undefined : "lazy"}
+          className="photo absolute inset-0 h-full w-full object-cover transition-transform duration-700 ease-out group-hover:scale-[1.03]"
+        />
+      </div>
+    );
+  }
+  if (book) {
+    return (
+      <div className={cn(frame, "grid place-items-center")}>
+        <div
+          aria-hidden
+          className="absolute inset-0 bg-[radial-gradient(ellipse_at_50%_42%,var(--background)_0%,transparent_68%)] opacity-70"
+        />
+        <div
+          aria-hidden
+          className="absolute inset-x-0 bottom-0 h-[22%] border-t border-foreground/10 bg-foreground/[0.04]"
+        />
+        <BookCover
+          book={book}
+          size={feature ? "md" : "sm"}
+          className={cn(
+            "relative shadow-[0_18px_30px_-12px_rgb(0_0_0/0.45)] transition-transform duration-500 ease-out group-hover:-translate-y-1 group-hover:-rotate-1",
+            feature ? "w-[34%] max-w-52" : "w-[30%] max-w-36",
+          )}
+        />
+      </div>
+    );
+  }
+  return (
+    <div
+      className={cn(frame, "flex flex-col justify-center", feature ? "p-10 md:p-14" : "p-7 lg:p-9")}
+    >
+      <span
+        aria-hidden
+        className={cn(
+          "block select-none font-display leading-[0.5] text-accent/50",
+          feature ? "mb-6 text-8xl" : "mb-4 text-6xl",
+        )}
+      >
+        “
+      </span>
+      <p
+        className={cn(
+          "shrink-0 whitespace-pre-line italic text-foreground/85",
+          a.bangla ? "font-bangla" : "font-display",
+          feature
+            ? "line-clamp-5 text-2xl leading-relaxed md:text-3xl"
+            : "line-clamp-3 text-lg leading-relaxed md:text-xl",
+        )}
+      >
+        {a.excerpt}
+      </p>
+      {feature && <div className="eyebrow mt-6">{a.author}</div>}
+    </div>
+  );
+}
+
+export function FeatureArticle({ a }: { a: Article }) {
   return (
     <Link
       to="/article/$slug"
@@ -52,19 +130,7 @@ export function FeatureArticle({ a }: { a: Article }) {
       className="group grid gap-8 lg:grid-cols-12 lg:items-center"
     >
       <div className="lg:col-span-7">
-        {a.image ? (
-          <img src={a.image} alt="" className="photo aspect-[16/10] w-full object-cover" />
-        ) : book ? (
-          <div className="grid aspect-[16/10] place-items-center bg-secondary">
-            <BookCover book={book} className="w-40" />
-          </div>
-        ) : (
-          <div className="grid aspect-[16/10] place-items-center bg-secondary p-10">
-            <p className="whitespace-pre-line text-center font-bangla text-3xl italic leading-relaxed">
-              {a.excerpt}
-            </p>
-          </div>
-        )}
+        <ArticleMedia a={a} feature className="aspect-[16/10]" />
       </div>
       <div className="lg:col-span-5">
         <div className="eyebrow">
@@ -96,22 +162,22 @@ export function FeatureArticle({ a }: { a: Article }) {
 }
 
 export function ArticleRow({ a }: { a: Article }) {
-  const book = a.bookId ? getBook(a.bookId) : undefined;
   return (
     <Link
       to="/article/$slug"
       params={{ slug: a.slug }}
-      className="group grid grid-cols-[minmax(0,1fr)_96px] gap-6 border-b border-border py-8 md:grid-cols-[140px_minmax(0,1fr)_160px]"
+      className="group grid gap-6 border-b border-border py-10 md:grid-cols-[minmax(0,5fr)_minmax(0,7fr)] md:items-center md:gap-10 lg:gap-14"
     >
-      <div className="hidden text-sm text-muted-foreground md:block">
-        {fmtDate(a.date)}
-        <div className="eyebrow mt-2">{kindLabel[a.kind]}</div>
-      </div>
+      <ArticleMedia a={a} className="aspect-[16/10] md:aspect-[3/2]" />
       <div className="min-w-0">
-        <div className="eyebrow md:hidden">{kindLabel[a.kind]}</div>
+        <div className="eyebrow">
+          {kindLabel[a.kind]}
+          {a.sub ? ` · ${a.sub}` : ""}
+          <span className="text-muted-foreground/70"> · {fmtDate(a.date)}</span>
+        </div>
         <h3
           className={cn(
-            "mt-1 text-2xl leading-snug group-hover:text-accent md:mt-0 md:text-3xl",
+            "mt-3 text-2xl leading-snug group-hover:text-accent md:text-[2rem]",
             a.bangla && "font-bangla",
           )}
         >
@@ -119,31 +185,20 @@ export function ArticleRow({ a }: { a: Article }) {
         </h3>
         <p
           className={cn(
-            "mt-2 line-clamp-2 text-muted-foreground",
+            "mt-3 line-clamp-3 leading-relaxed text-muted-foreground",
             a.bangla && "whitespace-pre-line font-bangla",
           )}
         >
           {a.excerpt}
         </p>
-        <div className="mt-3 flex flex-wrap items-center gap-3 text-sm">
-          {a.author} <span className="text-muted-foreground">· {a.minutes} min</span>
+        <div className="mt-5 flex flex-wrap items-center gap-3 text-sm">
+          {a.author} <span className="text-muted-foreground">· {a.minutes} min read</span>
           {a.rating && <Stars n={a.rating} />}
+          <span className="ml-auto hidden text-sm font-medium transition-transform group-hover:translate-x-1 group-hover:text-accent md:inline">
+            Read →
+          </span>
         </div>
       </div>
-      {a.image ? (
-        <img
-          src={a.image}
-          alt=""
-          loading="lazy"
-          className="photo aspect-square w-full object-cover md:aspect-[4/3]"
-        />
-      ) : book ? (
-        <BookCover book={book} size="sm" className="w-full max-w-[96px] justify-self-end" />
-      ) : (
-        <div className="grid aspect-square place-items-center bg-secondary font-bangla text-4xl text-accent md:aspect-[4/3]">
-          “
-        </div>
-      )}
     </Link>
   );
 }
