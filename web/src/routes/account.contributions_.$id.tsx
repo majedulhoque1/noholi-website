@@ -1,4 +1,4 @@
-import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { FileText } from "lucide-react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
@@ -48,7 +48,6 @@ const statusNote: Record<string, string> = {
 function ContributionDetail() {
   const { id } = Route.useParams();
   const { contributions, removeContribution } = useApp();
-  const nav = useNavigate();
   const c = contributions.find((x) => x.id === id);
   const back = (
     <BackLink
@@ -166,11 +165,7 @@ function ContributionDetail() {
             <Button
               variant="ghost"
               className="text-destructive"
-              onClick={() => {
-                removeContribution(c.id);
-                toast("Draft deleted");
-                nav({ to: c.kind === "review" ? "/account/reviews" : "/account/contributions" });
-              }}
+              onClick={() => removeContribution(c.id)} // coming soon: shows a notice, deletes nothing
             >
               Delete Draft
             </Button>

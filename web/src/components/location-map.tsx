@@ -10,8 +10,20 @@ export function LocationMap({
   className?: string;
   card?: boolean | "sm";
 }) {
-  const { lang } = useApp();
+  const { lang, t } = useApp();
   const bn = lang === "bn";
+  // The pin and address are not confirmed by Noholi yet (see `library.confirmed`): show no map.
+  if (!library.confirmed)
+    return (
+      <div
+        className={`grid place-items-center border border-border bg-secondary px-6 text-center ${className}`}
+      >
+        <div>
+          <div className="eyebrow mb-2">{t("forms.soon.badge")}</div>
+          <p className="text-sm text-muted-foreground">{t("forms.map.soon")}</p>
+        </div>
+      </div>
+    );
   return (
     <div className={`relative overflow-hidden border border-border bg-secondary ${className}`}>
       <iframe

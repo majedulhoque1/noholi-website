@@ -1,4 +1,14 @@
+import type { TKey } from "./i18n";
 import { articles, audiobooks, books, type Book } from "./data";
+import {
+  coverUrl,
+  displayAuthor,
+  displayTitle,
+  searchBooks,
+  toneOf,
+  type BookLang,
+  type BookSearchRow,
+} from "./books";
 
 export type SearchGroup =
   "Books" | "Noholi Books" | "E-Books" | "Audio Books" | "Authors" | "Write Ups";
@@ -11,8 +21,11 @@ export type SearchItem = {
   /** Extra text that matches but isn't shown (Bangla/English alternates). */
   alt: string;
   tone?: number;
+  /** URL of a real cover image (books from the catalogue). */
+  cover?: string | null;
   link:
     | { to: "/book/$id"; params: { id: string } }
+    | { to: "/read/$id"; params: { id: string } }
     | { to: "/article/$slug"; params: { slug: string } }
     | { to: "/audio/$id"; params: { id: string } }
     | { to: "/search"; search: { q: string } };
@@ -27,7 +40,11 @@ const bookItem = (b: Book, group: SearchGroup): SearchItem => ({
   sub: b.language === "Bangla" ? b.authorBn : b.authorEn,
   alt: `${b.titleEn} ${b.titleBn} ${b.authorEn} ${b.authorBn} ${b.isbn} ${b.publisher}`,
   tone: b.tone,
-  link: { to: "/book/$id", params: { id: b.id } },
+  // The sample e-books only exist in the reader; real catalogue books are searched on the server.
+  link:
+    group === "E-Books"
+      ? { to: "/read/$id", params: { id: b.id } }
+      : { to: "/book/$id", params: { id: b.id } },
   bookId: b.id,
 });
 
@@ -72,6 +89,16 @@ export const searchIndex: SearchItem[] = [
   })),
 ];
 
+/** Translation key for each group's heading. */
+export const groupLabel: Record<SearchGroup, TKey> = {
+  Books: "books",
+  "Noholi Books": "noholiBooks",
+  "E-Books": "ebooks",
+  "Audio Books": "audiobooks",
+  Authors: "catalog.groupAuthors",
+  "Write Ups": "writeups",
+};
+
 export const groupOrder: SearchGroup[] = [
   "Books",
   "Noholi Books",
@@ -80,6 +107,40 @@ export const groupOrder: SearchGroup[] = [
   "Authors",
   "Write Ups",
 ];
+
+/**
+ * Groups served by the local index only. "Books" come from the server (`search_books`); the local
+ * "Books", "Noholi Books" and "Authors" entries are sample data that still back the picker mode
+ * (`onPick`) used by the coming-soon member forms, and are never shown on public pages.
+ */
+export const publicLocalGroups: SearchGroup[] = ["E-Books", "Audio Books", "Write Ups"];
+
+/** A catalogue book from `search_books` as a search result. */
+export function bookRowToItem(b: BookSearchRow, lang: BookLang): SearchItem {
+  return {
+    key: `Books-${b.id}`,
+    group: "Books",
+    title: displayTitle(b, lang),
+    sub: displayAuthor(b, lang),
+    alt: "",
+    tone: toneOf(b.id),
+    cover: coverUrl(b),
+    link: { to: "/book/$id", params: { id: b.id } },
+    bookId: b.id,
+  };
+}
+
+/** Server search for the autocomplete and the search page. `signal` aborts a stale request. */
+export async function searchBookItems(
+  q: string,
+  opts: { lang: BookLang; pageSize: number; page?: number; signal?: AbortSignal },
+): Promise<{ items: SearchItem[]; total: number }> {
+  const { rows, total } = await searchBooks(
+    { q, pageSize: opts.pageSize, page: opts.page ?? 1 },
+    { signal: opts.signal },
+  );
+  return { items: rows.map((r) => bookRowToItem(r, opts.lang)), total };
+}
 
 const norm = (s: string) => s.toLowerCase().normalize("NFC");
 

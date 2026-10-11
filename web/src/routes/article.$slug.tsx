@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { BookCover, fmtDate, Stars } from "@/components/noholi";
 import { ArticleRow, kindLabel, kindPath } from "@/components/writeups";
 import { articles, getBook } from "@/lib/data";
+import { useApp } from "@/lib/store";
 import { cn } from "@/lib/utils";
 
 export const Route = createFileRoute("/article/$slug")({
@@ -38,6 +39,7 @@ export const Route = createFileRoute("/article/$slug")({
 
 function ArticlePage() {
   const { article: a } = Route.useLoaderData();
+  const { t } = useApp();
   const book = a.bookId ? getBook(a.bookId) : undefined;
   const related = articles.filter((x) => x.kind === a.kind && x.slug !== a.slug).slice(0, 3);
   const poem = a.kind === "creative" && a.sub === "Poetry";
@@ -86,8 +88,8 @@ function ArticlePage() {
       {book && (
         <div className="container-page max-w-2xl">
           <Link
-            to="/book/$id"
-            params={{ id: book.id }}
+            to="/search"
+            search={{ q: book.titleEn }}
             className="mt-6 grid grid-cols-[64px_minmax(0,1fr)_auto] items-center gap-4 border-y border-border py-4 hover:text-accent"
           >
             <BookCover book={book} size="sm" />
@@ -97,7 +99,9 @@ function ArticlePage() {
                 {book.authorEn} · {book.year}
               </div>
             </div>
-            <span className="text-sm underline underline-offset-4">Borrow</span>
+            <span className="text-sm underline underline-offset-4">
+              {t("catalog.findInCatalogue")}
+            </span>
           </Link>
         </div>
       )}

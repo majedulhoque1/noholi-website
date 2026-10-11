@@ -1,8 +1,7 @@
-import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
+import { createFileRoute, Link, useRouter } from "@tanstack/react-router";
 import { useState } from "react";
 import { ArrowLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Logo } from "@/components/noholi";
@@ -11,12 +10,15 @@ import { useApp } from "@/lib/store";
 import { describeError } from "@/lib/supabase";
 
 export const Route = createFileRoute("/login")({
+  validateSearch: (search: Record<string, unknown>): { redirect?: string } => ({
+    redirect: typeof search["redirect"] === "string" ? search["redirect"] : undefined,
+  }),
   head: () => ({
     meta: [
       { title: "Log in — Noholi Library" },
       { name: "description", content: "Log in to your Noholi patron account." },
       { property: "og:title", content: "Log in to Noholi" },
-      { property: "og:description", content: "Access your wishlist, loans and digital library." },
+      { property: "og:description", content: "Access your loans, requests and account." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
     ],
@@ -24,9 +26,18 @@ export const Route = createFileRoute("/login")({
   component: Login,
 });
 
+/** Only same-site paths are allowed as a post-login destination (no open redirects). */
+function safeRedirect(target: string | undefined): string | null {
+  if (!target || !target.startsWith("/") || target.startsWith("//") || target.startsWith("/\\"))
+    return null;
+  if (target === "/login" || target.startsWith("/login?")) return null;
+  return target;
+}
+
 function Login() {
-  const { login } = useApp();
-  const nav = useNavigate();
+  const { login, t } = useApp();
+  const router = useRouter();
+  const { redirect } = Route.useSearch();
   const [id, setId] = useState("");
   const [pw, setPw] = useState("");
   const [err, setErr] = useState("");
@@ -35,16 +46,20 @@ function Login() {
     e.preventDefault();
     if (busy) return;
     if (!id.trim() || !pw) {
-      setErr("Enter your email or Member ID and password.");
+      setErr(t("auth.enterCredentials"));
       return;
     }
     setBusy(true);
     setErr("");
     try {
-      await login(id, pw);
-      // TODO(auth-account agent): a member with must_change_password goes to /account/password once that route exists.
-      nav({ to: "/account" });
+      const member = await login(id, pw);
+      // A temporary password (set by the desk) must be replaced before anything else.
+      const dest = member.must_change_password
+        ? "/account/password"
+        : (safeRedirect(redirect) ?? "/account");
+      router.history.push(dest);
     } catch (error) {
+      // Keep what the reader typed; only report the problem.
       setErr(describeError(error));
       setBusy(false);
     }
@@ -60,33 +75,27 @@ function Login() {
             to="/"
             className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground"
           >
-            <ArrowLeft className="h-4 w-4" /> Back to website
+            <ArrowLeft className="h-4 w-4" /> {t("auth.login.back")}
           </Link>
         </div>
         <div className="mx-auto my-auto w-full max-w-sm py-16">
-          <div className="eyebrow mb-4">Patron login</div>
-          <h1 className="text-5xl">Welcome back.</h1>
-          <p className="mt-3 text-muted-foreground">
-            Your shelf, your loans, your place in every book.
-          </p>
-          <form onSubmit={submit} className="mt-10 space-y-5">
+          <div className="eyebrow mb-4">{t("auth.login.eyebrow")}</div>
+          <h1 className="text-5xl">{t("auth.login.title")}</h1>
+          <p className="mt-3 text-muted-foreground">{t("auth.login.subtitle")}</p>
+          <form onSubmit={submit} className="mt-10 space-y-5" noValidate>
             <div className="space-y-2">
-              <Label htmlFor="id">Email or Member ID</Label>
+              <Label htmlFor="id">{t("auth.login.idLabel")}</Label>
               <Input
                 id="id"
                 value={id}
                 onChange={(e) => setId(e.target.value)}
                 className="h-12"
                 autoComplete="username"
+                disabled={busy}
               />
             </div>
             <div className="space-y-2">
-              <div className="flex justify-between">
-                <Label htmlFor="pw">Password</Label>
-                <a href="#" className="text-xs underline underline-offset-4">
-                  Forgot password?
-                </a>
-              </div>
+              <Label htmlFor="pw">{t("auth.login.passwordLabel")}</Label>
               <Input
                 id="pw"
                 type="password"
@@ -94,6 +103,7 @@ function Login() {
                 onChange={(e) => setPw(e.target.value)}
                 className="h-12"
                 autoComplete="current-password"
+                disabled={busy}
               />
             </div>
             {err && (
@@ -101,17 +111,20 @@ function Login() {
                 {err}
               </p>
             )}
-            <label className="flex items-center gap-2 text-sm">
-              <Checkbox defaultChecked /> Remember me
-            </label>
             <Button type="submit" size="lg" className="w-full" disabled={busy} aria-busy={busy}>
-              {busy ? "Logging in…" : "Log in"}
+              {busy ? t("auth.login.loggingIn") : t("auth.login.submit")}
             </Button>
           </form>
+          <p className="mt-6 text-sm text-muted-foreground">
+            {t("auth.login.forgot")}{" "}
+            <Link to="/contact" className="underline underline-offset-4 hover:text-foreground">
+              {t("auth.login.contactLibrary")}
+            </Link>
+          </p>
           <p className="mt-8 text-sm">
-            New to Noholi?{" "}
+            {t("auth.login.newHere")}{" "}
             <Link to="/join" className="underline underline-offset-4 hover:text-accent">
-              Become a member
+              {t("auth.login.becomeMember")}
             </Link>
           </p>
         </div>

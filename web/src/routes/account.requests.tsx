@@ -1,9 +1,23 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { BookCover, Empty, fmtDate, StatusBadge } from "@/components/noholi";
-import { DetailsLink } from "@/components/record-view";
-import { getBook } from "@/lib/data";
+import { Empty } from "@/components/noholi";
+import {
+  BookThumb,
+  DetailsLink,
+  ErrorState,
+  ListSkeleton,
+  ToneBadge,
+} from "@/components/record-view";
+import {
+  bookAuthorOf,
+  bookTitleOf,
+  myRequests,
+  requestStatusView,
+  useFmt,
+  useLoad,
+} from "@/lib/lending";
+import { useAuth } from "@/lib/auth";
 import { useApp } from "@/lib/store";
 import { cn } from "@/lib/utils";
 
@@ -21,29 +35,25 @@ export const Route = createFileRoute("/account/requests")({
   component: Requests,
 });
 
-const filters = ["Open", "All", "Past"] as const;
-const open = ["Pending Review", "Approved", "Ready for Pickup"];
-const hint: Record<string, string> = {
-  "Ready for Pickup": "Approved — collect from the front desk with your NID",
-  "Pending Review": "Usually 1–2 working days",
-  Approved: "Approved — not issued yet",
-};
+const filters = ["open", "all", "past"] as const;
 
 function Requests() {
-  const { borrowRequests } = useApp();
-  const [f, setF] = useState<(typeof filters)[number]>("Open");
-  const list = borrowRequests.filter(
-    (r) => f === "All" || (f === "Open" ? open.includes(r.status) : !open.includes(r.status)),
+  const { t, lang } = useApp();
+  const { ready } = useAuth();
+  const fmt = useFmt();
+  const [f, setF] = useState<(typeof filters)[number]>("open");
+  const { data, error, loading, reload } = useLoad(myRequests, [], ready);
+
+  const list = (data ?? []).filter(
+    (r) => f === "all" || (f === "open" ? r.status === "Pending" : r.status !== "Pending"),
   );
+
   return (
     <>
       <div className="mb-8 grid gap-3 sm:grid-cols-[minmax(0,1fr)_auto] sm:items-end">
         <div>
-          <h1 className="text-4xl">Borrow requests</h1>
-          <p className="mt-2 text-sm text-muted-foreground">
-            Borrowing is free. Each request is checked by the librarian; once the book is handed
-            over, it becomes a loan under Borrowed Books.
-          </p>
+          <h1 className="text-4xl">{t("lending.req.title")}</h1>
+          <p className="mt-2 max-w-2xl text-sm text-muted-foreground">{t("lending.req.intro")}</p>
         </div>
         <div className="flex gap-2">
           {filters.map((x) => (
@@ -56,62 +66,88 @@ function Requests() {
                 f === x ? "border-foreground bg-foreground text-background" : "border-border",
               )}
             >
-              {x}
+              {t(
+                x === "open"
+                  ? "lending.req.filterOpen"
+                  : x === "all"
+                    ? "lending.req.filterAll"
+                    : "lending.req.filterPast",
+              )}
             </button>
           ))}
         </div>
       </div>
-      {list.length === 0 ? (
+      {loading ? (
+        <ListSkeleton />
+      ) : error ? (
+        <ErrorState
+          title={t("lending.loadError")}
+          message={error}
+          retryLabel={t("lending.retry")}
+          onRetry={reload}
+        />
+      ) : list.length === 0 ? (
         <Empty
-          title="No borrow requests here."
-          body="Find a book on the shelves and choose Borrow to send a request."
+          title={t("lending.req.emptyTitle")}
+          body={t("lending.req.emptyBody")}
           action={
             <Button asChild>
-              <Link to="/library/books">Browse books</Link>
+              <Link to="/library/books">{t("lending.browseBooks")}</Link>
             </Button>
           }
         />
       ) : (
         <ul className="divide-y divide-border border-y border-border">
-          <li className="hidden grid-cols-[56px_minmax(0,1fr)_120px_120px_170px_100px] gap-5 py-3 text-xs text-muted-foreground md:grid">
+          <li className="hidden grid-cols-[56px_minmax(0,1fr)_120px_120px_190px_100px] gap-5 py-3 text-xs text-muted-foreground md:grid">
             <span />
-            <span>Book</span>
-            <span>Submitted</span>
-            <span>Last updated</span>
-            <span>Status</span>
+            <span>{t("lending.req.colBook")}</span>
+            <span>{t("lending.req.colSubmitted")}</span>
+            <span>{t("lending.req.colPickup")}</span>
+            <span>{t("lending.req.colStatus")}</span>
             <span />
           </li>
           {list.map((r) => {
-            const b = getBook(r.bookId)!;
+            const sv = requestStatusView(r.status);
+            const title = bookTitleOf(r.book, lang, r.book_title);
             return (
               <li
                 key={r.id}
-                className="grid grid-cols-[56px_minmax(0,1fr)] gap-x-5 gap-y-1.5 py-5 md:grid-cols-[56px_minmax(0,1fr)_120px_120px_170px_100px] md:items-center"
+                className="grid grid-cols-[56px_minmax(0,1fr)] gap-x-5 gap-y-1.5 py-5 md:grid-cols-[56px_minmax(0,1fr)_120px_120px_190px_100px] md:items-center"
               >
-                <BookCover book={b} size="sm" />
+                <BookThumb book={r.book} fallbackTitle={r.book_title} size="sm" />
                 <div className="min-w-0">
-                  <div className="truncate font-display text-xl">{b.titleEn}</div>
-                  <div className="truncate text-sm text-muted-foreground">
-                    {b.authorEn} · {r.copy}
+                  <div className="break-words font-display text-xl leading-snug">{title}</div>
+                  <div className="break-words text-sm text-muted-foreground">
+                    {bookAuthorOf(r.book, lang)}
                   </div>
                   <div className="mt-1 font-mono text-xs text-muted-foreground">{r.id}</div>
                 </div>
                 <span className="col-start-2 text-sm md:col-start-auto">
-                  <span className="text-muted-foreground md:hidden">Submitted </span>
-                  {fmtDate(r.submitted)}
+                  <span className="text-muted-foreground md:hidden">
+                    {t("lending.req.submitted")}
+                  </span>
+                  {fmt.date(r.created_at)}
                 </span>
                 <span className="col-start-2 text-sm md:col-start-auto">
-                  <span className="text-muted-foreground md:hidden">Updated </span>
-                  {fmtDate(r.updated)}
+                  <span className="text-muted-foreground md:hidden">{t("lending.req.pickup")}</span>
+                  {fmt.date(r.pickup_date)}
                 </span>
-                <div className="col-start-2 md:col-start-auto">
-                  <StatusBadge status={r.status} />
-                  <div className="mt-1 text-xs text-muted-foreground">
-                    {r.loanId ? `Loan ${r.loanId}` : (hint[r.status] ?? "")}
+                <div className="col-start-2 min-w-0 md:col-start-auto">
+                  <ToneBadge label={t(sv.key)} tone={sv.tone} />
+                  <div className="mt-1 break-words text-xs text-muted-foreground">
+                    {r.status === "Pending"
+                      ? t("lending.req.collectBy", { date: fmt.date(r.expires_at) })
+                      : r.status === "Issued" && r.loan_id
+                        ? t("lending.req.loanRef", { id: r.loan_id })
+                        : r.reason
+                          ? t("lending.req.reasonLine", { reason: r.reason })
+                          : ""}
                   </div>
                 </div>
                 <div className="col-start-2 md:col-start-auto md:text-right">
-                  <DetailsLink to="/account/requests/$id" params={{ id: r.id }} />
+                  <DetailsLink to="/account/requests/$id" params={{ id: r.id }}>
+                    {t("lending.viewDetails")}
+                  </DetailsLink>
                 </div>
               </li>
             );

@@ -1,6 +1,14 @@
-import { createFileRoute, Link, Outlet } from "@tanstack/react-router";
+import {
+  createFileRoute,
+  Link,
+  Navigate,
+  Outlet,
+  useLocation,
+  useNavigate,
+} from "@tanstack/react-router";
 import { Button } from "@/components/ui/button";
 import { MemberAvatar } from "@/components/noholi";
+import { MemberLoadState, MemberStatus } from "@/components/member-ui";
 import { useApp } from "@/lib/store";
 import { useAuth } from "@/lib/auth";
 
@@ -23,51 +31,62 @@ export const Route = createFileRoute("/account")({
   component: AccountLayout,
 });
 
+// `soon` marks sections with no backend this round: the link stays, the page shows a coming-soon state.
 const tabs = [
-  ["/account", "Dashboard"],
-  ["/account/borrowed", "Borrowed"],
-  ["/account/requests", "Borrow requests"],
-  ["/account/fines", "Overdue & Fines"],
-  ["/account/wishlist", "Wishlist"],
-  ["/account/recommendations", "Recommendations"],
-  ["/account/contributions", "Contributions"],
-  ["/account/reviews", "Book Reviews"],
-  ["/account/profile", "Profile"],
-  ["/account/settings", "Settings"],
+  { to: "/account", k: "auth.nav.dashboard" },
+  { to: "/account/borrowed", k: "auth.nav.borrowed" },
+  { to: "/account/requests", k: "auth.nav.requests" },
+  { to: "/account/fines", k: "auth.nav.fines" },
+  { to: "/account/wishlist", k: "auth.nav.wishlist", soon: true },
+  { to: "/account/recommendations", k: "auth.nav.recommendations", soon: true },
+  { to: "/account/contributions", k: "auth.nav.contributions", soon: true },
+  { to: "/account/reviews", k: "auth.nav.reviews", soon: true },
+  { to: "/account/profile", k: "auth.nav.profile" },
+  { to: "/account/settings", k: "auth.nav.settings" },
 ] as const;
 
+const PASSWORD_PATH = "/account/password";
+
 function AccountLayout() {
-  const { loggedIn } = useApp();
-  const { ready, member, memberError } = useAuth();
+  const { t, logout } = useApp();
+  const { ready, session, member, mustChangePassword } = useAuth();
+  const { pathname } = useLocation();
+  const nav = useNavigate();
+
   // Wait for the stored session to be checked before deciding (no flash of the "members only" screen).
-  if (!ready)
-    return (
-      <div
-        className="container-page max-w-lg py-32 text-center text-sm text-muted-foreground"
-        role="status"
-      >
-        Loading your account…
-      </div>
-    );
-  if (!loggedIn) {
+  if (!ready) return <MemberLoadState loadingLabel={t("auth.loadingAccount")} />;
+  if (!session) {
     return (
       <div className="container-page max-w-lg py-32 text-center">
-        <div className="eyebrow mb-4">Members only</div>
-        <h1 className="text-5xl">Become a Noholi member</h1>
-        <p className="mt-3 text-muted-foreground">
-          Your profile, dashboard, borrowing and contributions live here. Membership is free.
-        </p>
+        <div className="eyebrow mb-4">{t("auth.membersOnly")}</div>
+        <h1 className="text-5xl">{t("auth.membersOnlyTitle")}</h1>
+        <p className="mt-3 text-muted-foreground">{t("auth.membersOnlyBody")}</p>
         <div className="mt-8 flex justify-center gap-3">
           <Button asChild>
-            <Link to="/login">Log In</Link>
+            <Link to="/login" search={{ redirect: pathname }}>
+              {t("login")}
+            </Link>
           </Button>
           <Button variant="accent" asChild>
-            <Link to="/join">Become a Member</Link>
+            <Link to="/join">{t("become")}</Link>
           </Button>
         </div>
       </div>
     );
   }
+  // A real session, but the member row is still loading or failed to load (never show fake data).
+  if (!member) {
+    return (
+      <div className="container-page">
+        <MemberLoadState />
+      </div>
+    );
+  }
+
+  // Temporary password from the desk: nothing else in /account opens until it is replaced.
+  const held = mustChangePassword;
+  if (held && pathname !== PASSWORD_PATH) return <Navigate to={PASSWORD_PATH} replace />;
+
   return (
     <>
       <div className="border-b border-border">
@@ -75,36 +94,49 @@ function AccountLayout() {
           <div className="flex min-w-0 items-center gap-4 pb-6">
             <MemberAvatar className="h-14 w-14" textClass="text-2xl" />
             <div className="min-w-0">
-              <div className="truncate font-display text-2xl">{member?.name ?? "Your account"}</div>
+              <div className="truncate font-display text-2xl">{member.name}</div>
               <div className="text-sm text-muted-foreground">
-                {member ? (
-                  <>
-                    {member.id} ·{" "}
-                    {member.status === "Active" ? (
-                      <span className="text-success">● Active Patron</span>
-                    ) : (
-                      <span className="text-warning">● {member.status}</span>
-                    )}
-                  </>
-                ) : (
-                  (memberError ?? "")
-                )}
+                {member.id} · <MemberStatus status={member.status} />
               </div>
             </div>
           </div>
+          {held && (
+            <div className="pb-6">
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => {
+                  logout();
+                  nav({ to: "/" });
+                }}
+              >
+                {t("logout")}
+              </Button>
+            </div>
+          )}
         </div>
-        <nav className="container-page flex gap-6 overflow-x-auto" aria-label="Account">
-          {tabs.map(([to, l]) => (
-            <Link
-              key={to}
-              to={to}
-              activeOptions={{ exact: true }}
-              className="-mb-px whitespace-nowrap border-b-2 border-transparent pb-3 text-sm text-muted-foreground hover:text-foreground data-[status=active]:border-foreground data-[status=active]:text-foreground"
-            >
-              {l}
-            </Link>
-          ))}
-        </nav>
+        {!held && (
+          <nav
+            className="container-page flex gap-5 overflow-x-auto [scrollbar-width:thin]"
+            aria-label={t("auth.nav.label")}
+          >
+            {tabs.map((tab) => (
+              <Link
+                key={tab.to}
+                to={tab.to}
+                activeOptions={{ exact: true }}
+                className="-mb-px inline-flex items-center gap-1.5 whitespace-nowrap border-b-2 border-transparent pb-3 text-sm text-muted-foreground hover:text-foreground data-[status=active]:border-foreground data-[status=active]:text-foreground"
+              >
+                {t(tab.k)}
+                {"soon" in tab && (
+                  <span className="rounded-sm border border-border px-1 py-px text-[0.625rem] font-medium uppercase leading-none tracking-wide text-muted-foreground">
+                    {t("auth.soon")}
+                  </span>
+                )}
+              </Link>
+            ))}
+          </nav>
+        )}
       </div>
       <div className="container-page py-12">
         <Outlet />

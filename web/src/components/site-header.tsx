@@ -1,18 +1,5 @@
 import { Link, useNavigate } from "@tanstack/react-router";
-import {
-  ChevronDown,
-  Facebook,
-  Instagram,
-  Mail,
-  MapPin,
-  Menu,
-  Moon,
-  Phone,
-  Search,
-  Sun,
-  User,
-  Youtube,
-} from "lucide-react";
+import { ChevronDown, Mail, MapPin, Menu, Moon, Phone, Search, Sun, User } from "lucide-react";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import {
@@ -26,8 +13,10 @@ import { Sheet, SheetContent, SheetTitle, SheetTrigger } from "@/components/ui/s
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import { Logo, MemberAvatar } from "@/components/noholi";
 import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
+import { MemberStatus } from "@/components/member-ui";
 import { SearchBox } from "@/components/search-box";
-import { library, user } from "@/lib/data";
+import { library } from "@/lib/data";
+import { useAuth } from "@/lib/auth";
 import { useApp } from "@/lib/store";
 import { cn } from "@/lib/utils";
 
@@ -148,19 +137,30 @@ function GlobalSearch() {
   );
 }
 
+/** Small "Soon" tag for account sections that have no backend yet. */
+function SoonTag({ className }: { className?: string }) {
+  const { t } = useApp();
+  return (
+    <span
+      className={cn(
+        "rounded-sm border border-border px-1 py-px text-[0.625rem] font-medium uppercase leading-none tracking-wide text-muted-foreground",
+        className,
+      )}
+    >
+      {t("auth.soon")}
+    </span>
+  );
+}
+
 function WishlistMenu() {
-  const { t, wishlist } = useApp();
+  const { t } = useApp();
   return (
     <DropdownMenu modal={false}>
       <DropdownMenuTrigger
-        className={cn(navCls, "inline-flex items-center gap-1 px-2 outline-none")}
+        className={cn(navCls, "inline-flex items-center gap-1.5 px-2 outline-none")}
       >
         {t("wishlist")}
-        {wishlist.length > 0 && (
-          <span className="text-xs font-normal tabular-nums text-muted-foreground">
-            ({wishlist.length})
-          </span>
-        )}{" "}
+        <SoonTag />
         <ChevronDown className="h-3.5 w-3.5 opacity-60" />
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="w-52 rounded-sm p-1.5">
@@ -187,99 +187,130 @@ const groupCls =
   "px-3 pb-1 pt-2 text-[0.7rem] font-semibold uppercase tracking-[0.14em] text-muted-foreground";
 
 function AccountMenu() {
-  const { t, logout, lang } = useApp();
+  const { t, logout } = useApp();
+  const { member, mustChangePassword } = useAuth();
   const nav = useNavigate();
+  const name = member?.name ?? t("auth.yourAccount");
   return (
     <DropdownMenu modal={false}>
-      <DropdownMenuTrigger className="inline-flex items-center gap-2 rounded-full border border-border py-1 pl-1 pr-3 text-sm outline-none hover:border-foreground/40">
+      <DropdownMenuTrigger
+        aria-label={t("auth.menu.account.aria")}
+        className="inline-flex items-center gap-2 rounded-full border border-border py-1 pl-1 pr-3 text-sm outline-none hover:border-foreground/40"
+      >
         <MemberAvatar className="h-7 w-7" textClass="text-sm" />
-        <span className="max-w-[10rem] truncate font-semibold">
-          {lang === "bn" ? user.nameBn : user.name}
-        </span>
+        <span className="max-w-[7rem] truncate font-semibold xl:max-w-[10rem]">{name}</span>
         <ChevronDown className="h-3.5 w-3.5 opacity-60" />
       </DropdownMenuTrigger>
       <DropdownMenuContent
         align="end"
         className="max-h-[calc(100vh-6rem)] w-72 overflow-y-auto rounded-sm p-0"
       >
-        <div className="flex items-center gap-3 px-4 py-4" aria-label="Patron details">
-          <MemberAvatar className="h-11 w-11" textClass="text-lg" />
+        <div
+          className="flex items-center gap-3 px-4 py-4"
+          role="group"
+          aria-label={t("auth.menu.patronDetails")}
+        >
+          <MemberAvatar className="h-11 w-11 shrink-0" textClass="text-lg" />
           <div className="min-w-0">
-            <div className="truncate font-display text-lg leading-tight">
-              {lang === "bn" ? user.nameBn : user.name}
-            </div>
-            <div className="mt-0.5 text-xs text-muted-foreground">
-              {t("memberId")}: {user.memberId}
-            </div>
-            <div className="mt-1 inline-flex items-center gap-1.5 text-xs font-medium text-success">
-              <span className="h-1.5 w-1.5 rounded-full bg-success" />
-              {t("activePatron")}
-            </div>
+            <div className="truncate font-display text-lg leading-tight">{name}</div>
+            {member && (
+              <>
+                <div className="mt-0.5 truncate text-xs text-muted-foreground">
+                  {t("memberId")}: {member.id}
+                </div>
+                <div className="mt-1 text-xs font-medium">
+                  <MemberStatus status={member.status} />
+                </div>
+              </>
+            )}
           </div>
         </div>
         <DropdownMenuSeparator className="my-0" />
-        <div className="p-1.5">
-          <DropdownMenuItem asChild className={cn(itemCls, "font-medium")}>
-            <Link to="/account">My Dashboard</Link>
-          </DropdownMenuItem>
-        </div>
-        <DropdownMenuSeparator className="my-0" />
-        <div className="p-1.5">
-          <div className={groupCls}>My Library</div>
-          <DropdownMenuItem asChild className={subCls}>
-            <Link to="/account/borrowed">Borrowed Books</Link>
-          </DropdownMenuItem>
-          <DropdownMenuItem asChild className={subCls}>
-            <Link to="/account/requests">Borrow Requests</Link>
-          </DropdownMenuItem>
-          <DropdownMenuItem asChild className={subCls}>
-            <Link to="/account/fines">Overdue &amp; Fines</Link>
-          </DropdownMenuItem>
-          <div className={cn(groupCls, "mt-1")}>My Collection</div>
-          <DropdownMenuItem asChild className={subCls}>
-            <Link to="/account/wishlist">Wishlist</Link>
-          </DropdownMenuItem>
-          <DropdownMenuItem asChild className={subCls}>
-            <Link to="/account/recommendations">My Recommendations</Link>
-          </DropdownMenuItem>
-          <div className={cn(groupCls, "mt-1")}>
-            <Link to="/account/contributions" className="hover:text-foreground">
-              My Contributions
-            </Link>
+        {mustChangePassword ? (
+          <div className="p-1.5">
+            <DropdownMenuItem asChild className={cn(itemCls, "font-medium")}>
+              <Link to="/account/password">{t("auth.nav.password")}</Link>
+            </DropdownMenuItem>
           </div>
-          <DropdownMenuItem asChild className={subCls}>
-            <Link to="/account/contributions" search={{ f: "Blogs" }}>
-              Blogs
-            </Link>
-          </DropdownMenuItem>
-          <DropdownMenuItem asChild className={subCls}>
-            <Link to="/account/contributions" search={{ f: "Creative Writings" }}>
-              Creative Writing
-            </Link>
-          </DropdownMenuItem>
-          <DropdownMenuItem asChild className={subCls}>
-            <Link to="/account/reviews">Book Reviews</Link>
-          </DropdownMenuItem>
-        </div>
-        <DropdownMenuSeparator className="my-0" />
-        <div className="p-1.5">
-          <DropdownMenuItem
-            asChild
-            className={cn(itemCls, "font-semibold text-accent focus:text-accent")}
-          >
-            <Link to="/account/recommend">Recommend a Book</Link>
-          </DropdownMenuItem>
-        </div>
-        <DropdownMenuSeparator className="my-0" />
-        <div className="p-1.5">
-          <div className={groupCls}>My Account</div>
-          <DropdownMenuItem asChild className={subCls}>
-            <Link to="/account/profile">My Profile</Link>
-          </DropdownMenuItem>
-          <DropdownMenuItem asChild className={subCls}>
-            <Link to="/account/settings">Account Settings</Link>
-          </DropdownMenuItem>
-        </div>
+        ) : (
+          <>
+            <div className="p-1.5">
+              <DropdownMenuItem asChild className={cn(itemCls, "font-medium")}>
+                <Link to="/account">{t("auth.menu.dashboard")}</Link>
+              </DropdownMenuItem>
+            </div>
+            <DropdownMenuSeparator className="my-0" />
+            <div className="p-1.5">
+              <div className={groupCls}>{t("auth.menu.library")}</div>
+              <DropdownMenuItem asChild className={subCls}>
+                <Link to="/account/borrowed">{t("auth.menu.borrowed")}</Link>
+              </DropdownMenuItem>
+              <DropdownMenuItem asChild className={subCls}>
+                <Link to="/account/requests">{t("auth.menu.requests")}</Link>
+              </DropdownMenuItem>
+              <DropdownMenuItem asChild className={subCls}>
+                <Link to="/account/fines">{t("auth.menu.fines")}</Link>
+              </DropdownMenuItem>
+              <div className={cn(groupCls, "mt-1")}>{t("auth.menu.collection")}</div>
+              <DropdownMenuItem asChild className={subCls}>
+                <Link to="/account/wishlist" className="flex items-center gap-2">
+                  {t("wishlist")}
+                  <SoonTag />
+                </Link>
+              </DropdownMenuItem>
+              <DropdownMenuItem asChild className={subCls}>
+                <Link to="/account/recommendations" className="flex items-center gap-2">
+                  {t("auth.menu.recommendations")}
+                  <SoonTag />
+                </Link>
+              </DropdownMenuItem>
+              <div className={cn(groupCls, "mt-1 flex items-center gap-2")}>
+                <Link to="/account/contributions" className="hover:text-foreground">
+                  {t("auth.menu.contributions")}
+                </Link>
+                <SoonTag />
+              </div>
+              <DropdownMenuItem asChild className={subCls}>
+                <Link to="/account/contributions" search={{ f: "Blogs" }}>
+                  {t("auth.menu.blogs")}
+                </Link>
+              </DropdownMenuItem>
+              <DropdownMenuItem asChild className={subCls}>
+                <Link to="/account/contributions" search={{ f: "Creative Writings" }}>
+                  {t("auth.menu.creative")}
+                </Link>
+              </DropdownMenuItem>
+              <DropdownMenuItem asChild className={subCls}>
+                <Link to="/account/reviews" className="flex items-center gap-2">
+                  {t("auth.menu.reviews")}
+                  <SoonTag />
+                </Link>
+              </DropdownMenuItem>
+            </div>
+            <DropdownMenuSeparator className="my-0" />
+            <div className="p-1.5">
+              <DropdownMenuItem
+                asChild
+                className={cn(itemCls, "font-semibold text-accent focus:text-accent")}
+              >
+                <Link to="/account/recommend" className="flex items-center gap-2">
+                  {t("auth.menu.recommend")}
+                  <SoonTag />
+                </Link>
+              </DropdownMenuItem>
+            </div>
+            <DropdownMenuSeparator className="my-0" />
+            <div className="p-1.5">
+              <div className={groupCls}>{t("auth.menu.account")}</div>
+              <DropdownMenuItem asChild className={subCls}>
+                <Link to="/account/profile">{t("auth.menu.profile")}</Link>
+              </DropdownMenuItem>
+              <DropdownMenuItem asChild className={subCls}>
+                <Link to="/account/settings">{t("auth.menu.settings")}</Link>
+              </DropdownMenuItem>
+            </div>
+          </>
+        )}
         <DropdownMenuSeparator className="my-0" />
         <div className="p-1.5">
           <DropdownMenuItem
@@ -298,7 +329,8 @@ function AccountMenu() {
 }
 
 function MobileNav() {
-  const { t, loggedIn, logout, lang } = useApp();
+  const { t, loggedIn, logout } = useApp();
+  const { member, mustChangePassword } = useAuth();
   const [open, setOpen] = useState(false);
   const close = () => setOpen(false);
   const Group = ({
@@ -344,56 +376,84 @@ function MobileNav() {
         </div>
         {loggedIn && (
           <div className="border-b border-border px-6 py-5">
-            <div className="font-display text-xl">{lang === "bn" ? user.nameBn : user.name}</div>
-            <div className="text-xs text-muted-foreground">
-              {user.memberId} · <span className="text-success">● {t("activePatron")}</span>
+            <div className="break-words font-display text-xl">
+              {member?.name ?? t("auth.yourAccount")}
             </div>
+            {member && (
+              <div className="text-xs text-muted-foreground">
+                {member.id} · <MemberStatus status={member.status} />
+              </div>
+            )}
             <div className="mt-3 flex flex-wrap gap-x-4 gap-y-2 text-sm">
-              <Link to="/account" onClick={close} className="underline underline-offset-4">
-                {t("dashboard")}
-              </Link>
-              <Link to="/account/wishlist" onClick={close} className="underline underline-offset-4">
-                {t("wishlist")}
-              </Link>
-              <Link to="/account/profile" onClick={close} className="underline underline-offset-4">
-                {t("profile")}
-              </Link>
-              <Link to="/account/settings" onClick={close} className="underline underline-offset-4">
-                {t("settings")}
-              </Link>
-              <Link to="/account/requests" onClick={close} className="underline underline-offset-4">
-                Borrow requests
-              </Link>
-              <Link to="/account/borrowed" onClick={close} className="underline underline-offset-4">
-                Borrowed books
-              </Link>
-              <Link to="/account/fines" onClick={close} className="underline underline-offset-4">
-                Overdue &amp; fines
-              </Link>
-              <Link
-                to="/account/recommendations"
-                onClick={close}
-                className="underline underline-offset-4"
-              >
-                My recommendations
-              </Link>
-              <Link
-                to="/account/contributions"
-                onClick={close}
-                className="underline underline-offset-4"
-              >
-                My contributions
-              </Link>
-              <Link to="/account/reviews" onClick={close} className="underline underline-offset-4">
-                My book reviews
-              </Link>
-              <Link
-                to="/account/recommend"
-                onClick={close}
-                className="underline underline-offset-4"
-              >
-                Recommend a Book
-              </Link>
+              {mustChangePassword ? (
+                <Link
+                  to="/account/password"
+                  onClick={close}
+                  className="underline underline-offset-4"
+                >
+                  {t("auth.nav.password")}
+                </Link>
+              ) : (
+                <>
+                  <Link to="/account" onClick={close} className="underline underline-offset-4">
+                    {t("dashboard")}
+                  </Link>
+                  <Link
+                    to="/account/requests"
+                    onClick={close}
+                    className="underline underline-offset-4"
+                  >
+                    {t("auth.nav.requests")}
+                  </Link>
+                  <Link
+                    to="/account/borrowed"
+                    onClick={close}
+                    className="underline underline-offset-4"
+                  >
+                    {t("auth.menu.borrowed")}
+                  </Link>
+                  <Link
+                    to="/account/fines"
+                    onClick={close}
+                    className="underline underline-offset-4"
+                  >
+                    {t("auth.menu.fines")}
+                  </Link>
+                  <Link
+                    to="/account/profile"
+                    onClick={close}
+                    className="underline underline-offset-4"
+                  >
+                    {t("profile")}
+                  </Link>
+                  <Link
+                    to="/account/settings"
+                    onClick={close}
+                    className="underline underline-offset-4"
+                  >
+                    {t("settings")}
+                  </Link>
+                  {(
+                    [
+                      ["/account/wishlist", t("wishlist")],
+                      ["/account/recommendations", t("auth.menu.recommendations")],
+                      ["/account/contributions", t("auth.menu.contributions")],
+                      ["/account/reviews", t("auth.menu.reviews")],
+                      ["/account/recommend", t("auth.menu.recommend")],
+                    ] as const
+                  ).map(([to, label]) => (
+                    <Link
+                      key={to}
+                      to={to}
+                      onClick={close}
+                      className="inline-flex items-center gap-1.5 underline underline-offset-4"
+                    >
+                      {label}
+                      <SoonTag />
+                    </Link>
+                  ))}
+                </>
+              )}
             </div>
           </div>
         )}
@@ -457,9 +517,9 @@ export function SiteHeader() {
   const { t, loggedIn } = useApp();
   return (
     <header className="sticky top-0 z-40 border-b border-border bg-background/92 backdrop-blur">
-      <div className="bg-foreground text-background">
-        <div className="container-page flex h-9 items-center justify-between gap-4 text-xs">
-          <div className="flex min-w-0 items-center gap-5">
+      {library.confirmed && (
+        <div className="bg-foreground text-background">
+          <div className="container-page flex h-9 items-center gap-5 text-xs">
             <a
               href={library.mapsUrl}
               target="_blank"
@@ -477,26 +537,15 @@ export function SiteHeader() {
               {library.phoneDisplay}
             </a>
             <a
-              href="mailto:hello@noholi.org"
+              href={`mailto:${library.email}`}
               className="hidden items-center gap-1.5 hover:opacity-80 sm:inline-flex"
             >
               <Mail className="h-3.5 w-3.5 opacity-70" />
-              hello@noholi.org
-            </a>
-          </div>
-          <div className="flex items-center gap-3.5">
-            <a href="#" aria-label="Facebook" className="hover:opacity-80">
-              <Facebook className="h-3.5 w-3.5" />
-            </a>
-            <a href="#" aria-label="Instagram" className="hover:opacity-80">
-              <Instagram className="h-3.5 w-3.5" />
-            </a>
-            <a href="#" aria-label="YouTube" className="hover:opacity-80">
-              <Youtube className="h-3.5 w-3.5" />
+              {library.email}
             </a>
           </div>
         </div>
-      </div>
+      )}
       <div className="container-page flex h-16 items-center gap-4 md:h-[72px]">
         <Link to="/" aria-label="Noholi home" className="shrink-0">
           <Logo />
@@ -528,7 +577,7 @@ export function SiteHeader() {
           </span>
           {loggedIn ? (
             <>
-              <span className="hidden lg:block">
+              <span className="hidden xl:block">
                 <WishlistMenu />
               </span>
               <span className="hidden lg:block">

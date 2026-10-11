@@ -1,11 +1,11 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useState } from "react";
-import { BookOpen, Check, Headphones, Library } from "lucide-react";
-import { toast } from "sonner";
+import { BookOpen, Headphones, Library } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
+import { ComingSoonBanner, ComingSoonDialog } from "@/components/contribution-list";
 import { Empty, fmtDate, StatusBadge } from "@/components/noholi";
 import { Chips, More, Opt, Req } from "@/components/form-bits";
 import { SearchBox } from "@/components/search-box";
@@ -58,13 +58,13 @@ function Err({ m }: { m?: string | false }) {
 }
 
 function Recommend() {
-  const { recommendations, addRecommendation } = useApp();
+  const { recommendations, t } = useApp();
   const [step, setStep] = useState(0);
   const [format, setFormat] = useState<Format | null>(null);
   const [d, setD] = useState(empty);
   const [cover, setCover] = useState<DocState>(null);
   const [tried, setTried] = useState(false);
-  const [sent, setSent] = useState<string | null>(null);
+  const [soon, setSoon] = useState(false);
   const [held, setHeld] = useState<string | null>(null);
   const set =
     (k: keyof typeof empty) => (x: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) =>
@@ -85,29 +85,8 @@ function Recommend() {
     setTried(false);
     setStep(step + 1);
   };
-  const submit = () => {
-    const id = addRecommendation({
-      format: format!,
-      title: d.title,
-      author: d.author,
-      language: d.language === "English" ? "English" : "Bangla",
-      reason: d.reason,
-      ...(d.publisher ? { publisher: d.publisher } : {}),
-      ...(d.isbn ? { isbn: d.isbn } : {}),
-      ...(d.year ? { year: d.year } : {}),
-      ...(d.edition ? { edition: d.edition } : {}),
-      ...(d.genre ? { genre: d.genre } : {}),
-      ...(d.category ? { category: d.category } : {}),
-      ...(d.narrator ? { narrator: d.narrator } : {}),
-      ...(d.source ? { source: d.source } : {}),
-    });
-    setSent(id);
-    setD(empty);
-    setCover(null);
-    setFormat(null);
-    setStep(0);
-    window.scrollTo(0, 0);
-  };
+  // Coming soon: recommendations have no backend yet, so submit only explains that. Nothing is created.
+  const submit = () => setSoon(true);
   const kind = format === "E-Book" ? "e-book" : format === "Audio Book" ? "audio book" : "book";
 
   return (
@@ -120,27 +99,7 @@ function Recommend() {
           who uses Noholi.
         </p>
 
-        {sent && (
-          <div
-            className="mt-8 grid grid-cols-[32px_minmax(0,1fr)] gap-3 border border-foreground p-5"
-            role="status"
-          >
-            <span className="grid h-8 w-8 place-items-center rounded-full bg-foreground text-background">
-              <Check className="h-4 w-4" />
-            </span>
-            <div>
-              <div className="font-medium">Thank you — recommendation received.</div>
-              <div className="mt-1 flex flex-wrap items-center gap-x-4 text-sm">
-                <span className="font-mono text-muted-foreground">{sent}</span>
-                <StatusBadge status="Submitted" />
-              </div>
-              <div className="mt-1 text-sm text-muted-foreground">
-                The acquisitions team reviews suggestions every month. You'll see updates in the
-                list here.
-              </div>
-            </div>
-          </div>
-        )}
+        <ComingSoonBanner className="mt-8" />
 
         <Stepper steps={steps} current={step} className="mt-10" />
         <div className="mt-10 min-h-[280px] space-y-6">
@@ -359,7 +318,15 @@ function Recommend() {
                     </div>
                   )}
                   <div className="max-w-[200px]">
-                    <IdentityUpload kind="photo" label="Cover" value={cover} onChange={setCover} />
+                    <fieldset disabled aria-label={t("forms.soon.upload")} className="opacity-60">
+                      <IdentityUpload
+                        kind="photo"
+                        label="Cover"
+                        value={cover}
+                        onChange={setCover}
+                      />
+                      <p className="mt-2 text-xs text-muted-foreground">{t("forms.soon.upload")}</p>
+                    </fieldset>
                   </div>
                 </div>
               </More>
@@ -398,8 +365,7 @@ function Recommend() {
                 <p className="whitespace-pre-line">{d.reason}</p>
               </SummaryBlock>
               <p className="border-t border-border pt-5 text-sm text-muted-foreground">
-                You'll get a recommendation ID with the status{" "}
-                <strong className="text-foreground">Submitted</strong>.
+                Submitting recommendations is coming soon — nothing is sent from here yet.
               </p>
             </>
           )}
@@ -422,14 +388,7 @@ function Recommend() {
           </Button>
           <div className="ml-auto flex gap-3">
             {step >= 1 && (
-              <Button
-                variant="outline"
-                onClick={() =>
-                  toast("Draft saved", {
-                    description: "Your recommendation is kept for this session.",
-                  })
-                }
-              >
+              <Button variant="outline" onClick={() => setSoon(true)}>
                 Save draft
               </Button>
             )}
@@ -449,10 +408,7 @@ function Recommend() {
         <h2 className="rule-top pt-5 text-2xl">Your recommendations</h2>
         {recommendations.length === 0 ? (
           <div className="mt-6">
-            <Empty
-              title="You haven't recommended a book yet."
-              body="Your suggestions will appear here with their status."
-            />
+            <Empty title={t("forms.soon.list")} body={t("forms.soon.listBody")} />
           </div>
         ) : (
           <ul className="mt-2 divide-y divide-border">
@@ -484,10 +440,8 @@ function Recommend() {
             ))}
           </ul>
         )}
-        <p className="mt-6 text-xs text-muted-foreground">
-          Statuses: Submitted → Under Review → Considering → Acquired or Not Planned.
-        </p>
       </aside>
+      <ComingSoonDialog open={soon} onOpenChange={setSoon} />
     </div>
   );
 }

@@ -1,13 +1,47 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { ArrowRight, BookOpen, Headphones, Library, Play, Tablet } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { BookCard, BookCover, Cover, fmtDate, SectionHead } from "@/components/noholi";
+import { BookCover, Cover, fmtDate, SectionHead } from "@/components/noholi";
+import { LiveBookCard, LiveCover } from "@/components/catalog-bits";
+// `books` is used only to resolve the sample book-review write-up's own book; the shelves below are live.
 import { articles, audiobooks, books, fmtDuration, images } from "@/lib/data";
+import {
+  displayAuthor,
+  displayTitle,
+  fmtNum,
+  getNoholiBooks,
+  getShelfBooks,
+  hasBengali,
+  searchBooks,
+  type BookRow,
+} from "@/lib/books";
+import { describeError } from "@/lib/supabase";
 import { useApp } from "@/lib/store";
 import { SearchBox } from "@/components/search-box";
 import { reasons } from "@/components/member-gate";
 
+type Shelf = { rows: BookRow[]; error: string | null };
+const settled = async (p: Promise<BookRow[]>): Promise<Shelf> => {
+  try {
+    return { rows: await p, error: null };
+  } catch (err) {
+    return { rows: [], error: describeError(err) };
+  }
+};
+
 export const Route = createFileRoute("/")({
+  // Live shelves: failures come back as error strings, so a failed fetch never looks like an empty shelf.
+  loader: async () => {
+    const [shelf, noholi, total] = await Promise.all([
+      settled(getShelfBooks(10)),
+      settled(getNoholiBooks(5)),
+      searchBooks({ pageSize: 1 }).then(
+        (r) => r.total,
+        () => null,
+      ),
+    ]);
+    return { shelf, noholi, total };
+  },
   head: () => ({
     meta: [
       { title: "Noholi Library — Stories live here" },
@@ -30,10 +64,11 @@ export const Route = createFileRoute("/")({
 
 function Home() {
   const { t, lang, play, loggedIn } = useApp();
-  const featured = books
-    .filter((b) => !b.noholi)
-    .filter((_, i) => [0, 2, 4, 8, 16, 21].includes(i));
-  const noholi = books.filter((b) => b.noholi);
+  const { shelf, noholi: noholiShelf, total } = Route.useLoaderData();
+  const hero = shelf.rows.slice(0, 4);
+  const featured = shelf.rows.slice(4, 10);
+  const spines = shelf.rows.slice(5, 8);
+  const noholi = noholiShelf.rows;
   const blog = articles.filter((a) => a.kind === "blog");
   const creative = articles.find((a) => a.kind === "creative")!;
   const review = articles.find((a) => a.kind === "review")!;
@@ -58,10 +93,7 @@ function Home() {
               {t("heroBody")}
             </p>
             <div className="mt-8 max-w-lg">
-              <SearchBox
-                placeholder="Search a title, author or ISBN…"
-                inputClassName="h-14 border-foreground/30 text-base"
-              />
+              <SearchBox inputClassName="h-14 border-foreground/30 text-base" />
               <div className="mt-4 flex flex-wrap gap-3">
                 <Button size="lg" variant="outline" asChild>
                   <Link to="/library/books">
@@ -82,20 +114,14 @@ function Home() {
                 )}
               </div>
             </div>
-            <dl className="mt-10 grid max-w-lg grid-cols-3 gap-6 border-t border-border pt-5">
-              {[
-                ["12,400+", "Books on the shelf"],
-                ["860", "E-books"],
-                ["140", "Audio books"],
-              ].map(([n, l]) => (
-                <div key={l}>
-                  <dt className="font-display text-3xl">{n}</dt>
-                  <dd className="mt-1 text-xs text-muted-foreground">{l}</dd>
-                </div>
-              ))}
-            </dl>
+            {total !== null && total > 0 && (
+              <dl className="mt-10 max-w-lg border-t border-border pt-5">
+                <dt className="font-display text-3xl">{fmtNum(total, lang)}</dt>
+                <dd className="mt-1 text-xs text-muted-foreground">{t("catalog.homeBooksStat")}</dd>
+              </dl>
+            )}
           </div>
-          <HeroBooks />
+          <HeroBooks books={hero} />
         </div>
       </section>
 
@@ -113,11 +139,17 @@ function Home() {
             </Link>
           }
         />
-        <div className="grid grid-cols-2 gap-x-6 gap-y-12 sm:grid-cols-3 lg:grid-cols-6">
-          {featured.map((b) => (
-            <BookCard key={b.id} book={b} />
-          ))}
-        </div>
+        {shelf.error ? (
+          <p role="alert" className="text-sm text-muted-foreground">
+            {t("catalog.shelfError", { error: shelf.error })}
+          </p>
+        ) : (
+          <div className="grid grid-cols-2 gap-x-6 gap-y-12 sm:grid-cols-3 lg:grid-cols-6">
+            {featured.map((b) => (
+              <LiveBookCard key={b.id} book={b} />
+            ))}
+          </div>
+        )}
       </section>
 
       {/* Explore */}
@@ -141,7 +173,7 @@ function Home() {
                 icon: Library,
                 n: "01",
                 title: t("books"),
-                body: "Twelve thousand volumes in Bangla and English, from Tagore to Tahmima Anam.",
+                body: t("catalog.fourWaysBooks"),
                 tone: 0,
               },
               {
@@ -242,64 +274,64 @@ function Home() {
         </ol>
       </section>
 
-      {/* Noholi books */}
-      <section className="container-page mt-28">
-        <SectionHead
-          eyebrow="Noholi Prokash"
-          title="Published by Noholi"
-          link={
-            <Link
-              to="/library/noholi"
-              className="inline-flex items-center gap-2 text-sm hover:text-accent"
-            >
-              {t("viewAll")} <ArrowRight className="h-4 w-4" />
-            </Link>
-          }
-        />
-        <div className="grid gap-12 lg:grid-cols-12">
-          <Link
-            to="/book/$id"
-            params={{ id: noholi[0].id }}
-            className="group grid gap-8 sm:grid-cols-[220px_minmax(0,1fr)] lg:col-span-7"
-          >
-            <BookCover book={noholi[0]} size="lg" className="w-full max-w-[220px]" />
-            <div>
-              <div className="eyebrow mb-3">New novel · 2024</div>
-              <h3 className="font-bangla text-4xl leading-tight group-hover:text-accent">
-                {noholi[0].titleBn}
-              </h3>
-              <div className="mt-1 font-display text-xl italic text-muted-foreground">
-                {noholi[0].titleEn}
-              </div>
-              <p className="mt-5 leading-relaxed text-muted-foreground">{noholi[0].description}</p>
-              <div className="mt-6 text-sm">
-                {noholi[0].authorEn} · {noholi[0].pages} pages
-              </div>
-            </div>
-          </Link>
-          <ul className="divide-y divide-border border-y border-border lg:col-span-5">
-            {noholi.slice(1).map((b) => (
-              <li key={b.id}>
-                <Link
-                  to="/book/$id"
-                  params={{ id: b.id }}
-                  className="group grid grid-cols-[56px_minmax(0,1fr)] items-center gap-5 py-4"
-                >
-                  <BookCover book={b} size="sm" />
-                  <div className="min-w-0">
-                    <div className="truncate font-display text-xl group-hover:text-accent">
-                      {b.language === "Bangla" ? b.titleBn : b.titleEn}
-                    </div>
-                    <div className="truncate text-sm text-muted-foreground">
-                      {b.authorEn} · {b.genre}
-                    </div>
+      {/* Published by Noholi: real books whose publisher is Noholi; hidden when there are none */}
+      {(noholi.length > 0 || noholiShelf.error) && (
+        <section className="container-page mt-28">
+          <SectionHead eyebrow="Noholi Prokash" title={t("catalog.noholiImprint")} />
+          {noholiShelf.error ? (
+            <p role="alert" className="text-sm text-muted-foreground">
+              {t("catalog.shelfError", { error: noholiShelf.error })}
+            </p>
+          ) : (
+            <div className="grid gap-12 lg:grid-cols-12">
+              <Link
+                to="/book/$id"
+                params={{ id: noholi[0].id }}
+                className="group grid min-w-0 gap-8 sm:grid-cols-[220px_minmax(0,1fr)] lg:col-span-7"
+              >
+                <LiveCover book={noholi[0]} size="lg" className="w-full max-w-[220px]" />
+                <div className="min-w-0">
+                  <div className="eyebrow mb-3 break-words">
+                    {[noholi[0].genre, noholi[0].year_of_publication].filter(Boolean).join(" · ")}
                   </div>
-                </Link>
-              </li>
-            ))}
-          </ul>
-        </div>
-      </section>
+                  <h3
+                    className={`break-words text-4xl leading-tight group-hover:text-accent ${hasBengali(displayTitle(noholi[0], lang)) ? "font-bangla" : "font-display"}`}
+                  >
+                    {displayTitle(noholi[0], lang)}
+                  </h3>
+                  <div className="mt-6 text-sm">
+                    {displayAuthor(noholi[0], lang)}
+                    {noholi[0].pages
+                      ? ` · ${t("catalog.pagesCount", { n: fmtNum(noholi[0].pages, lang) })}`
+                      : ""}
+                  </div>
+                </div>
+              </Link>
+              <ul className="divide-y divide-border border-y border-border lg:col-span-5">
+                {noholi.slice(1).map((b) => (
+                  <li key={b.id}>
+                    <Link
+                      to="/book/$id"
+                      params={{ id: b.id }}
+                      className="group grid grid-cols-[56px_minmax(0,1fr)] items-center gap-5 py-4"
+                    >
+                      <LiveCover book={b} size="sm" />
+                      <div className="min-w-0">
+                        <div className="truncate font-display text-xl group-hover:text-accent">
+                          {displayTitle(b, lang)}
+                        </div>
+                        <div className="truncate text-sm text-muted-foreground">
+                          {[displayAuthor(b, lang), b.genre].filter(Boolean).join(" · ")}
+                        </div>
+                      </div>
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
+        </section>
+      )}
 
       {/* Digital */}
       <section className="container-page mt-28">
@@ -436,7 +468,7 @@ function Home() {
       </section>
 
       {/* Help shape the collection */}
-      <ShapeCollection />
+      <ShapeCollection spines={spines} />
 
       {/* About */}
       <section className="container-page mt-28 grid gap-12 lg:grid-cols-12 lg:items-center">
@@ -479,66 +511,70 @@ function Home() {
   );
 }
 
-/** Leaning shelf of real catalogue covers — the hero's visual anchor. */
-function HeroBooks() {
-  const picks: { id: string; w: string; rot: number; y: number; z: number }[] = [
-    { id: "pather-panchali", w: "w-[34%]", rot: -4, y: 0, z: 3 },
-    { id: "lalsalu", w: "w-[27%]", rot: 2, y: 0, z: 2 },
-    { id: "hajar-bochor", w: "w-[31%]", rot: -1, y: 0, z: 4 },
-    { id: "aranyak", w: "w-[25%]", rot: 7, y: 0, z: 1 },
+/** Leaning shelf of real catalogue covers: the hero's visual anchor. Hidden when there are none. */
+function HeroBooks({ books: list }: { books: BookRow[] }) {
+  const { t, lang } = useApp();
+  if (!list.length) return null;
+  const layout = [
+    { w: "w-[34%]", rot: -4, z: 3 },
+    { w: "w-[27%]", rot: 2, z: 2 },
+    { w: "w-[31%]", rot: -1, z: 4 },
+    { w: "w-[25%]", rot: 7, z: 1 },
   ];
-  const list = picks.map((p) => ({ ...p, b: books.find((x) => x.id === p.id) })).filter((p) => p.b);
+  const lead = list[0];
   return (
     <div
       className="relative lg:col-span-6 lg:pb-14"
       aria-label="A shelf of books from the Noholi catalogue"
     >
       <div className="relative mx-auto flex max-w-[680px] items-end justify-center gap-0 border-b border-foreground/70 px-2 lg:-ml-6 lg:mr-0">
-        {list.map((p, i) => (
+        {list.map((b, i) => (
           <Link
-            key={p.id}
+            key={b.id}
             to="/book/$id"
-            params={{ id: p.id }}
-            className={`group relative ${p.w} ${i ? "-ml-[4%]" : ""}`}
+            params={{ id: b.id }}
+            aria-label={displayTitle(b, lang)}
+            className={`group relative ${layout[i % layout.length].w} ${i ? "-ml-[4%]" : ""}`}
             style={{
-              transform: `rotate(${p.rot}deg) translateY(${p.y}px)`,
+              transform: `rotate(${layout[i % layout.length].rot}deg)`,
               transformOrigin: "bottom center",
-              zIndex: p.z,
+              zIndex: layout[i % layout.length].z,
             }}
           >
-            <BookCover book={p.b!} size="md" />
+            <LiveCover book={b} size="md" eager />
           </Link>
         ))}
       </div>
       <Link
         to="/book/$id"
-        params={{ id: "pather-panchali" }}
-        className="mx-auto mt-3 flex max-w-[680px] items-baseline justify-between gap-4 px-2 lg:-ml-6 lg:mr-0 text-sm hover:text-accent"
+        params={{ id: lead.id }}
+        className="mx-auto mt-3 flex max-w-[680px] items-baseline justify-between gap-4 px-2 text-sm hover:text-accent lg:-ml-6 lg:mr-0"
       >
-        <span>
-          <span className="eyebrow mr-2">Book of the month</span>
-          <span className="font-bangla">পথের পাঁচালী</span>
+        <span className="min-w-0 truncate">
+          <span className="eyebrow mr-2">{t("catalog.fromShelves")}</span>
+          <span className={hasBengali(displayTitle(lead, lang)) ? "font-bangla" : "font-display"}>
+            {displayTitle(lead, lang)}
+          </span>
         </span>
-        <span className="hidden text-muted-foreground sm:inline">Bibhutibhushan →</span>
+        <span className="hidden max-w-[40%] truncate text-muted-foreground sm:inline">
+          {displayAuthor(lead, lang)} →
+        </span>
       </Link>
     </div>
   );
 }
 
 /** Recommend vs. wishlist — two separate member actions, side by side. */
-function ShapeCollection() {
+function ShapeCollection({ spines }: { spines: BookRow[] }) {
   const { requireMember } = useApp();
   const nav = useNavigate();
-  const spines = ["lalsalu", "aranyak", "hajar-bochor"]
-    .map((id) => books.find((b) => b.id === id))
-    .filter(Boolean);
   return (
     <section className="container-page mt-28">
       <div className="grid items-center gap-10 border-y border-border py-14 md:grid-cols-[minmax(0,1fr)_minmax(0,1.3fr)] md:gap-16">
         <div className="mx-auto flex w-full max-w-[300px] items-end justify-center" aria-hidden>
           {spines.map((b, i) => (
             <div
-              key={b!.id}
+              key={b.id}
               className={`w-[38%] ${i ? "-ml-[8%]" : ""}`}
               style={{
                 transform: `rotate(${[-5, 1, 6][i]}deg)`,
@@ -546,7 +582,7 @@ function ShapeCollection() {
                 zIndex: [1, 3, 2][i],
               }}
             >
-              <BookCover book={b!} size="md" />
+              <LiveCover book={b} size="md" />
             </div>
           ))}
         </div>

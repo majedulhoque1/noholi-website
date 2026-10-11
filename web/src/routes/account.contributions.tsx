@@ -2,6 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { z } from "zod";
 import { Button } from "@/components/ui/button";
 import {
+  ComingSoonBanner,
   ContributionRows,
   FilterPills,
   matchStatus,
@@ -79,6 +80,7 @@ function Contributions() {
           </Button>
         </div>
       </div>
+      <ComingSoonBanner className="mt-6" />
       <div className="mt-10 space-y-3 border-b border-border pb-5">
         <FilterPills
           label="Type"

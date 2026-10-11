@@ -12,15 +12,29 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AboutRouteImport } from './routes/about'
 import { Route as AccountRouteImport } from './routes/account'
+import { Route as AudioBooksRouteImport } from './routes/audio-books'
+import { Route as BecomeAMemberRouteImport } from './routes/become-a-member'
+import { Route as BlogsRouteImport } from './routes/blogs'
+import { Route as BookReviewsRouteImport } from './routes/book-reviews'
+import { Route as CatalogRouteImport } from './routes/catalog'
 import { Route as ContactRouteImport } from './routes/contact'
+import { Route as CreativeWritingsRouteImport } from './routes/creative-writings'
+import { Route as EBooksRouteImport } from './routes/e-books'
+import { Route as GalleryRouteImport } from './routes/gallery'
 import { Route as JoinRouteImport } from './routes/join'
 import { Route as LoginRouteImport } from './routes/login'
+import { Route as NoholiBooksRouteImport } from './routes/noholi-books'
+import { Route as PrivacyRouteImport } from './routes/privacy'
+import { Route as RulesRouteImport } from './routes/rules'
 import { Route as SearchRouteImport } from './routes/search'
+import { Route as StudioRouteImport } from './routes/studio'
+import { Route as WishlistRouteImport } from './routes/wishlist'
 import { Route as AccountIndexRouteImport } from './routes/account.index'
 import { Route as AccountBorrowedRouteImport } from './routes/account.borrowed'
 import { Route as AccountContributeRouteImport } from './routes/account.contribute'
 import { Route as AccountContributionsRouteImport } from './routes/account.contributions'
 import { Route as AccountFinesRouteImport } from './routes/account.fines'
+import { Route as AccountPasswordRouteImport } from './routes/account.password'
 import { Route as AccountProfileRouteImport } from './routes/account.profile'
 import { Route as AccountRecommendRouteImport } from './routes/account.recommend'
 import { Route as AccountRecommendationsRouteImport } from './routes/account.recommendations'
@@ -29,15 +43,27 @@ import { Route as AccountReviewsRouteImport } from './routes/account.reviews'
 import { Route as AccountSettingsRouteImport } from './routes/account.settings'
 import { Route as AccountWishlistRouteImport } from './routes/account.wishlist'
 import { Route as ArticleSlugRouteImport } from './routes/article.$slug'
+import { Route as AudioBooksSlugRouteImport } from './routes/audio-books.$slug'
 import { Route as AudioIdRouteImport } from './routes/audio.$id'
+import { Route as BlogsSlugRouteImport } from './routes/blogs.$slug'
+import { Route as BookReviewsSlugRouteImport } from './routes/book-reviews.$slug'
 import { Route as BookIdRouteImport } from './routes/book.$id'
+import { Route as BooksSlugRouteImport } from './routes/books.$slug'
+import { Route as BorrowSlugRouteImport } from './routes/borrow.$slug'
+import { Route as CreativeWritingsSlugRouteImport } from './routes/creative-writings.$slug'
 import { Route as LibraryAudioRouteImport } from './routes/library.audio'
 import { Route as LibraryBooksRouteImport } from './routes/library.books'
 import { Route as LibraryEbooksRouteImport } from './routes/library.ebooks'
 import { Route as LibraryGalleryRouteImport } from './routes/library.gallery'
 import { Route as LibraryNoholiRouteImport } from './routes/library.noholi'
 import { Route as LibraryRulesRouteImport } from './routes/library.rules'
+import { Route as MemberDashboardRouteImport } from './routes/member.dashboard'
+import { Route as MemberEditRouteImport } from './routes/member.edit'
+import { Route as MemberPasswordRouteImport } from './routes/member.password'
+import { Route as MemberProfileRouteImport } from './routes/member.profile'
 import { Route as ReadIdRouteImport } from './routes/read.$id'
+import { Route as StudioSplatRouteImport } from './routes/studio.$'
+import { Route as WishlistSplatRouteImport } from './routes/wishlist.$'
 import { Route as WriteupsIndexRouteImport } from './routes/writeups.index'
 import { Route as WriteupsBlogsRouteImport } from './routes/writeups.blogs'
 import { Route as WriteupsCreativeRouteImport } from './routes/writeups.creative'
@@ -63,9 +89,49 @@ const AccountRoute = AccountRouteImport.update({
   path: '/account',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AudioBooksRoute = AudioBooksRouteImport.update({
+  id: '/audio-books',
+  path: '/audio-books',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const BecomeAMemberRoute = BecomeAMemberRouteImport.update({
+  id: '/become-a-member',
+  path: '/become-a-member',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const BlogsRoute = BlogsRouteImport.update({
+  id: '/blogs',
+  path: '/blogs',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const BookReviewsRoute = BookReviewsRouteImport.update({
+  id: '/book-reviews',
+  path: '/book-reviews',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CatalogRoute = CatalogRouteImport.update({
+  id: '/catalog',
+  path: '/catalog',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ContactRoute = ContactRouteImport.update({
   id: '/contact',
   path: '/contact',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CreativeWritingsRoute = CreativeWritingsRouteImport.update({
+  id: '/creative-writings',
+  path: '/creative-writings',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const EBooksRoute = EBooksRouteImport.update({
+  id: '/e-books',
+  path: '/e-books',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const GalleryRoute = GalleryRouteImport.update({
+  id: '/gallery',
+  path: '/gallery',
   getParentRoute: () => rootRouteImport,
 } as any)
 const JoinRoute = JoinRouteImport.update({
@@ -78,9 +144,34 @@ const LoginRoute = LoginRouteImport.update({
   path: '/login',
   getParentRoute: () => rootRouteImport,
 } as any)
+const NoholiBooksRoute = NoholiBooksRouteImport.update({
+  id: '/noholi-books',
+  path: '/noholi-books',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PrivacyRoute = PrivacyRouteImport.update({
+  id: '/privacy',
+  path: '/privacy',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const RulesRoute = RulesRouteImport.update({
+  id: '/rules',
+  path: '/rules',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const SearchRoute = SearchRouteImport.update({
   id: '/search',
   path: '/search',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const StudioRoute = StudioRouteImport.update({
+  id: '/studio',
+  path: '/studio',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const WishlistRoute = WishlistRouteImport.update({
+  id: '/wishlist',
+  path: '/wishlist',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AccountIndexRoute = AccountIndexRouteImport.update({
@@ -106,6 +197,11 @@ const AccountContributionsRoute = AccountContributionsRouteImport.update({
 const AccountFinesRoute = AccountFinesRouteImport.update({
   id: '/fines',
   path: '/fines',
+  getParentRoute: () => AccountRoute,
+} as any)
+const AccountPasswordRoute = AccountPasswordRouteImport.update({
+  id: '/password',
+  path: '/password',
   getParentRoute: () => AccountRoute,
 } as any)
 const AccountProfileRoute = AccountProfileRouteImport.update({
@@ -148,15 +244,45 @@ const ArticleSlugRoute = ArticleSlugRouteImport.update({
   path: '/article/$slug',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AudioBooksSlugRoute = AudioBooksSlugRouteImport.update({
+  id: '/$slug',
+  path: '/$slug',
+  getParentRoute: () => AudioBooksRoute,
+} as any)
 const AudioIdRoute = AudioIdRouteImport.update({
   id: '/audio/$id',
   path: '/audio/$id',
   getParentRoute: () => rootRouteImport,
 } as any)
+const BlogsSlugRoute = BlogsSlugRouteImport.update({
+  id: '/$slug',
+  path: '/$slug',
+  getParentRoute: () => BlogsRoute,
+} as any)
+const BookReviewsSlugRoute = BookReviewsSlugRouteImport.update({
+  id: '/$slug',
+  path: '/$slug',
+  getParentRoute: () => BookReviewsRoute,
+} as any)
 const BookIdRoute = BookIdRouteImport.update({
   id: '/book/$id',
   path: '/book/$id',
   getParentRoute: () => rootRouteImport,
+} as any)
+const BooksSlugRoute = BooksSlugRouteImport.update({
+  id: '/books/$slug',
+  path: '/books/$slug',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const BorrowSlugRoute = BorrowSlugRouteImport.update({
+  id: '/borrow/$slug',
+  path: '/borrow/$slug',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CreativeWritingsSlugRoute = CreativeWritingsSlugRouteImport.update({
+  id: '/$slug',
+  path: '/$slug',
+  getParentRoute: () => CreativeWritingsRoute,
 } as any)
 const LibraryAudioRoute = LibraryAudioRouteImport.update({
   id: '/library/audio',
@@ -188,10 +314,40 @@ const LibraryRulesRoute = LibraryRulesRouteImport.update({
   path: '/library/rules',
   getParentRoute: () => rootRouteImport,
 } as any)
+const MemberDashboardRoute = MemberDashboardRouteImport.update({
+  id: '/member/dashboard',
+  path: '/member/dashboard',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const MemberEditRoute = MemberEditRouteImport.update({
+  id: '/member/edit',
+  path: '/member/edit',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const MemberPasswordRoute = MemberPasswordRouteImport.update({
+  id: '/member/password',
+  path: '/member/password',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const MemberProfileRoute = MemberProfileRouteImport.update({
+  id: '/member/profile',
+  path: '/member/profile',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ReadIdRoute = ReadIdRouteImport.update({
   id: '/read/$id',
   path: '/read/$id',
   getParentRoute: () => rootRouteImport,
+} as any)
+const StudioSplatRoute = StudioSplatRouteImport.update({
+  id: '/$',
+  path: '/$',
+  getParentRoute: () => StudioRoute,
+} as any)
+const WishlistSplatRoute = WishlistSplatRouteImport.update({
+  id: '/$',
+  path: '/$',
+  getParentRoute: () => WishlistRoute,
 } as any)
 const WriteupsIndexRoute = WriteupsIndexRouteImport.update({
   id: '/writeups/',
@@ -244,14 +400,28 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
   '/account': typeof AccountRouteWithChildren
+  '/audio-books': typeof AudioBooksRouteWithChildren
+  '/become-a-member': typeof BecomeAMemberRoute
+  '/blogs': typeof BlogsRouteWithChildren
+  '/book-reviews': typeof BookReviewsRouteWithChildren
+  '/catalog': typeof CatalogRoute
   '/contact': typeof ContactRoute
+  '/creative-writings': typeof CreativeWritingsRouteWithChildren
+  '/e-books': typeof EBooksRoute
+  '/gallery': typeof GalleryRoute
   '/join': typeof JoinRoute
   '/login': typeof LoginRoute
+  '/noholi-books': typeof NoholiBooksRoute
+  '/privacy': typeof PrivacyRoute
+  '/rules': typeof RulesRoute
   '/search': typeof SearchRoute
+  '/studio': typeof StudioRouteWithChildren
+  '/wishlist': typeof WishlistRouteWithChildren
   '/account/borrowed': typeof AccountBorrowedRoute
   '/account/contribute': typeof AccountContributeRoute
   '/account/contributions': typeof AccountContributionsRoute
   '/account/fines': typeof AccountFinesRoute
+  '/account/password': typeof AccountPasswordRoute
   '/account/profile': typeof AccountProfileRoute
   '/account/recommend': typeof AccountRecommendRoute
   '/account/recommendations': typeof AccountRecommendationsRoute
@@ -260,15 +430,27 @@ export interface FileRoutesByFullPath {
   '/account/settings': typeof AccountSettingsRoute
   '/account/wishlist': typeof AccountWishlistRoute
   '/article/$slug': typeof ArticleSlugRoute
+  '/audio-books/$slug': typeof AudioBooksSlugRoute
   '/audio/$id': typeof AudioIdRoute
+  '/blogs/$slug': typeof BlogsSlugRoute
+  '/book-reviews/$slug': typeof BookReviewsSlugRoute
   '/book/$id': typeof BookIdRoute
+  '/books/$slug': typeof BooksSlugRoute
+  '/borrow/$slug': typeof BorrowSlugRoute
+  '/creative-writings/$slug': typeof CreativeWritingsSlugRoute
   '/library/audio': typeof LibraryAudioRoute
   '/library/books': typeof LibraryBooksRoute
   '/library/ebooks': typeof LibraryEbooksRoute
   '/library/gallery': typeof LibraryGalleryRoute
   '/library/noholi': typeof LibraryNoholiRoute
   '/library/rules': typeof LibraryRulesRoute
+  '/member/dashboard': typeof MemberDashboardRoute
+  '/member/edit': typeof MemberEditRoute
+  '/member/password': typeof MemberPasswordRoute
+  '/member/profile': typeof MemberProfileRoute
   '/read/$id': typeof ReadIdRoute
+  '/studio/$': typeof StudioSplatRoute
+  '/wishlist/$': typeof WishlistSplatRoute
   '/writeups/blogs': typeof WriteupsBlogsRoute
   '/writeups/creative': typeof WriteupsCreativeRoute
   '/writeups/reviews': typeof WriteupsReviewsRoute
@@ -283,14 +465,28 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
+  '/audio-books': typeof AudioBooksRouteWithChildren
+  '/become-a-member': typeof BecomeAMemberRoute
+  '/blogs': typeof BlogsRouteWithChildren
+  '/book-reviews': typeof BookReviewsRouteWithChildren
+  '/catalog': typeof CatalogRoute
   '/contact': typeof ContactRoute
+  '/creative-writings': typeof CreativeWritingsRouteWithChildren
+  '/e-books': typeof EBooksRoute
+  '/gallery': typeof GalleryRoute
   '/join': typeof JoinRoute
   '/login': typeof LoginRoute
+  '/noholi-books': typeof NoholiBooksRoute
+  '/privacy': typeof PrivacyRoute
+  '/rules': typeof RulesRoute
   '/search': typeof SearchRoute
+  '/studio': typeof StudioRouteWithChildren
+  '/wishlist': typeof WishlistRouteWithChildren
   '/account/borrowed': typeof AccountBorrowedRoute
   '/account/contribute': typeof AccountContributeRoute
   '/account/contributions': typeof AccountContributionsRoute
   '/account/fines': typeof AccountFinesRoute
+  '/account/password': typeof AccountPasswordRoute
   '/account/profile': typeof AccountProfileRoute
   '/account/recommend': typeof AccountRecommendRoute
   '/account/recommendations': typeof AccountRecommendationsRoute
@@ -299,15 +495,27 @@ export interface FileRoutesByTo {
   '/account/settings': typeof AccountSettingsRoute
   '/account/wishlist': typeof AccountWishlistRoute
   '/article/$slug': typeof ArticleSlugRoute
+  '/audio-books/$slug': typeof AudioBooksSlugRoute
   '/audio/$id': typeof AudioIdRoute
+  '/blogs/$slug': typeof BlogsSlugRoute
+  '/book-reviews/$slug': typeof BookReviewsSlugRoute
   '/book/$id': typeof BookIdRoute
+  '/books/$slug': typeof BooksSlugRoute
+  '/borrow/$slug': typeof BorrowSlugRoute
+  '/creative-writings/$slug': typeof CreativeWritingsSlugRoute
   '/library/audio': typeof LibraryAudioRoute
   '/library/books': typeof LibraryBooksRoute
   '/library/ebooks': typeof LibraryEbooksRoute
   '/library/gallery': typeof LibraryGalleryRoute
   '/library/noholi': typeof LibraryNoholiRoute
   '/library/rules': typeof LibraryRulesRoute
+  '/member/dashboard': typeof MemberDashboardRoute
+  '/member/edit': typeof MemberEditRoute
+  '/member/password': typeof MemberPasswordRoute
+  '/member/profile': typeof MemberProfileRoute
   '/read/$id': typeof ReadIdRoute
+  '/studio/$': typeof StudioSplatRoute
+  '/wishlist/$': typeof WishlistSplatRoute
   '/writeups/blogs': typeof WriteupsBlogsRoute
   '/writeups/creative': typeof WriteupsCreativeRoute
   '/writeups/reviews': typeof WriteupsReviewsRoute
@@ -324,14 +532,28 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
   '/account': typeof AccountRouteWithChildren
+  '/audio-books': typeof AudioBooksRouteWithChildren
+  '/become-a-member': typeof BecomeAMemberRoute
+  '/blogs': typeof BlogsRouteWithChildren
+  '/book-reviews': typeof BookReviewsRouteWithChildren
+  '/catalog': typeof CatalogRoute
   '/contact': typeof ContactRoute
+  '/creative-writings': typeof CreativeWritingsRouteWithChildren
+  '/e-books': typeof EBooksRoute
+  '/gallery': typeof GalleryRoute
   '/join': typeof JoinRoute
   '/login': typeof LoginRoute
+  '/noholi-books': typeof NoholiBooksRoute
+  '/privacy': typeof PrivacyRoute
+  '/rules': typeof RulesRoute
   '/search': typeof SearchRoute
+  '/studio': typeof StudioRouteWithChildren
+  '/wishlist': typeof WishlistRouteWithChildren
   '/account/borrowed': typeof AccountBorrowedRoute
   '/account/contribute': typeof AccountContributeRoute
   '/account/contributions': typeof AccountContributionsRoute
   '/account/fines': typeof AccountFinesRoute
+  '/account/password': typeof AccountPasswordRoute
   '/account/profile': typeof AccountProfileRoute
   '/account/recommend': typeof AccountRecommendRoute
   '/account/recommendations': typeof AccountRecommendationsRoute
@@ -340,15 +562,27 @@ export interface FileRoutesById {
   '/account/settings': typeof AccountSettingsRoute
   '/account/wishlist': typeof AccountWishlistRoute
   '/article/$slug': typeof ArticleSlugRoute
+  '/audio-books/$slug': typeof AudioBooksSlugRoute
   '/audio/$id': typeof AudioIdRoute
+  '/blogs/$slug': typeof BlogsSlugRoute
+  '/book-reviews/$slug': typeof BookReviewsSlugRoute
   '/book/$id': typeof BookIdRoute
+  '/books/$slug': typeof BooksSlugRoute
+  '/borrow/$slug': typeof BorrowSlugRoute
+  '/creative-writings/$slug': typeof CreativeWritingsSlugRoute
   '/library/audio': typeof LibraryAudioRoute
   '/library/books': typeof LibraryBooksRoute
   '/library/ebooks': typeof LibraryEbooksRoute
   '/library/gallery': typeof LibraryGalleryRoute
   '/library/noholi': typeof LibraryNoholiRoute
   '/library/rules': typeof LibraryRulesRoute
+  '/member/dashboard': typeof MemberDashboardRoute
+  '/member/edit': typeof MemberEditRoute
+  '/member/password': typeof MemberPasswordRoute
+  '/member/profile': typeof MemberProfileRoute
   '/read/$id': typeof ReadIdRoute
+  '/studio/$': typeof StudioSplatRoute
+  '/wishlist/$': typeof WishlistSplatRoute
   '/writeups/blogs': typeof WriteupsBlogsRoute
   '/writeups/creative': typeof WriteupsCreativeRoute
   '/writeups/reviews': typeof WriteupsReviewsRoute
@@ -366,14 +600,28 @@ export interface FileRouteTypes {
     | '/'
     | '/about'
     | '/account'
+    | '/audio-books'
+    | '/become-a-member'
+    | '/blogs'
+    | '/book-reviews'
+    | '/catalog'
     | '/contact'
+    | '/creative-writings'
+    | '/e-books'
+    | '/gallery'
     | '/join'
     | '/login'
+    | '/noholi-books'
+    | '/privacy'
+    | '/rules'
     | '/search'
+    | '/studio'
+    | '/wishlist'
     | '/account/borrowed'
     | '/account/contribute'
     | '/account/contributions'
     | '/account/fines'
+    | '/account/password'
     | '/account/profile'
     | '/account/recommend'
     | '/account/recommendations'
@@ -382,15 +630,27 @@ export interface FileRouteTypes {
     | '/account/settings'
     | '/account/wishlist'
     | '/article/$slug'
+    | '/audio-books/$slug'
     | '/audio/$id'
+    | '/blogs/$slug'
+    | '/book-reviews/$slug'
     | '/book/$id'
+    | '/books/$slug'
+    | '/borrow/$slug'
+    | '/creative-writings/$slug'
     | '/library/audio'
     | '/library/books'
     | '/library/ebooks'
     | '/library/gallery'
     | '/library/noholi'
     | '/library/rules'
+    | '/member/dashboard'
+    | '/member/edit'
+    | '/member/password'
+    | '/member/profile'
     | '/read/$id'
+    | '/studio/$'
+    | '/wishlist/$'
     | '/writeups/blogs'
     | '/writeups/creative'
     | '/writeups/reviews'
@@ -405,14 +665,28 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/about'
+    | '/audio-books'
+    | '/become-a-member'
+    | '/blogs'
+    | '/book-reviews'
+    | '/catalog'
     | '/contact'
+    | '/creative-writings'
+    | '/e-books'
+    | '/gallery'
     | '/join'
     | '/login'
+    | '/noholi-books'
+    | '/privacy'
+    | '/rules'
     | '/search'
+    | '/studio'
+    | '/wishlist'
     | '/account/borrowed'
     | '/account/contribute'
     | '/account/contributions'
     | '/account/fines'
+    | '/account/password'
     | '/account/profile'
     | '/account/recommend'
     | '/account/recommendations'
@@ -421,15 +695,27 @@ export interface FileRouteTypes {
     | '/account/settings'
     | '/account/wishlist'
     | '/article/$slug'
+    | '/audio-books/$slug'
     | '/audio/$id'
+    | '/blogs/$slug'
+    | '/book-reviews/$slug'
     | '/book/$id'
+    | '/books/$slug'
+    | '/borrow/$slug'
+    | '/creative-writings/$slug'
     | '/library/audio'
     | '/library/books'
     | '/library/ebooks'
     | '/library/gallery'
     | '/library/noholi'
     | '/library/rules'
+    | '/member/dashboard'
+    | '/member/edit'
+    | '/member/password'
+    | '/member/profile'
     | '/read/$id'
+    | '/studio/$'
+    | '/wishlist/$'
     | '/writeups/blogs'
     | '/writeups/creative'
     | '/writeups/reviews'
@@ -445,14 +731,28 @@ export interface FileRouteTypes {
     | '/'
     | '/about'
     | '/account'
+    | '/audio-books'
+    | '/become-a-member'
+    | '/blogs'
+    | '/book-reviews'
+    | '/catalog'
     | '/contact'
+    | '/creative-writings'
+    | '/e-books'
+    | '/gallery'
     | '/join'
     | '/login'
+    | '/noholi-books'
+    | '/privacy'
+    | '/rules'
     | '/search'
+    | '/studio'
+    | '/wishlist'
     | '/account/borrowed'
     | '/account/contribute'
     | '/account/contributions'
     | '/account/fines'
+    | '/account/password'
     | '/account/profile'
     | '/account/recommend'
     | '/account/recommendations'
@@ -461,15 +761,27 @@ export interface FileRouteTypes {
     | '/account/settings'
     | '/account/wishlist'
     | '/article/$slug'
+    | '/audio-books/$slug'
     | '/audio/$id'
+    | '/blogs/$slug'
+    | '/book-reviews/$slug'
     | '/book/$id'
+    | '/books/$slug'
+    | '/borrow/$slug'
+    | '/creative-writings/$slug'
     | '/library/audio'
     | '/library/books'
     | '/library/ebooks'
     | '/library/gallery'
     | '/library/noholi'
     | '/library/rules'
+    | '/member/dashboard'
+    | '/member/edit'
+    | '/member/password'
+    | '/member/profile'
     | '/read/$id'
+    | '/studio/$'
+    | '/wishlist/$'
     | '/writeups/blogs'
     | '/writeups/creative'
     | '/writeups/reviews'
@@ -486,19 +798,38 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AboutRoute: typeof AboutRoute
   AccountRoute: typeof AccountRouteWithChildren
+  AudioBooksRoute: typeof AudioBooksRouteWithChildren
+  BecomeAMemberRoute: typeof BecomeAMemberRoute
+  BlogsRoute: typeof BlogsRouteWithChildren
+  BookReviewsRoute: typeof BookReviewsRouteWithChildren
+  CatalogRoute: typeof CatalogRoute
   ContactRoute: typeof ContactRoute
+  CreativeWritingsRoute: typeof CreativeWritingsRouteWithChildren
+  EBooksRoute: typeof EBooksRoute
+  GalleryRoute: typeof GalleryRoute
   JoinRoute: typeof JoinRoute
   LoginRoute: typeof LoginRoute
+  NoholiBooksRoute: typeof NoholiBooksRoute
+  PrivacyRoute: typeof PrivacyRoute
+  RulesRoute: typeof RulesRoute
   SearchRoute: typeof SearchRoute
+  StudioRoute: typeof StudioRouteWithChildren
+  WishlistRoute: typeof WishlistRouteWithChildren
   ArticleSlugRoute: typeof ArticleSlugRoute
   AudioIdRoute: typeof AudioIdRoute
   BookIdRoute: typeof BookIdRoute
+  BooksSlugRoute: typeof BooksSlugRoute
+  BorrowSlugRoute: typeof BorrowSlugRoute
   LibraryAudioRoute: typeof LibraryAudioRoute
   LibraryBooksRoute: typeof LibraryBooksRoute
   LibraryEbooksRoute: typeof LibraryEbooksRoute
   LibraryGalleryRoute: typeof LibraryGalleryRoute
   LibraryNoholiRoute: typeof LibraryNoholiRoute
   LibraryRulesRoute: typeof LibraryRulesRoute
+  MemberDashboardRoute: typeof MemberDashboardRoute
+  MemberEditRoute: typeof MemberEditRoute
+  MemberPasswordRoute: typeof MemberPasswordRoute
+  MemberProfileRoute: typeof MemberProfileRoute
   ReadIdRoute: typeof ReadIdRoute
   WriteupsBlogsRoute: typeof WriteupsBlogsRoute
   WriteupsCreativeRoute: typeof WriteupsCreativeRoute
@@ -529,11 +860,67 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AccountRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/audio-books': {
+      id: '/audio-books'
+      path: '/audio-books'
+      fullPath: '/audio-books'
+      preLoaderRoute: typeof AudioBooksRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/become-a-member': {
+      id: '/become-a-member'
+      path: '/become-a-member'
+      fullPath: '/become-a-member'
+      preLoaderRoute: typeof BecomeAMemberRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/blogs': {
+      id: '/blogs'
+      path: '/blogs'
+      fullPath: '/blogs'
+      preLoaderRoute: typeof BlogsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/book-reviews': {
+      id: '/book-reviews'
+      path: '/book-reviews'
+      fullPath: '/book-reviews'
+      preLoaderRoute: typeof BookReviewsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/catalog': {
+      id: '/catalog'
+      path: '/catalog'
+      fullPath: '/catalog'
+      preLoaderRoute: typeof CatalogRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/contact': {
       id: '/contact'
       path: '/contact'
       fullPath: '/contact'
       preLoaderRoute: typeof ContactRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/creative-writings': {
+      id: '/creative-writings'
+      path: '/creative-writings'
+      fullPath: '/creative-writings'
+      preLoaderRoute: typeof CreativeWritingsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/e-books': {
+      id: '/e-books'
+      path: '/e-books'
+      fullPath: '/e-books'
+      preLoaderRoute: typeof EBooksRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/gallery': {
+      id: '/gallery'
+      path: '/gallery'
+      fullPath: '/gallery'
+      preLoaderRoute: typeof GalleryRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/join': {
@@ -550,11 +937,46 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LoginRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/noholi-books': {
+      id: '/noholi-books'
+      path: '/noholi-books'
+      fullPath: '/noholi-books'
+      preLoaderRoute: typeof NoholiBooksRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/privacy': {
+      id: '/privacy'
+      path: '/privacy'
+      fullPath: '/privacy'
+      preLoaderRoute: typeof PrivacyRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/rules': {
+      id: '/rules'
+      path: '/rules'
+      fullPath: '/rules'
+      preLoaderRoute: typeof RulesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/search': {
       id: '/search'
       path: '/search'
       fullPath: '/search'
       preLoaderRoute: typeof SearchRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/studio': {
+      id: '/studio'
+      path: '/studio'
+      fullPath: '/studio'
+      preLoaderRoute: typeof StudioRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/wishlist': {
+      id: '/wishlist'
+      path: '/wishlist'
+      fullPath: '/wishlist'
+      preLoaderRoute: typeof WishlistRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/account/': {
@@ -590,6 +1012,13 @@ declare module '@tanstack/react-router' {
       path: '/fines'
       fullPath: '/account/fines'
       preLoaderRoute: typeof AccountFinesRouteImport
+      parentRoute: typeof AccountRoute
+    }
+    '/account/password': {
+      id: '/account/password'
+      path: '/password'
+      fullPath: '/account/password'
+      preLoaderRoute: typeof AccountPasswordRouteImport
       parentRoute: typeof AccountRoute
     }
     '/account/profile': {
@@ -648,6 +1077,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ArticleSlugRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/audio-books/$slug': {
+      id: '/audio-books/$slug'
+      path: '/$slug'
+      fullPath: '/audio-books/$slug'
+      preLoaderRoute: typeof AudioBooksSlugRouteImport
+      parentRoute: typeof AudioBooksRoute
+    }
     '/audio/$id': {
       id: '/audio/$id'
       path: '/audio/$id'
@@ -655,12 +1091,47 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AudioIdRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/blogs/$slug': {
+      id: '/blogs/$slug'
+      path: '/$slug'
+      fullPath: '/blogs/$slug'
+      preLoaderRoute: typeof BlogsSlugRouteImport
+      parentRoute: typeof BlogsRoute
+    }
+    '/book-reviews/$slug': {
+      id: '/book-reviews/$slug'
+      path: '/$slug'
+      fullPath: '/book-reviews/$slug'
+      preLoaderRoute: typeof BookReviewsSlugRouteImport
+      parentRoute: typeof BookReviewsRoute
+    }
     '/book/$id': {
       id: '/book/$id'
       path: '/book/$id'
       fullPath: '/book/$id'
       preLoaderRoute: typeof BookIdRouteImport
       parentRoute: typeof rootRouteImport
+    }
+    '/books/$slug': {
+      id: '/books/$slug'
+      path: '/books/$slug'
+      fullPath: '/books/$slug'
+      preLoaderRoute: typeof BooksSlugRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/borrow/$slug': {
+      id: '/borrow/$slug'
+      path: '/borrow/$slug'
+      fullPath: '/borrow/$slug'
+      preLoaderRoute: typeof BorrowSlugRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/creative-writings/$slug': {
+      id: '/creative-writings/$slug'
+      path: '/$slug'
+      fullPath: '/creative-writings/$slug'
+      preLoaderRoute: typeof CreativeWritingsSlugRouteImport
+      parentRoute: typeof CreativeWritingsRoute
     }
     '/library/audio': {
       id: '/library/audio'
@@ -704,12 +1175,54 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LibraryRulesRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/member/dashboard': {
+      id: '/member/dashboard'
+      path: '/member/dashboard'
+      fullPath: '/member/dashboard'
+      preLoaderRoute: typeof MemberDashboardRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/member/edit': {
+      id: '/member/edit'
+      path: '/member/edit'
+      fullPath: '/member/edit'
+      preLoaderRoute: typeof MemberEditRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/member/password': {
+      id: '/member/password'
+      path: '/member/password'
+      fullPath: '/member/password'
+      preLoaderRoute: typeof MemberPasswordRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/member/profile': {
+      id: '/member/profile'
+      path: '/member/profile'
+      fullPath: '/member/profile'
+      preLoaderRoute: typeof MemberProfileRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/read/$id': {
       id: '/read/$id'
       path: '/read/$id'
       fullPath: '/read/$id'
       preLoaderRoute: typeof ReadIdRouteImport
       parentRoute: typeof rootRouteImport
+    }
+    '/studio/$': {
+      id: '/studio/$'
+      path: '/$'
+      fullPath: '/studio/$'
+      preLoaderRoute: typeof StudioSplatRouteImport
+      parentRoute: typeof StudioRoute
+    }
+    '/wishlist/$': {
+      id: '/wishlist/$'
+      path: '/$'
+      fullPath: '/wishlist/$'
+      preLoaderRoute: typeof WishlistSplatRouteImport
+      parentRoute: typeof WishlistRoute
     }
     '/writeups/': {
       id: '/writeups/'
@@ -782,6 +1295,7 @@ interface AccountRouteChildren {
   AccountContributeRoute: typeof AccountContributeRoute
   AccountContributionsRoute: typeof AccountContributionsRoute
   AccountFinesRoute: typeof AccountFinesRoute
+  AccountPasswordRoute: typeof AccountPasswordRoute
   AccountProfileRoute: typeof AccountProfileRoute
   AccountRecommendRoute: typeof AccountRecommendRoute
   AccountRecommendationsRoute: typeof AccountRecommendationsRoute
@@ -802,6 +1316,7 @@ const AccountRouteChildren: AccountRouteChildren = {
   AccountContributeRoute: AccountContributeRoute,
   AccountContributionsRoute: AccountContributionsRoute,
   AccountFinesRoute: AccountFinesRoute,
+  AccountPasswordRoute: AccountPasswordRoute,
   AccountProfileRoute: AccountProfileRoute,
   AccountRecommendRoute: AccountRecommendRoute,
   AccountRecommendationsRoute: AccountRecommendationsRoute,
@@ -820,23 +1335,110 @@ const AccountRouteChildren: AccountRouteChildren = {
 const AccountRouteWithChildren =
   AccountRoute._addFileChildren(AccountRouteChildren)
 
+interface AudioBooksRouteChildren {
+  AudioBooksSlugRoute: typeof AudioBooksSlugRoute
+}
+
+const AudioBooksRouteChildren: AudioBooksRouteChildren = {
+  AudioBooksSlugRoute: AudioBooksSlugRoute,
+}
+
+const AudioBooksRouteWithChildren = AudioBooksRoute._addFileChildren(
+  AudioBooksRouteChildren,
+)
+
+interface BlogsRouteChildren {
+  BlogsSlugRoute: typeof BlogsSlugRoute
+}
+
+const BlogsRouteChildren: BlogsRouteChildren = {
+  BlogsSlugRoute: BlogsSlugRoute,
+}
+
+const BlogsRouteWithChildren = BlogsRoute._addFileChildren(BlogsRouteChildren)
+
+interface BookReviewsRouteChildren {
+  BookReviewsSlugRoute: typeof BookReviewsSlugRoute
+}
+
+const BookReviewsRouteChildren: BookReviewsRouteChildren = {
+  BookReviewsSlugRoute: BookReviewsSlugRoute,
+}
+
+const BookReviewsRouteWithChildren = BookReviewsRoute._addFileChildren(
+  BookReviewsRouteChildren,
+)
+
+interface CreativeWritingsRouteChildren {
+  CreativeWritingsSlugRoute: typeof CreativeWritingsSlugRoute
+}
+
+const CreativeWritingsRouteChildren: CreativeWritingsRouteChildren = {
+  CreativeWritingsSlugRoute: CreativeWritingsSlugRoute,
+}
+
+const CreativeWritingsRouteWithChildren =
+  CreativeWritingsRoute._addFileChildren(CreativeWritingsRouteChildren)
+
+interface StudioRouteChildren {
+  StudioSplatRoute: typeof StudioSplatRoute
+}
+
+const StudioRouteChildren: StudioRouteChildren = {
+  StudioSplatRoute: StudioSplatRoute,
+}
+
+const StudioRouteWithChildren =
+  StudioRoute._addFileChildren(StudioRouteChildren)
+
+interface WishlistRouteChildren {
+  WishlistSplatRoute: typeof WishlistSplatRoute
+}
+
+const WishlistRouteChildren: WishlistRouteChildren = {
+  WishlistSplatRoute: WishlistSplatRoute,
+}
+
+const WishlistRouteWithChildren = WishlistRoute._addFileChildren(
+  WishlistRouteChildren,
+)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AboutRoute: AboutRoute,
   AccountRoute: AccountRouteWithChildren,
+  AudioBooksRoute: AudioBooksRouteWithChildren,
+  BecomeAMemberRoute: BecomeAMemberRoute,
+  BlogsRoute: BlogsRouteWithChildren,
+  BookReviewsRoute: BookReviewsRouteWithChildren,
+  CatalogRoute: CatalogRoute,
   ContactRoute: ContactRoute,
+  CreativeWritingsRoute: CreativeWritingsRouteWithChildren,
+  EBooksRoute: EBooksRoute,
+  GalleryRoute: GalleryRoute,
   JoinRoute: JoinRoute,
   LoginRoute: LoginRoute,
+  NoholiBooksRoute: NoholiBooksRoute,
+  PrivacyRoute: PrivacyRoute,
+  RulesRoute: RulesRoute,
   SearchRoute: SearchRoute,
+  StudioRoute: StudioRouteWithChildren,
+  WishlistRoute: WishlistRouteWithChildren,
   ArticleSlugRoute: ArticleSlugRoute,
   AudioIdRoute: AudioIdRoute,
   BookIdRoute: BookIdRoute,
+  BooksSlugRoute: BooksSlugRoute,
+  BorrowSlugRoute: BorrowSlugRoute,
   LibraryAudioRoute: LibraryAudioRoute,
   LibraryBooksRoute: LibraryBooksRoute,
   LibraryEbooksRoute: LibraryEbooksRoute,
   LibraryGalleryRoute: LibraryGalleryRoute,
   LibraryNoholiRoute: LibraryNoholiRoute,
   LibraryRulesRoute: LibraryRulesRoute,
+  MemberDashboardRoute: MemberDashboardRoute,
+  MemberEditRoute: MemberEditRoute,
+  MemberPasswordRoute: MemberPasswordRoute,
+  MemberProfileRoute: MemberProfileRoute,
   ReadIdRoute: ReadIdRoute,
   WriteupsBlogsRoute: WriteupsBlogsRoute,
   WriteupsCreativeRoute: WriteupsCreativeRoute,

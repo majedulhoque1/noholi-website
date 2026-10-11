@@ -1,16 +1,17 @@
-import { Link, useNavigate } from "@tanstack/react-router";
-import { fmtDate, Initials, Stars } from "@/components/noholi";
-import { MemberButton, reasons } from "@/components/member-gate";
-import { articles, communityReviews } from "@/lib/data";
+import { Link } from "@tanstack/react-router";
+import { Button } from "@/components/ui/button";
+import { fmtDate, Stars } from "@/components/noholi";
+import { articles } from "@/lib/data";
+import { useApp } from "@/lib/store";
 
 /** Reviews block for any book / e-book / audio book detail page. */
-export function ReviewsSection({ itemId, title }: { itemId: string; title: string }) {
-  const nav = useNavigate();
-  const list = communityReviews.filter((r) => r.itemId === itemId);
+export function ReviewsSection({ itemId }: { itemId: string; title?: string }) {
+  const { t } = useApp();
+  // Member reviews have no backend yet, so the community-review list is never rendered (the sample
+  // records in data.ts are not real readers). Editorial review essays stay, as sample content.
   const essays = articles.filter((a) => a.kind === "review" && a.bookId === itemId);
-  const all = [...list.map((r) => r.rating), ...essays.map((e) => e.rating ?? 0).filter(Boolean)];
+  const all = essays.map((e) => e.rating ?? 0).filter(Boolean);
   const avg = all.length ? all.reduce((a, b) => a + b, 0) / all.length : 0;
-  const write = () => nav({ to: "/account/contribute", search: { type: "review", book: itemId } });
 
   return (
     <section className="container-page mt-16" aria-labelledby="reviews-h">
@@ -31,21 +32,12 @@ export function ReviewsSection({ itemId, title }: { itemId: string; title: strin
               </div>
             </div>
           ) : (
-            <p className="mt-4 text-sm text-muted-foreground">
-              No reviews yet. Be the first to tell other readers about <em>{title}</em>.
-            </p>
+            <p className="mt-4 text-sm text-muted-foreground">{t("forms.soon.reviews")}</p>
           )}
-          <MemberButton
-            reason={reasons.review}
-            onAllowed={write}
-            variant="outline"
-            className="mt-6"
-          >
+          <Button variant="outline" className="mt-6" disabled title={t("forms.soon.writeReview")}>
             Write a Review
-          </MemberButton>
-          <p className="mt-2 text-xs text-muted-foreground">
-            Reviews are read by our editors before they appear.
-          </p>
+          </Button>
+          <p className="mt-2 text-xs text-muted-foreground">{t("forms.soon.writeReview")}</p>
         </div>
         <div>
           {essays.map((e) => (
@@ -63,28 +55,6 @@ export function ReviewsSection({ itemId, title }: { itemId: string; title: strin
               </div>
             </Link>
           ))}
-          <ul className="divide-y divide-border">
-            {list.map((r) => (
-              <li key={r.id} className="grid grid-cols-[40px_minmax(0,1fr)] gap-4 py-5">
-                <Initials name={r.name} className="h-10 w-10 text-base" />
-                <div className="min-w-0">
-                  <div className="flex flex-wrap items-baseline gap-x-3 text-sm">
-                    <span className="font-medium">{r.name}</span>
-                    <span className="text-muted-foreground">{fmtDate(r.date)}</span>
-                    <Stars n={r.rating} />
-                  </div>
-                  <div className="mt-1 font-display text-xl">{r.title}</div>
-                  <p className="mt-1 leading-relaxed text-muted-foreground">{r.text}</p>
-                  {r.tags && (
-                    <div className="mt-2 text-xs text-muted-foreground">
-                      {r.recommend && "Recommends · "}
-                      {r.tags.join(" · ")}
-                    </div>
-                  )}
-                </div>
-              </li>
-            ))}
-          </ul>
         </div>
       </div>
     </section>

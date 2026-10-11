@@ -125,7 +125,8 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
 
 function RootShell({ children }: { children: ReactNode }) {
   return (
-    <html lang="en">
+    // The boot script flags a failed load on <html> before React hydrates (see initial-loading.tsx).
+    <html lang="en" suppressHydrationWarning>
       <head>
         <HeadContent />
         <style dangerouslySetInnerHTML={{ __html: initialLoadingCss }} />

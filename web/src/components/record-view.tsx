@@ -1,8 +1,12 @@
 import { Link, useCanGoBack, useRouter } from "@tanstack/react-router";
 import { ArrowLeft } from "lucide-react";
-import type { ReactNode } from "react";
-import { fmtDate, StatusBadge } from "@/components/noholi";
+import { useState, type ReactNode } from "react";
+import { Cover, fmtDate, StatusBadge } from "@/components/noholi";
+import { Button } from "@/components/ui/button";
+import { Skeleton } from "@/components/ui/skeleton";
 import type { RecordEvent } from "@/lib/data";
+import { coverUrl, toneOf, type BookLite } from "@/lib/lending";
+import { useApp } from "@/lib/store";
 import { cn } from "@/lib/utils";
 
 /** Shared pattern for every member "View Details" page: header, labelled sections, timeline, actions. */
@@ -44,6 +48,8 @@ export function RecordHeader({
   status,
   statusNote,
   dates,
+  statusBadge,
+  formatDate = fmtDate,
 }: {
   back: ReactNode;
   eyebrow: string;
@@ -52,14 +58,18 @@ export function RecordHeader({
   status: string;
   statusNote?: ReactNode;
   dates: { label: string; value?: string }[];
+  /** Replaces the default StatusBadge (e.g. a translated ToneBadge). */
+  statusBadge?: ReactNode;
+  /** Date formatter; defaults to the prototype's fmtDate. */
+  formatDate?: (d: string) => string;
 }) {
   return (
     <header className="border-b border-foreground pb-6">
       {back}
       <div className="eyebrow mt-6">{eyebrow}</div>
-      <h1 className="mt-2 text-4xl leading-tight md:text-5xl">{title}</h1>
+      <h1 className="mt-2 break-words text-4xl leading-tight md:text-5xl">{title}</h1>
       <div className="mt-4 flex flex-wrap items-center gap-x-6 gap-y-2 text-sm">
-        <StatusBadge status={status} className="text-sm" />
+        {statusBadge ?? <StatusBadge status={status} className="text-sm" />}
         {ids.map((i) => (
           <span key={i.label}>
             <span className="text-muted-foreground">{i.label} </span>
@@ -71,7 +81,7 @@ export function RecordHeader({
           .map((d) => (
             <span key={d.label}>
               <span className="text-muted-foreground">{d.label} </span>
-              {fmtDate(d.value!)}
+              {formatDate(d.value!)}
             </span>
           ))}
       </div>
@@ -123,7 +133,13 @@ export function Fields({ rows, className }: { rows: Row[]; className?: string })
   );
 }
 
-export function Timeline({ events }: { events: RecordEvent[] }) {
+export function Timeline({
+  events,
+  formatDate = fmtDate,
+}: {
+  events: RecordEvent[];
+  formatDate?: (d: string) => string;
+}) {
   return (
     <ol className="relative ml-1.5 border-l border-border">
       {events.map((e, i) => (
@@ -135,7 +151,7 @@ export function Timeline({ events }: { events: RecordEvent[] }) {
             )}
           />
           <div className="text-sm font-medium">{e.label}</div>
-          <div className="text-xs text-muted-foreground">{fmtDate(e.date)}</div>
+          <div className="text-xs text-muted-foreground">{formatDate(e.date)}</div>
           {e.note && <p className="mt-1 text-sm text-muted-foreground">{e.note}</p>}
         </li>
       ))}
@@ -166,14 +182,150 @@ export function DetailsLink({
   );
 }
 
-export function NotFoundRecord({ what, back }: { what: string; back: ReactNode }) {
+export function NotFoundRecord({
+  what,
+  back,
+  title,
+  body,
+}: {
+  what: string;
+  back: ReactNode;
+  /** Overrides the default English heading (for translated pages). */
+  title?: string;
+  body?: string;
+}) {
   return (
     <div className="py-16">
       {back}
-      <h1 className="mt-6 text-4xl">{what} not found</h1>
+      <h1 className="mt-6 text-4xl">{title ?? `${what} not found`}</h1>
       <p className="mt-2 text-muted-foreground">
-        This record doesn't exist or isn't part of your account.
+        {body ?? "This record doesn't exist or isn't part of your account."}
       </p>
+    </div>
+  );
+}
+
+// ---- Shared by the real-data lending pages (loans, requests, fines, dashboard) ----
+
+const toneClass = {
+  ok: ["text-success", "bg-success"],
+  bad: ["text-destructive", "bg-destructive"],
+  pending: ["text-foreground", "border border-foreground"],
+  muted: ["text-muted-foreground", "bg-muted-foreground/50"],
+} as const;
+export type Tone = keyof typeof toneClass;
+
+/** Status label with an explicit tone, so the text can be translated (StatusBadge keys on English). */
+export function ToneBadge({
+  label,
+  tone,
+  className,
+}: {
+  label: string;
+  tone: Tone;
+  className?: string;
+}) {
+  const [text, dot] = toneClass[tone];
+  return (
+    <span
+      className={cn(
+        "inline-flex items-center gap-1.5 whitespace-nowrap text-xs font-medium",
+        text,
+        className,
+      )}
+    >
+      <span className={cn("h-1.5 w-1.5 rounded-full", dot)} />
+      {label}
+    </span>
+  );
+}
+
+/** The real cover from the `covers` bucket, or the drawn cover when there is none (or it fails to load). */
+export function BookThumb({
+  book,
+  fallbackTitle,
+  size = "sm",
+  className,
+}: {
+  book: BookLite | null;
+  fallbackTitle: string;
+  size?: "sm" | "md" | "lg";
+  className?: string;
+}) {
+  const { lang } = useApp();
+  const [broken, setBroken] = useState(false);
+  const url = broken ? null : coverUrl(book?.thumbnail);
+  if (url)
+    return (
+      <img
+        src={url}
+        alt=""
+        loading="lazy"
+        onError={() => setBroken(true)}
+        className={cn(
+          "aspect-[2/3] w-full rounded-[2px] bg-muted object-cover shadow-book",
+          className,
+        )}
+      />
+    );
+  const title = book
+    ? lang === "bn" && book.title_bangla
+      ? book.title_bangla
+      : book.title
+    : fallbackTitle;
+  const author = book
+    ? lang === "bn" && book.author_bangla
+      ? book.author_bangla
+      : book.author
+    : "";
+  return (
+    <Cover
+      title={title}
+      author={author}
+      tone={toneOf(book?.id ?? fallbackTitle)}
+      size={size}
+      className={className}
+    />
+  );
+}
+
+/** Placeholder rows while a list loads. */
+export function ListSkeleton({ rows = 3 }: { rows?: number }) {
+  return (
+    <div role="status" aria-busy="true" className="divide-y divide-border border-y border-border">
+      {Array.from({ length: rows }).map((_, i) => (
+        <div key={i} className="grid grid-cols-[56px_minmax(0,1fr)] gap-5 py-5">
+          <Skeleton className="aspect-[2/3] w-full" />
+          <div className="space-y-2.5">
+            <Skeleton className="h-5 w-2/3" />
+            <Skeleton className="h-4 w-1/3" />
+            <Skeleton className="h-3 w-1/4" />
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+/** A failed fetch: the real reason plus a retry. Distinct from an empty list. */
+export function ErrorState({
+  title,
+  message,
+  retryLabel,
+  onRetry,
+}: {
+  title: string;
+  message: string;
+  retryLabel: string;
+  onRetry: () => void;
+}) {
+  return (
+    <div role="alert" className="border border-destructive/40 px-6 py-12 text-center">
+      <h3 className="text-2xl">{title}</h3>
+      <p className="mx-auto mt-2 max-w-md break-words text-sm text-muted-foreground">{message}</p>
+      <Button className="mt-6" variant="outline" onClick={onRetry}>
+        {retryLabel}
+      </Button>
     </div>
   );
 }

@@ -1,8 +1,9 @@
 import { Link } from "@tanstack/react-router";
 import { Heart, Star } from "lucide-react";
-import type { ReactNode } from "react";
+import { useEffect, useRef, useState, type ReactNode } from "react";
 import logo from "@/assets/noholi-logo.png";
 import { availability, type Book } from "@/lib/data";
+import { useAuth } from "@/lib/auth";
 import { useApp } from "@/lib/store";
 import { cn } from "@/lib/utils";
 
@@ -10,6 +11,14 @@ export function Logo({ className }: { className?: string }) {
   return <img src={logo} alt="Noholi Library" className={cn("logo-ink h-9 w-auto", className)} />;
 }
 
+const BENGALI = /[ঀ-৿]/;
+
+/**
+ * A book cover in a fixed 2:3 box. With `src` (a real cover image) it shows the picture, lazy
+ * loaded by default; with no `src`, or if the image fails to load, it draws the cover from the
+ * title, author and a `--cover-N` colour (`tone`, derive it from the book id so a book always
+ * looks the same).
+ */
 export function Cover({
   title,
   author,
@@ -17,6 +26,9 @@ export function Cover({
   noholi,
   className,
   size = "md",
+  src,
+  alt,
+  eager,
 }: {
   title: string;
   author: string;
@@ -24,14 +36,33 @@ export function Cover({
   noholi?: boolean;
   className?: string;
   size?: "sm" | "md" | "lg";
+  /** URL of the real cover image, if the book has one. */
+  src?: string | null;
+  /** Alt text for the real image; defaults to the title. */
+  alt?: string;
+  /** Load the image straight away (above the fold) instead of lazily. */
+  eager?: boolean;
 }) {
   const v = tone % 3;
   const ts = size === "lg" ? "text-3xl md:text-4xl" : size === "sm" ? "text-[0.8rem]" : "text-lg";
   const as = size === "lg" ? "text-sm" : "text-[0.6rem]";
+  const bn = BENGALI.test(title);
+  const titleFont = bn ? "font-bangla leading-[1.25]" : "font-display leading-[1.05]";
+  const italicFont = bn ? titleFont : "font-display italic leading-[1.05]";
+  // A cover that failed to load is remembered per URL, so a new `src` gets a fresh try.
+  const [failedSrc, setFailedSrc] = useState<string | null>(null);
+  const [whole, setWhole] = useState(false);
+  const imgRef = useRef<HTMLImageElement>(null);
+  const image = !!src && failedSrc !== src;
+  useEffect(() => {
+    // The image can fail before React attaches onError (server-rendered markup): catch that here.
+    const el = imgRef.current;
+    if (src && el?.complete && el.naturalWidth === 0) setFailedSrc(src);
+  }, [src]);
   return (
     <div
       className={cn("book3d relative aspect-[2/3]", className)}
-      aria-hidden
+      aria-hidden={image ? undefined : true}
       onPointerMove={(e) => {
         if (e.pointerType !== "mouse") return;
         const el = e.currentTarget,
@@ -58,37 +89,63 @@ export function Cover({
         >
           <div className="book3d-bind absolute inset-y-0 left-0 w-[8.2%] mix-blend-overlay" />
           <div className="book3d-sheen pointer-events-none absolute inset-0" />
-          {v === 0 && (
-            <div className="flex h-full flex-col justify-between p-[10%] pl-[14%]">
-              <div className={cn("uppercase tracking-[0.18em] opacity-75", as)}>{author}</div>
-              <div>
-                <div className="mb-2 h-px w-8 bg-current opacity-60" />
-                <div className={cn("font-display leading-[1.05]", ts)}>{title}</div>
-              </div>
-            </div>
-          )}
-          {v === 1 && (
-            <div className="flex h-full flex-col p-[10%] pl-[14%]">
-              <div className={cn("font-display leading-[1.05]", ts)}>{title}</div>
-              <div className="mx-auto my-auto aspect-square w-1/2 rounded-full border border-current opacity-40" />
-              <div className={cn("uppercase tracking-[0.18em] opacity-75", as)}>{author}</div>
-            </div>
-          )}
-          {v === 2 && (
-            <div className="flex h-full flex-col items-center justify-center p-[12%] text-center">
-              <div className={cn("mb-3 uppercase tracking-[0.18em] opacity-75", as)}>{author}</div>
-              <div className={cn("font-display italic leading-[1.05]", ts)}>{title}</div>
-              <div className="mt-3 flex gap-1 opacity-60">
-                <span className="h-1 w-1 rounded-full bg-current" />
-                <span className="h-1 w-1 rounded-full bg-current" />
-                <span className="h-1 w-1 rounded-full bg-current" />
-              </div>
-            </div>
-          )}
-          {noholi && (
-            <div className={cn("absolute bottom-[5%] right-[7%] font-bangla opacity-80", as)}>
-              নহলি
-            </div>
+          {image ? (
+            <img
+              ref={imgRef}
+              src={src!}
+              alt={alt ?? title}
+              width={200}
+              height={300}
+              loading={eager ? "eager" : "lazy"}
+              decoding="async"
+              onError={() => setFailedSrc(src!)}
+              onLoad={(e) => {
+                // Landscape or square scans are shown whole on the tinted cover instead of cropped.
+                const i = e.currentTarget;
+                setWhole(i.naturalHeight / (i.naturalWidth || 1) < 1.2);
+              }}
+              className={cn(
+                "absolute inset-0 h-full w-full",
+                whole ? "object-contain" : "object-cover",
+              )}
+            />
+          ) : (
+            <>
+              {v === 0 && (
+                <div className="flex h-full flex-col justify-between p-[10%] pl-[14%]">
+                  <div className={cn("uppercase tracking-[0.18em] opacity-75", as)}>{author}</div>
+                  <div>
+                    <div className="mb-2 h-px w-8 bg-current opacity-60" />
+                    <div className={cn(titleFont, ts)}>{title}</div>
+                  </div>
+                </div>
+              )}
+              {v === 1 && (
+                <div className="flex h-full flex-col p-[10%] pl-[14%]">
+                  <div className={cn(titleFont, ts)}>{title}</div>
+                  <div className="mx-auto my-auto aspect-square w-1/2 rounded-full border border-current opacity-40" />
+                  <div className={cn("uppercase tracking-[0.18em] opacity-75", as)}>{author}</div>
+                </div>
+              )}
+              {v === 2 && (
+                <div className="flex h-full flex-col items-center justify-center p-[12%] text-center">
+                  <div className={cn("mb-3 uppercase tracking-[0.18em] opacity-75", as)}>
+                    {author}
+                  </div>
+                  <div className={cn(italicFont, ts)}>{title}</div>
+                  <div className="mt-3 flex gap-1 opacity-60">
+                    <span className="h-1 w-1 rounded-full bg-current" />
+                    <span className="h-1 w-1 rounded-full bg-current" />
+                    <span className="h-1 w-1 rounded-full bg-current" />
+                  </div>
+                </div>
+              )}
+              {noholi && (
+                <div className={cn("absolute bottom-[5%] right-[7%] font-bangla opacity-80", as)}>
+                  নহলি
+                </div>
+              )}
+            </>
           )}
         </div>
       </div>
@@ -148,6 +205,10 @@ export function Availability({ book, className }: { book: Book; className?: stri
   );
 }
 
+/**
+ * Wishlist heart. Wishlist is "coming soon" (see `store.tsx`): it never reads sample data, only the
+ * id, so it works the same next to a live catalogue book. Live catalogue cards use `LiveBookCard`.
+ */
 export function WishButton({
   id,
   className,
@@ -178,40 +239,6 @@ export function WishButton({
       <Heart className={cn("h-4 w-4", on && "fill-current")} />
       {label && (on ? "In wishlist" : "Add to wishlist")}
     </button>
-  );
-}
-
-export function BookCard({ book, showMeta = true }: { book: Book; showMeta?: boolean }) {
-  const { lang } = useApp();
-  return (
-    <div className="group relative">
-      <Link to="/book/$id" params={{ id: book.id }} className="block">
-        <BookCover book={book} />
-      </Link>
-      <div className="mt-4 grid grid-cols-[minmax(0,1fr)_auto] gap-2">
-        <div className="min-w-0">
-          <Link
-            to="/book/$id"
-            params={{ id: book.id }}
-            className="block font-display text-lg leading-tight hover:text-accent"
-          >
-            {bookTitle(book, lang)}
-          </Link>
-          <div className="mt-1 truncate text-sm text-muted-foreground">
-            {bookAuthor(book, lang)}
-          </div>
-        </div>
-        <WishButton id={book.id} className="mt-1 h-fit text-muted-foreground" />
-      </div>
-      {showMeta && (
-        <div className="mt-2 flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-muted-foreground">
-          <span>{book.genre}</span>
-          <span>·</span>
-          <span>{book.language}</span>
-          <Availability book={book} className="w-full" />
-        </div>
-      )}
-    </div>
   );
 }
 
@@ -388,7 +415,7 @@ export function Initials({ name, className }: { name: string; className?: string
   );
 }
 
-/** The signed-in member's photo, used everywhere the member appears. Falls back to initials if removed. */
+/** The signed-in member as an initial in a circle (profile photos are not available online yet). */
 export function MemberAvatar({
   className,
   textClass = "text-base",
@@ -396,14 +423,6 @@ export function MemberAvatar({
   className?: string;
   textClass?: string;
 }) {
-  const { avatar } = useApp();
-  return avatar ? (
-    <img
-      src={avatar}
-      alt="Your profile photo"
-      className={cn("shrink-0 rounded-full object-cover", className)}
-    />
-  ) : (
-    <Initials name="Aurko" className={cn(className, textClass)} />
-  );
+  const { member } = useAuth();
+  return <Initials name={member?.name ?? ""} className={cn(className, textClass)} />;
 }

@@ -1,12 +1,13 @@
-import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { useState } from "react";
 import { ArrowLeft, Check } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
 import { Logo } from "@/components/noholi";
+import { compressPhoto, EMAIL_RE, isAllowedPhoto, submitIntake } from "@/lib/intake";
+import { describeError, supabase } from "@/lib/supabase";
+import { useApp } from "@/lib/store";
 import { cn } from "@/lib/utils";
 
 export const Route = createFileRoute("/join")({
@@ -29,44 +30,124 @@ export const Route = createFileRoute("/join")({
   component: Join,
 });
 
-const steps = ["Personal", "Contact", "Account", "Review"];
+const stepKeys = [
+  "forms.join.step1",
+  "forms.join.step2",
+  "forms.join.step3",
+  "forms.join.step4",
+] as const;
+
+const empty = {
+  name: "",
+  email: "",
+  phone: "",
+  street: "",
+  city: "",
+  district: "",
+  postal: "",
+  website: "", // honeypot: people never see or fill it; bots do (CONTRACT.md §5)
+};
+
+type Done = { name: string; phone: string; ref: string | null; photoFailed: boolean };
 
 function Join() {
-  const nav = useNavigate();
+  const { t } = useApp();
   const [step, setStep] = useState(0);
-  const [done, setDone] = useState(false);
-  const [d, setD] = useState({
-    name: "",
-    dob: "",
-    gender: "",
-    email: "",
-    phone: "",
-    address: "",
-    pw: "",
-    pw2: "",
-    terms: false,
-  });
+  const [done, setDone] = useState<Done | null>(null);
+  const [d, setD] = useState(empty);
+  const [photo, setPhoto] = useState<File | null>(null);
   const [err, setErr] = useState("");
+  const [busy, setBusy] = useState(false);
   const set =
-    (k: keyof typeof d) => (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) =>
+    (k: keyof typeof empty) => (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) =>
       setD({ ...d, [k]: e.target.value });
 
   const validate = () => {
-    if (step === 0 && !d.name) return "Please enter your full name.";
-    if (step === 1 && (!d.email.includes("@") || d.phone.length < 8))
-      return "Please enter a valid email and phone number.";
-    if (step === 2 && (d.pw.length < 6 || d.pw !== d.pw2))
-      return "Passwords must match and be at least 6 characters.";
-    if (step === 3 && !d.terms) return "Please agree to the membership terms.";
+    if (step === 0) {
+      if (!d.name.trim()) return t("forms.join.errName");
+      if (!EMAIL_RE.test(d.email.trim())) return t("forms.join.errEmail");
+      if (d.phone.replace(/\D/g, "").length < 7) return t("forms.join.errPhone");
+    }
+    if (step === 1 && !d.street.trim()) return t("forms.join.errStreet");
     return "";
   };
+
+  const onPhoto = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0] ?? null;
+    e.target.value = "";
+    if (!file) return;
+    if (!isAllowedPhoto(file)) {
+      setPhoto(null);
+      setErr(t("forms.join.errPhoto"));
+      return;
+    }
+    setErr("");
+    setPhoto(file);
+  };
+
+  const submit = async () => {
+    if (busy) return;
+    setBusy(true);
+    setErr("");
+    try {
+      const compressed = photo ? await compressPhoto(photo) : null;
+      const reply = await submitIntake(
+        {
+          type: "application",
+          name: d.name.trim(),
+          phone: d.phone.trim(),
+          email: d.email.trim(),
+          street: d.street.trim(),
+          city: d.city.trim(),
+          district: d.district.trim(),
+          postal_code: d.postal.trim(),
+          has_photo: !!compressed,
+          website: d.website, // honeypot
+        },
+        t("forms.join.sendFailed"),
+      );
+      let photoFailed = false;
+      if (compressed && reply.photo_upload) {
+        const { path, token } = reply.photo_upload;
+        const { error: upErr } = await supabase.storage
+          .from("member-photos")
+          .uploadToSignedUrl(path, token, compressed, {
+            contentType: compressed.type,
+            upsert: true,
+          });
+        photoFailed = !!upErr;
+      }
+      setDone({ name: d.name.trim(), phone: d.phone.trim(), ref: reply.id ?? null, photoFailed });
+      setD(empty);
+      setPhoto(null);
+      window.scrollTo(0, 0);
+    } catch (e) {
+      // Keep everything the visitor typed; just say what went wrong.
+      setErr(describeError(e));
+    } finally {
+      setBusy(false);
+    }
+  };
+
   const nextStep = () => {
     const e = validate();
     setErr(e);
     if (e) return;
-    if (step === 3) setDone(true);
+    if (step === 3) void submit();
     else setStep(step + 1);
   };
+
+  const reviewRows: [string, string][] = [
+    [t("forms.join.name"), d.name],
+    [t("forms.join.email"), d.email],
+    [t("forms.join.phone"), d.phone],
+    [t("forms.join.street"), d.street],
+    [t("forms.join.city"), d.city || "—"],
+    [t("forms.join.district"), d.district || "—"],
+    [t("forms.join.postal"), d.postal || "—"],
+    [t("forms.join.reviewPhoto"), photo ? photo.name : t("forms.join.photoNone")],
+    [t("forms.join.reviewMembership"), t("forms.join.reviewFree")],
+  ];
 
   return (
     <div className="min-h-screen">
@@ -78,55 +159,51 @@ function Join() {
           to="/"
           className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground"
         >
-          <ArrowLeft className="h-4 w-4" /> Back to website
+          <ArrowLeft className="h-4 w-4" /> {t("forms.join.backToSite")}
         </Link>
       </header>
 
       {done ? (
-        <div className="container-page max-w-2xl py-20 text-center">
+        <div className="container-page max-w-2xl py-20 text-center" role="status">
           <div className="mx-auto grid h-16 w-16 place-items-center rounded-full bg-success text-background">
             <Check className="h-7 w-7" />
           </div>
-          <h1 className="mt-8 text-5xl md:text-6xl">Welcome to Noholi, {d.name.split(" ")[0]}.</h1>
+          <h1 className="mt-8 text-5xl md:text-6xl">{t("forms.join.doneTitle")}</h1>
           <p className="mx-auto mt-4 max-w-md text-muted-foreground">
-            Your application is received. Bring a photo ID to the front desk within 14 days to
-            collect your card.
+            {t("forms.join.doneThanks", { name: done.name })}
+            {done.ref ? ` ${t("forms.join.doneRef", { ref: done.ref })}` : ""}{" "}
+            {t("forms.join.donePhone", { phone: done.phone })}
           </p>
-          <div className="mx-auto mt-10 max-w-sm border border-foreground p-6 text-left">
-            <div className="flex items-start justify-between">
-              <Logo className="h-7" />
-              <span className="eyebrow">Patron card</span>
+          {done.photoFailed && (
+            <p className="mx-auto mt-3 max-w-md text-sm text-warning" role="alert">
+              {t("forms.join.donePhotoFailed")}
+            </p>
+          )}
+          {done.ref && (
+            <div className="mx-auto mt-8 max-w-xs border border-foreground p-5 text-left">
+              <div className="eyebrow">{t("forms.join.refLabel")}</div>
+              <div className="mt-2 font-mono text-2xl">{done.ref}</div>
             </div>
-            <div className="mt-8 font-display text-2xl">{d.name}</div>
-            <div className="mt-1 flex justify-between text-sm text-muted-foreground">
-              <span>NH-00{Math.floor(200 + Math.random() * 700)}</span>
-              <span>Free membership</span>
-            </div>
-            <div className="mt-3 inline-flex items-center gap-1.5 text-xs text-warning">
-              <span className="h-1.5 w-1.5 rounded-full bg-warning" /> Pending verification
-            </div>
-          </div>
+          )}
           <div className="mt-10 flex flex-wrap justify-center gap-3">
-            <Button size="lg" onClick={() => nav({ to: "/login" })}>
-              Log in
+            <Button size="lg" asChild>
+              <Link to="/library/books">{t("forms.join.browse")}</Link>
             </Button>
             <Button size="lg" variant="outline" asChild>
-              <Link to="/library/books">Browse the library</Link>
+              <Link to="/">{t("forms.join.backToSite")}</Link>
             </Button>
           </div>
         </div>
       ) : (
         <div className="container-page grid gap-16 py-14 lg:grid-cols-12">
           <aside className="lg:col-span-4">
-            <div className="eyebrow mb-4">Membership</div>
-            <h1 className="text-5xl leading-[1]">Become part of Noholi.</h1>
-            <p className="mt-4 text-muted-foreground">
-              Membership is free. Four short steps — about three minutes, no payment.
-            </p>
+            <div className="eyebrow mb-4">{t("forms.join.eyebrow")}</div>
+            <h1 className="text-5xl leading-[1]">{t("forms.join.title")}</h1>
+            <p className="mt-4 text-muted-foreground">{t("forms.join.intro")}</p>
             <ol className="mt-10 space-y-1" aria-label="Progress">
-              {steps.map((s, i) => (
+              {stepKeys.map((k, i) => (
                 <li
-                  key={s}
+                  key={k}
                   className={cn(
                     "flex items-center gap-4 py-2",
                     i > step && "text-muted-foreground",
@@ -144,7 +221,7 @@ function Join() {
                   >
                     {i < step ? <Check className="h-4 w-4" /> : i + 1}
                   </span>
-                  <span className={cn(i === step && "font-medium")}>{s}</span>
+                  <span className={cn(i === step && "font-medium")}>{t(k)}</span>
                 </li>
               ))}
             </ol>
@@ -157,48 +234,53 @@ function Join() {
               />
             </div>
             <h2 className="mb-8 text-3xl">
-              Step {step + 1} —{" "}
-              {
-                [
-                  "Personal information",
-                  "Contact information",
-                  "Account setup",
-                  "Review & confirm",
-                ][step]
-              }
+              {t("forms.join.stepHeading", { n: step + 1, name: t(stepKeys[step]) })}
             </h2>
-            <div className="grid gap-5 sm:grid-cols-2">
+            <form
+              className="grid gap-5 sm:grid-cols-2"
+              onSubmit={(e) => {
+                e.preventDefault();
+                nextStep();
+              }}
+              noValidate
+            >
               {step === 0 && (
                 <>
                   <div className="space-y-2 sm:col-span-2">
-                    <Label htmlFor="name">Full name</Label>
+                    <Label htmlFor="name">{t("forms.join.name")}</Label>
                     <Input
                       id="name"
+                      name="name"
+                      autoComplete="name"
                       value={d.name}
                       onChange={set("name")}
-                      placeholder="e.g. Nusrat Jahan"
+                      placeholder={t("forms.join.namePh")}
                       className="h-12"
                     />
                   </div>
                   <div className="space-y-2">
-                    <Label htmlFor="dob">Date of birth</Label>
+                    <Label htmlFor="em">{t("forms.join.email")}</Label>
                     <Input
-                      id="dob"
-                      type="date"
-                      value={d.dob}
-                      onChange={set("dob")}
+                      id="em"
+                      name="email"
+                      type="email"
+                      autoComplete="email"
+                      value={d.email}
+                      onChange={set("email")}
+                      placeholder={t("forms.join.emailPh")}
                       className="h-12"
                     />
                   </div>
                   <div className="space-y-2">
-                    <Label htmlFor="g">
-                      Occupation <span className="text-muted-foreground">(optional)</span>
-                    </Label>
+                    <Label htmlFor="ph">{t("forms.join.phone")}</Label>
                     <Input
-                      id="g"
-                      value={d.gender}
-                      onChange={set("gender")}
-                      placeholder="Student, teacher…"
+                      id="ph"
+                      name="phone"
+                      type="tel"
+                      autoComplete="tel"
+                      value={d.phone}
+                      onChange={set("phone")}
+                      placeholder={t("forms.join.phonePh")}
                       className="h-12"
                     />
                   </div>
@@ -206,35 +288,58 @@ function Join() {
               )}
               {step === 1 && (
                 <>
-                  <div className="space-y-2">
-                    <Label htmlFor="em">Email</Label>
-                    <Input
-                      id="em"
-                      type="email"
-                      value={d.email}
-                      onChange={set("email")}
-                      placeholder="you@example.com"
-                      className="h-12"
-                    />
-                  </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="ph">Phone</Label>
-                    <Input
-                      id="ph"
-                      value={d.phone}
-                      onChange={set("phone")}
-                      placeholder="+880 17…"
-                      className="h-12"
-                    />
-                  </div>
                   <div className="space-y-2 sm:col-span-2">
-                    <Label htmlFor="ad">Address</Label>
-                    <Textarea
-                      id="ad"
-                      value={d.address}
-                      onChange={set("address")}
-                      placeholder="House, road, area, city"
-                      rows={3}
+                    <Label htmlFor="st">{t("forms.join.street")}</Label>
+                    <Input
+                      id="st"
+                      name="street"
+                      autoComplete="street-address"
+                      value={d.street}
+                      onChange={set("street")}
+                      placeholder={t("forms.join.streetPh")}
+                      className="h-12"
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="ci">
+                      {t("forms.join.city")}{" "}
+                      <span className="text-muted-foreground">{t("forms.join.optional")}</span>
+                    </Label>
+                    <Input
+                      id="ci"
+                      name="city"
+                      autoComplete="address-level2"
+                      value={d.city}
+                      onChange={set("city")}
+                      className="h-12"
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="di">
+                      {t("forms.join.district")}{" "}
+                      <span className="text-muted-foreground">{t("forms.join.optional")}</span>
+                    </Label>
+                    <Input
+                      id="di"
+                      name="district"
+                      autoComplete="address-level1"
+                      value={d.district}
+                      onChange={set("district")}
+                      className="h-12"
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="po">
+                      {t("forms.join.postal")}{" "}
+                      <span className="text-muted-foreground">{t("forms.join.optional")}</span>
+                    </Label>
+                    <Input
+                      id="po"
+                      name="postal_code"
+                      autoComplete="postal-code"
+                      value={d.postal}
+                      onChange={set("postal")}
+                      className="h-12"
                     />
                   </div>
                 </>
@@ -242,65 +347,91 @@ function Join() {
               {step === 2 && (
                 <>
                   <div className="border-y border-foreground py-4 sm:col-span-2">
-                    <div className="font-display text-xl">Membership is free.</div>
+                    <div className="font-display text-xl">{t("forms.join.freeTitle")}</div>
                     <div className="mt-1 text-sm text-muted-foreground">
-                      No membership fee and no payment — now or later. Borrowing is free too.
+                      {t("forms.join.freeBody")}
                     </div>
                   </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="pw">Password</Label>
-                    <Input
-                      id="pw"
-                      type="password"
-                      value={d.pw}
-                      onChange={set("pw")}
-                      className="h-12"
+                  <div className="space-y-3 sm:col-span-2">
+                    <Label htmlFor="photo">
+                      {t("forms.join.photo")}{" "}
+                      <span className="text-muted-foreground">{t("forms.join.optional")}</span>
+                    </Label>
+                    <p className="text-sm text-muted-foreground">{t("forms.join.photoHint")}</p>
+                    <input
+                      id="photo"
+                      type="file"
+                      accept="image/jpeg,image/png,image/webp"
+                      className="sr-only"
+                      onChange={onPhoto}
                     />
-                  </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="pw2">Confirm password</Label>
-                    <Input
-                      id="pw2"
-                      type="password"
-                      value={d.pw2}
-                      onChange={set("pw2")}
-                      className="h-12"
-                    />
+                    <div className="flex flex-wrap items-center gap-3">
+                      <Button type="button" variant="outline" asChild>
+                        <label htmlFor="photo" className="cursor-pointer">
+                          {photo ? t("forms.join.changePhoto") : t("forms.join.choosePhoto")}
+                        </label>
+                      </Button>
+                      {photo && (
+                        <>
+                          <span className="min-w-0 truncate text-sm">
+                            {t("forms.join.photoSelected", { name: photo.name })}
+                          </span>
+                          <Button
+                            type="button"
+                            variant="ghost"
+                            size="sm"
+                            onClick={() => setPhoto(null)}
+                          >
+                            {t("forms.join.removePhoto")}
+                          </Button>
+                        </>
+                      )}
+                    </div>
                   </div>
                 </>
               )}
               {step === 3 && (
                 <div className="sm:col-span-2">
                   <dl className="divide-y divide-border border-y border-border">
-                    {[
-                      ["Name", d.name],
-                      ["Date of birth", d.dob || "—"],
-                      ["Email", d.email],
-                      ["Phone", d.phone],
-                      ["Address", d.address || "—"],
-                      ["Membership", "Free"],
-                    ].map(([k, v]) => (
+                    {reviewRows.map(([k, v]) => (
                       <div key={k} className="grid grid-cols-[140px_minmax(0,1fr)] py-3 text-sm">
                         <dt className="text-muted-foreground">{k}</dt>
-                        <dd>{v}</dd>
+                        <dd className="break-words">{v}</dd>
                       </div>
                     ))}
                   </dl>
-                  <label className="mt-6 flex items-start gap-3 text-sm">
-                    <Checkbox
-                      checked={d.terms}
-                      onCheckedChange={(c) => setD({ ...d, terms: !!c })}
-                      className="mt-0.5"
-                    />{" "}
-                    I agree to the Noholi membership terms and borrowing rules, including fines for
-                    late returns according to library policy.
-                  </label>
+                  <p className="mt-6 text-sm text-muted-foreground">
+                    {t("forms.join.consent")}{" "}
+                    <Link to="/privacy" className="underline underline-offset-2 hover:text-accent">
+                      {t("forms.join.consentLink")}
+                    </Link>
+                    .
+                  </p>
                 </div>
               )}
-            </div>
+              {/* honeypot: visually hidden and empty; bots fill it (CONTRACT.md §5) */}
+              <div className="absolute left-[-9999px] h-0 w-0 overflow-hidden" aria-hidden="true">
+                <label htmlFor="join-website">Website</label>
+                <input
+                  id="join-website"
+                  name="website"
+                  tabIndex={-1}
+                  autoComplete="off"
+                  value={d.website}
+                  onChange={set("website")}
+                />
+              </div>
+              {/* Enter submits the current step; the visible buttons below do the same. */}
+              <button type="submit" className="hidden" tabIndex={-1} aria-hidden="true" />
+            </form>
             {err && (
               <p className="mt-5 text-sm text-destructive" role="alert">
                 {err}
+              </p>
+            )}
+            {busy && (
+              <p className="mt-5 text-sm text-muted-foreground" role="status">
+                {t("forms.join.sending")}
               </p>
             )}
             <div className="mt-10 flex justify-between">
@@ -310,12 +441,21 @@ function Join() {
                   setErr("");
                   setStep(Math.max(0, step - 1));
                 }}
-                disabled={step === 0}
+                disabled={step === 0 || busy}
               >
-                Back
+                {t("forms.join.back")}
               </Button>
-              <Button size="lg" variant={step === 3 ? "accent" : "default"} onClick={nextStep}>
-                {step === 3 ? "Submit application" : "Continue"}
+              <Button
+                size="lg"
+                variant={step === 3 ? "accent" : "default"}
+                onClick={nextStep}
+                disabled={busy}
+              >
+                {step === 3
+                  ? busy
+                    ? t("forms.join.sending")
+                    : t("forms.join.submit")
+                  : t("forms.join.continue")}
               </Button>
             </div>
           </div>

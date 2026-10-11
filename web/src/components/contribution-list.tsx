@@ -2,8 +2,55 @@ import { Link } from "@tanstack/react-router";
 import { Button } from "@/components/ui/button";
 import { Empty, fmtDate, Stars, StatusBadge } from "@/components/noholi";
 import { DetailsLink } from "@/components/record-view";
+import { Dialog, DialogContent, DialogDescription, DialogTitle } from "@/components/ui/dialog";
 import type { Contribution } from "@/lib/data";
+import { useApp } from "@/lib/store";
 import { cn } from "@/lib/utils";
+
+/**
+ * Wishlist, recommendations, contributions and reviews have no backend yet. Pages stay viewable,
+ * lists are honestly empty, and every submit / save / upload control shows this instead of a success.
+ */
+export function ComingSoonBanner({ className }: { className?: string }) {
+  const { t } = useApp();
+  return (
+    <div
+      role="note"
+      className={cn(
+        "border-l-2 border-foreground/30 py-1 pl-5 text-sm text-muted-foreground",
+        className,
+      )}
+    >
+      <span className="eyebrow mr-2 text-foreground">{t("forms.soon.badge")}</span>
+      {t("forms.soon.banner")}
+    </div>
+  );
+}
+
+/** "Coming soon" dialog for a control that would otherwise submit / save / upload. Never a success message. */
+export function ComingSoonDialog({
+  open,
+  onOpenChange,
+}: {
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
+}) {
+  const { t } = useApp();
+  return (
+    <Dialog open={open} onOpenChange={onOpenChange}>
+      <DialogContent className="rounded-sm sm:max-w-md">
+        <div className="eyebrow">{t("forms.soon.badge")}</div>
+        <DialogTitle className="font-display text-3xl font-normal leading-tight">
+          {t("forms.soon.title")}
+        </DialogTitle>
+        <DialogDescription className="text-base">{t("forms.soon.dialogBody")}</DialogDescription>
+        <Button className="mt-2" onClick={() => onOpenChange(false)}>
+          {t("forms.soon.ok")}
+        </Button>
+      </DialogContent>
+    </Dialog>
+  );
+}
 
 export const kindLabel = {
   blog: "Blog",
@@ -63,18 +110,19 @@ export function FilterPills({
 export function ContributionRows({
   list,
   showKind = true,
-  emptyBody,
 }: {
   list: Contribution[];
   showKind?: boolean;
-  emptyBody: string;
+  /** Ignored: an empty list always shows the "coming soon" state (no backend yet). */
+  emptyBody?: string;
 }) {
+  const { t } = useApp();
   if (!list.length)
     return (
       <div className="mt-8">
         <Empty
-          title="Nothing in this list yet."
-          body={emptyBody}
+          title={t("forms.soon.list")}
+          body={t("forms.soon.listBody")}
           action={
             <Button variant="outline" asChild>
               <Link to="/writeups">Explore Write Ups</Link>

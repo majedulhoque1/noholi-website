@@ -3,6 +3,7 @@ import { ArrowRight } from "lucide-react";
 import { BookCover, PageIntro, WishButton } from "@/components/noholi";
 import { Button } from "@/components/ui/button";
 import { books } from "@/lib/data";
+import { useApp } from "@/lib/store";
 
 export const Route = createFileRoute("/library/noholi")({
   head: () => ({
@@ -25,6 +26,7 @@ export const Route = createFileRoute("/library/noholi")({
 });
 
 function NoholiBooks() {
+  const { t } = useApp();
   const list = books.filter((b) => b.noholi);
   const [lead, ...rest] = list;
   return (
@@ -56,8 +58,8 @@ function NoholiBooks() {
             </div>
             <div className="mt-8 flex flex-wrap items-center gap-4">
               <Button size="lg" asChild>
-                <Link to="/book/$id" params={{ id: lead.id }}>
-                  View details <ArrowRight />
+                <Link to="/search" search={{ q: lead.titleEn }}>
+                  {t("catalog.findInCatalogue")} <ArrowRight />
                 </Link>
               </Button>
               <WishButton id={lead.id} label />
@@ -75,14 +77,14 @@ function NoholiBooks() {
               className="grid gap-6 py-10 md:grid-cols-[40px_160px_minmax(0,1fr)_auto] md:items-start"
             >
               <span className="font-display text-muted-foreground">0{i + 2}</span>
-              <Link to="/book/$id" params={{ id: b.id }}>
+              <Link to="/search" search={{ q: b.titleEn }}>
                 <BookCover book={b} className="w-32 md:w-full" />
               </Link>
               <div className="max-w-xl">
                 <div className="eyebrow mb-2">
                   {b.genre} · {b.category} · {b.language}
                 </div>
-                <Link to="/book/$id" params={{ id: b.id }} className="hover:text-accent">
+                <Link to="/search" search={{ q: b.titleEn }} className="hover:text-accent">
                   <h3 className={b.language === "Bangla" ? "font-bangla text-3xl" : "text-3xl"}>
                     {b.language === "Bangla" ? b.titleBn : b.titleEn}
                   </h3>
@@ -98,8 +100,8 @@ function NoholiBooks() {
               <div className="flex items-center gap-4">
                 <WishButton id={b.id} />
                 <Button variant="outline" asChild>
-                  <Link to="/book/$id" params={{ id: b.id }}>
-                    Details
+                  <Link to="/search" search={{ q: b.titleEn }}>
+                    {t("catalog.findInCatalogue")}
                   </Link>
                 </Button>
               </div>

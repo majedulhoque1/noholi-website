@@ -1,10 +1,12 @@
 import { Link } from "@tanstack/react-router";
-import { Facebook, Instagram, Youtube } from "lucide-react";
 import { Logo } from "@/components/noholi";
 import { LocationMap } from "@/components/location-map";
 import { LangToggle, libraryLinks, ThemeToggle, writeLinks } from "@/components/site-header";
 import { library } from "@/lib/data";
 import { useApp } from "@/lib/store";
+
+// Noholi OS (staff console). Override with VITE_ADMIN_URL when it moves to a custom domain.
+const ADMIN_URL = import.meta.env.VITE_ADMIN_URL || "https://noholi-admin1.vercel.app";
 
 export function SiteFooter() {
   const { t } = useApp();
@@ -16,17 +18,6 @@ export function SiteFooter() {
           <p className="mt-6 max-w-xs font-display text-xl leading-snug">
             A library and literary home for readers, listeners and writers in Bangladesh.
           </p>
-          <div className="mt-6 flex gap-4 text-muted-foreground">
-            <a href="#" aria-label="Facebook" className="hover:text-foreground">
-              <Facebook className="h-5 w-5" />
-            </a>
-            <a href="#" aria-label="Instagram" className="hover:text-foreground">
-              <Instagram className="h-5 w-5" />
-            </a>
-            <a href="#" aria-label="YouTube" className="hover:text-foreground">
-              <Youtube className="h-5 w-5" />
-            </a>
-          </div>
         </div>
         <FooterCol
           title="Noholi"
@@ -35,6 +26,7 @@ export function SiteFooter() {
             { to: "/about", l: t("about") },
             { to: "/contact", l: t("contact") },
             { to: "/join", l: t("become") },
+            { to: "/privacy", l: t("forms.footer.privacy") },
           ]}
         />
         <FooterCol
@@ -43,35 +35,46 @@ export function SiteFooter() {
         />
         <FooterCol title={t("writeups")} links={writeLinks.map((x) => ({ to: x.to, l: t(x.k) }))} />
         <div className="md:col-span-2">
-          <div className="eyebrow mb-4">Visit</div>
-          <address className="text-sm not-italic leading-relaxed text-muted-foreground">
-            <a
-              href={library.mapsUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="hover:text-accent"
-            >
-              {library.address.map((l) => (
-                <span key={l}>
-                  {l}
-                  <br />
-                </span>
-              ))}
-            </a>
-            <span className="tabular-nums">{library.hoursShort}</span>
-            <br />
-            <a href="mailto:hello@noholi.org" className="text-foreground hover:text-accent">
-              hello@noholi.org
-            </a>
-          </address>
+          <div className="eyebrow mb-4">{t("forms.footer.visit")}</div>
+          {library.confirmed ? (
+            <address className="text-sm not-italic leading-relaxed text-muted-foreground">
+              <a
+                href={library.mapsUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="hover:text-accent"
+              >
+                {library.address.map((l) => (
+                  <span key={l}>
+                    {l}
+                    <br />
+                  </span>
+                ))}
+              </a>
+              <span className="tabular-nums">{library.hoursShort}</span>
+              <br />
+              <a href={`mailto:${library.email}`} className="text-foreground hover:text-accent">
+                {library.email}
+              </a>
+            </address>
+          ) : (
+            <p className="text-sm leading-relaxed text-muted-foreground">
+              {t("forms.footer.visitSoon")}
+            </p>
+          )}
         </div>
       </div>
-      <div className="container-page pb-14">
-        <LocationMap className="h-72 w-full" card="sm" />
-      </div>
+      {library.confirmed && (
+        <div className="container-page pb-14">
+          <LocationMap className="h-72 w-full" card="sm" />
+        </div>
+      )}
       <div className="container-page flex flex-col gap-4 border-t border-border py-6 text-xs text-muted-foreground sm:flex-row sm:items-center sm:justify-between">
-        <span>© 2026 Noholi Library. Prototype — all data is for demonstration.</span>
+        <span>{t("forms.footer.copyright")}</span>
         <div className="flex items-center gap-3">
+          <a href={ADMIN_URL} rel="nofollow" className="hover:text-foreground">
+            {t("forms.footer.staff")}
+          </a>
           <LangToggle />
           <ThemeToggle />
         </div>

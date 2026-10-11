@@ -1,6 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { z } from "zod";
 import { Button } from "@/components/ui/button";
+import { ComingSoonBanner } from "@/components/contribution-list";
 import { Availability, BookCover, Cover, Empty } from "@/components/noholi";
 import { audiobooks, getBook } from "@/lib/data";
 import { useApp } from "@/lib/store";
@@ -29,14 +30,18 @@ export const Route = createFileRoute("/account/wishlist")({
 });
 
 function Wishlist() {
-  const { wishlist, toggleWish, play } = useApp();
+  const { wishlist, toggleWish, play, t } = useApp();
   const { type: tab = "All" } = Route.useSearch();
-  const items = wishlist.map((id) => {
-    const a = audiobooks.find((x) => x.id === id);
-    if (a) return { id, type: "Audio Books" as const, a };
-    const b = getBook(id)!;
-    return { id, type: b.ebook ? ("E-Books" as const) : ("Books" as const), b };
-  });
+  // Sample-data lookup only (wishlist is coming soon and empty); an id that matches nothing is skipped.
+  const items = wishlist
+    .map((id) => {
+      const a = audiobooks.find((x) => x.id === id);
+      if (a) return { id, type: "Audio Books" as const, a };
+      const b = getBook(id);
+      if (!b) return null;
+      return { id, type: b.ebook ? ("E-Books" as const) : ("Books" as const), b };
+    })
+    .filter((i): i is NonNullable<typeof i> => i !== null);
   const list = items.filter((i) => tab === "All" || i.type === tab);
 
   return (
@@ -49,6 +54,7 @@ function Wishlist() {
         </Link>
         .
       </p>
+      <ComingSoonBanner className="mb-8" />
       <div className="mb-8 flex flex-wrap gap-2">
         {tabs.map((t) => (
           <Link
@@ -70,8 +76,8 @@ function Wishlist() {
       </div>
       {list.length === 0 ? (
         <Empty
-          title="No books saved yet."
-          body="Tap the heart on any book, e-book or audio book to save it here."
+          title={t("forms.soon.list")}
+          body={t("forms.soon.wish")}
           action={
             <Button asChild>
               <Link to="/library/books">Explore the library</Link>

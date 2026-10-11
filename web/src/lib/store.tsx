@@ -13,8 +13,6 @@ import {
   audiobooks,
   user,
   initialBorrowRequests,
-  initialContributions,
-  initialRecommendations,
   type Audio,
   type BorrowRequest,
   type Contribution,
@@ -22,7 +20,6 @@ import {
 } from "./data";
 import { setActiveLang, translateFor, type Lang, type TKey, type TVars } from "./i18n";
 import { useAuth, type MemberRow } from "./auth";
-import memberPhoto from "@/assets/member-aurko.jpg";
 
 type Ctx = {
   theme: "light" | "dark";
@@ -36,8 +33,6 @@ type Ctx = {
   /** Real sign-in (resolve_login -> password -> my_role). Rejects with a reader-facing Error; use describeError(err). */
   login: (identifier: string, password: string) => Promise<MemberRow>;
   logout: () => void;
-  avatar: string | null;
-  setAvatar: (url: string | null) => void;
   memberPrompt: string | null;
   askMember: (reason: string) => void;
   closeMemberPrompt: () => void;
@@ -83,6 +78,11 @@ type Ctx = {
 
 const today = () => new Date().toISOString().slice(0, 10);
 
+// Stable empty lists for the features that are "coming soon" (wishlist, contributions, recommendations).
+const NO_IDS: string[] = [];
+const NO_CONTRIBUTIONS: Contribution[] = [];
+const NO_RECOMMENDATIONS: Recommendation[] = [];
+
 // Keep one context instance across hot reloads; otherwise an edit to this file creates a new
 // context while the mounted provider still uses the old one ("useApp outside provider").
 const g = globalThis as unknown as { __noholiCtx?: React.Context<Ctx | null> };
@@ -113,18 +113,12 @@ export function AppProvider({ children }: { children: ReactNode }) {
   const auth = useAuth();
   const loggedIn = !!auth.session;
   const { signIn, signOut } = auth;
-  const [avatar, setAvatar] = useState<string | null>(memberPhoto);
   const [memberPrompt, setMemberPrompt] = useState<string | null>(null);
-  const [wishlist, setWishlist] = useState<string[]>([
-    "khoabnama",
-    "a-gitanjali",
-    "nodir-naam",
-    "sapiens",
-    "pather-panchali",
-  ]);
+  // Wishlist, contributions and recommendations have no backend yet: always empty, never mock records.
+  const wishlist = NO_IDS;
   const [borrowRequests, setBorrowRequests] = useState<BorrowRequest[]>(initialBorrowRequests);
-  const [contributions, setContributions] = useState<Contribution[]>(initialContributions);
-  const [recommendations, setRecommendations] = useState<Recommendation[]>(initialRecommendations);
+  const contributions = NO_CONTRIBUTIONS;
+  const recommendations = NO_RECOMMENDATIONS;
   const [player, setPlayer] = useState<Ctx["player"]>({
     track: null,
     playing: false,
@@ -177,8 +171,6 @@ export function AppProvider({ children }: { children: ReactNode }) {
         void signOut();
         toast("You have been logged out.");
       },
-      avatar,
-      setAvatar,
       memberPrompt,
       askMember: setMemberPrompt,
       closeMemberPrompt: () => setMemberPrompt(null),
@@ -186,19 +178,18 @@ export function AppProvider({ children }: { children: ReactNode }) {
         if (loggedIn) fn();
         else setMemberPrompt(reason);
       },
-      removeContribution: (id) => setContributions((x) => x.filter((c) => c.id !== id)),
+      // Coming soon: no backend yet, so these never create, remove or "save" anything.
+      removeContribution: () => {
+        toast(t("forms.soon.contribute"));
+      },
       wishlist,
-      inWish: (id) => loggedIn && wishlist.includes(id),
-      toggleWish: (id) => {
+      inWish: () => false,
+      toggleWish: () => {
         if (!loggedIn) {
           setMemberPrompt("Log in or become a free member to save books to your wishlist.");
           return;
         }
-        setWishlist((w) => {
-          const has = w.includes(id);
-          toast(has ? "Removed from wishlist" : "Saved to wishlist");
-          return has ? w.filter((x) => x !== id) : [id, ...w];
-        });
+        toast(t("forms.soon.wish"));
       },
       borrowRequests,
       addBorrowRequest: (r) => {
@@ -244,39 +235,15 @@ export function AppProvider({ children }: { children: ReactNode }) {
         toast("Borrow request cancelled", { description: id });
       },
       contributions,
-      addContribution: (c) => {
-        const id = `C-${1183 + contributions.length}`;
-        const d = today();
-        setContributions((x) => [
-          {
-            ...c,
-            id,
-            updated: d,
-            ...(c.status === "Draft" ? {} : { submitted: d }),
-            timeline: [
-              { date: d, label: c.status === "Draft" ? "Draft saved" : "Submitted for review" },
-            ],
-          },
-          ...x,
-        ]);
-        return id;
+      // Coming soon: nothing is created. Returns "" (no record id); callers must not show success.
+      addContribution: () => {
+        toast(t("forms.soon.contribute"));
+        return "";
       },
       recommendations,
-      addRecommendation: (r) => {
-        const id = `RQ-00${94 + recommendations.length}`;
-        const d = today();
-        setRecommendations((x) => [
-          {
-            ...r,
-            id,
-            date: d,
-            updated: d,
-            status: "Submitted",
-            timeline: [{ date: d, label: "Submitted" }],
-          },
-          ...x,
-        ]);
-        return id;
+      addRecommendation: () => {
+        toast(t("forms.soon.recommend"));
+        return "";
       },
       player,
       play: (id) => {
@@ -320,7 +287,6 @@ export function AppProvider({ children }: { children: ReactNode }) {
       loggedIn,
       signIn,
       signOut,
-      avatar,
       memberPrompt,
       wishlist,
       borrowRequests,

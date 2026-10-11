@@ -2,17 +2,34 @@ import { Link, useNavigate } from "@tanstack/react-router";
 import { Search, X } from "lucide-react";
 import { useEffect, useId, useMemo, useRef, useState } from "react";
 import { Cover } from "@/components/noholi";
-import { groupOrder, runSearch, type SearchGroup, type SearchItem } from "@/lib/search";
+import {
+  groupLabel,
+  groupOrder,
+  publicLocalGroups,
+  runSearch,
+  searchBookItems,
+  type SearchGroup,
+  type SearchItem,
+} from "@/lib/search";
+import { describeError } from "@/lib/supabase";
+import { useApp } from "@/lib/store";
 import { cn } from "@/lib/utils";
 
 type Props = {
   groups?: SearchGroup[];
   placeholder?: string;
-  /** Picker mode: called instead of navigating (e.g. choosing a book for a review). */
+  /**
+   * Picker mode: called instead of navigating (e.g. choosing a book for a review). Picker mode
+   * searches the local sample index only, because the callers look the picked id up in it.
+   */
   onPick?: (item: SearchItem) => void;
   /** Controlled text, for pages that also filter a list as you type. */
   value?: string;
   onValueChange?: (v: string) => void;
+  /** Called on Enter when `suggest` is off (the page applies the text itself). */
+  onSubmit?: (v: string) => void;
+  /** Show the grouped autocomplete. Turn off on pages that already list the results themselves. */
+  suggest?: boolean;
   autoFocus?: boolean;
   className?: string;
   inputClassName?: string;
@@ -20,37 +37,90 @@ type Props = {
   showViewAll?: boolean;
 };
 
-/** The one Noholi search: grouped autocomplete used across the site. */
+/** Books shown in the autocomplete (one small server page). */
+const BOOK_SUGGESTIONS = 6;
+const DEBOUNCE_MS = 250;
+
+type Remote = {
+  status: "loading" | "ready" | "error";
+  items: SearchItem[];
+  error?: string;
+};
+
+/**
+ * The one Noholi search: grouped autocomplete used across the site. Books come from the server
+ * (`search_books`, debounced, stale requests aborted); write ups, e-books and audio books come
+ * from the local index.
+ */
 export function SearchBox({
   groups = groupOrder,
-  placeholder = "Search books, authors, write ups…",
+  placeholder,
   onPick,
   value,
   onValueChange,
+  onSubmit,
+  suggest = true,
   autoFocus,
   className,
   inputClassName,
   perGroup = 4,
   showViewAll = true,
 }: Props) {
+  const { t, lang } = useApp();
+  const ph = placeholder ?? t("search");
   const [inner, setInner] = useState("");
   const q = value ?? inner;
   const setQ = (v: string) => {
-    onValueChange ? onValueChange(v) : setInner(v);
+    if (onValueChange) onValueChange(v);
+    else setInner(v);
   };
   const [open, setOpen] = useState(false);
   const [active, setActive] = useState(0);
   const nav = useNavigate();
   const listId = useId();
   const wrap = useRef<HTMLDivElement>(null);
+  const trimmed = q.trim();
+
+  // Public pages: books from the server, the rest from the local index (no sample books).
+  const remoteOn = suggest && !onPick && groups.includes("Books");
+  const localGroups = onPick ? groups : groups.filter((g) => publicLocalGroups.includes(g));
+
+  const [remote, setRemote] = useState<Remote | null>(null);
+  useEffect(() => {
+    if (!remoteOn || !trimmed) {
+      setRemote(null);
+      return;
+    }
+    const ctrl = new AbortController();
+    // Keep the previous results on screen while the next page is on its way.
+    setRemote((r) => ({ status: "loading", items: r?.items ?? [] }));
+    const timer = setTimeout(() => {
+      searchBookItems(trimmed, { lang, pageSize: BOOK_SUGGESTIONS, signal: ctrl.signal })
+        .then(({ items }) => setRemote({ status: "ready", items }))
+        .catch((err) => {
+          if (ctrl.signal.aborted) return;
+          setRemote({ status: "error", items: [], error: describeError(err) });
+        });
+    }, DEBOUNCE_MS);
+    return () => {
+      clearTimeout(timer);
+      ctrl.abort();
+    };
+  }, [trimmed, remoteOn, lang]);
 
   const grouped = useMemo(() => {
-    const res = runSearch(q, groups);
+    const res = suggest ? runSearch(q, localGroups) : [];
     return groupOrder
       .filter((g) => groups.includes(g))
-      .map((g) => [g, res.filter((r) => r.group === g).slice(0, perGroup)] as const)
+      .map((g) => {
+        const list =
+          g === "Books" && remoteOn
+            ? (remote?.items ?? [])
+            : res.filter((r) => r.group === g).slice(0, perGroup);
+        return [g, list] as const;
+      })
       .filter(([, l]) => l.length);
-  }, [q, groups, perGroup]);
+  }, [q, groups, localGroups, perGroup, remote, remoteOn, suggest]);
   const flat = grouped.flatMap(([, l]) => l);
 
   useEffect(() => setActive(0), [q]);
@@ -86,12 +156,15 @@ export function SearchBox({
     } else if (e.key === "Enter") {
       e.preventDefault();
       const it = flat[active];
-      if (open && it) choose(it);
+      if (!suggest && onSubmit) onSubmit(q);
+      else if (open && it) choose(it);
       else if (!onPick && q.trim()) viewAll();
     } else if (e.key === "Escape") setOpen(false);
   };
 
-  const show = open && q.trim().length > 0;
+  const show = suggest && open && trimmed.length > 0;
+  const searching = remote?.status === "loading";
+  const failed = remote?.status === "error";
   let idx = -1;
   return (
     <div ref={wrap} className={cn("relative", className)}>
@@ -102,11 +175,11 @@ export function SearchBox({
         aria-expanded={show}
         aria-controls={listId}
         aria-autocomplete="list"
-        aria-label={placeholder}
+        aria-label={ph}
         aria-activedescendant={show && flat[active] ? `${listId}-${active}` : undefined}
         value={q}
         autoFocus={autoFocus}
-        placeholder={placeholder}
+        placeholder={ph}
         onChange={(e) => {
           setQ(e.target.value);
           setOpen(true);
@@ -121,7 +194,7 @@ export function SearchBox({
       {q && (
         <button
           type="button"
-          aria-label="Clear search"
+          aria-label={t("catalog.clearSearch")}
           onClick={() => {
             setQ("");
             setOpen(false);
@@ -137,14 +210,19 @@ export function SearchBox({
           role="listbox"
           className="absolute inset-x-0 top-full z-50 mt-1 max-h-[min(70vh,520px)] overflow-y-auto border border-border bg-popover text-popover-foreground shadow-lg"
         >
-          {grouped.length === 0 ? (
-            <div className="px-4 py-6 text-sm text-muted-foreground">
-              Nothing on our shelves matches “{q}”. Try an author's name or a Bangla title.
+          {failed && (
+            <div role="alert" className="px-4 py-3 text-sm text-destructive">
+              {t("catalog.searchError", { error: remote?.error ?? "" })}
+            </div>
+          )}
+          {grouped.length === 0 && !failed ? (
+            <div className="px-4 py-6 text-sm text-muted-foreground" aria-live="polite">
+              {searching ? t("catalog.searching") : t("catalog.noResults", { q })}
             </div>
           ) : (
             grouped.map(([g, list]) => (
               <div key={g} className="border-b border-border py-2 last:border-b-0">
-                <div className="eyebrow px-4 pb-1 pt-1">{g}</div>
+                <div className="eyebrow px-4 pb-1 pt-1">{t(groupLabel[g])}</div>
                 {list.map((it) => {
                   idx++;
                   const i = idx;
@@ -167,6 +245,7 @@ export function SearchBox({
                           title=""
                           author=""
                           tone={it.tone}
+                          src={it.cover}
                           size="sm"
                           className="w-7 shadow-none"
                         />
@@ -195,7 +274,7 @@ export function SearchBox({
               onClick={viewAll}
               className="w-full border-t border-border px-4 py-3 text-left text-sm font-medium hover:bg-muted"
             >
-              View all results for “{q}” →
+              {t("catalog.viewAllResults", { q })}
             </button>
           )}
         </div>
@@ -211,7 +290,7 @@ export function SearchResultRow({ it }: { it: SearchItem }) {
       className="grid grid-cols-[40px_minmax(0,1fr)] items-center gap-4 py-4 hover:text-accent"
     >
       {it.tone !== undefined ? (
-        <Cover title="" author="" tone={it.tone} size="sm" className="w-10" />
+        <Cover title="" author="" tone={it.tone} src={it.cover} size="sm" className="w-10" />
       ) : (
         <span className="grid h-10 w-10 place-items-center rounded-full border border-border font-display">
           {it.title.charAt(0)}

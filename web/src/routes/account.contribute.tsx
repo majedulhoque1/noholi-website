@@ -10,7 +10,8 @@ import { BookCover, Cover, StatusBadge, Stars } from "@/components/noholi";
 import { SearchBox } from "@/components/search-box";
 import { Chips, More, Opt, Req } from "@/components/form-bits";
 import { IdentityUpload, Stepper, SummaryBlock, type DocState } from "@/components/verify";
-import { audiobooks, getBook, user } from "@/lib/data";
+import { audiobooks, getBook } from "@/lib/data";
+import { useAuth } from "@/lib/auth";
 import { useApp } from "@/lib/store";
 import { cn } from "@/lib/utils";
 import {
@@ -22,6 +23,7 @@ import {
   type SubmitMethod,
   type UploadedDoc,
 } from "@/components/doc-upload";
+import { ComingSoonBanner, ComingSoonDialog } from "@/components/contribution-list";
 
 const types = ["blog", "creative", "review"] as const;
 
@@ -64,10 +66,24 @@ function Err({ m }: { m?: string }) {
   return m ? <p className="text-xs text-destructive">{m}</p> : null;
 }
 
+// Writing submissions have no backend yet: the form stays explorable, but nothing is saved or sent,
+// and "Submit" / "Save draft" only open the Coming soon dialog (never a success state).
 function Contribute() {
+  const [soon, setSoon] = useState(false);
+  return (
+    <>
+      <ComingSoonBanner className="mb-8" />
+      <ContributeForm onSoon={() => setSoon(true)} />
+      <ComingSoonDialog open={soon} onOpenChange={setSoon} />
+    </>
+  );
+}
+
+function ContributeForm({ onSoon }: { onSoon: () => void }) {
   const { type = "blog", book: preBook } = Route.useSearch();
   const nav = useNavigate({ from: "/account/contribute" });
-  const { addContribution } = useApp();
+  const { t } = useApp();
+  const { member } = useAuth();
   // shared
   const [title, setTitle] = useState("");
   const [body, setBody] = useState("");
@@ -77,7 +93,7 @@ function Contribute() {
   const [cover, setCover] = useState<DocState>(null);
   const [cat, setCat] = useState<string[]>([]);
   const [tags, setTags] = useState("");
-  const [display, setDisplay] = useState(user.name);
+  const [display, setDisplay] = useState(member?.name ?? "");
   const [relatedBook, setRelatedBook] = useState<string | null>(null);
   const [topic, setTopic] = useState("");
   const [lang, setLang] = useState<string[]>(["Bangla"]);
@@ -104,9 +120,9 @@ function Contribute() {
   const [readDate, setReadDate] = useState("");
   const [rtags, setRtags] = useState<string[]>([]);
   const [tried, setTried] = useState(false);
-  const [sent, setSent] = useState<{ id: string; draft: boolean } | null>(null);
 
   const book = itemId ? getBook(itemId) : undefined;
+  const related = relatedBook ? getBook(relatedBook) : undefined;
   const audio = itemId ? audiobooks.find((a) => a.id === itemId) : undefined;
   const itemTitle = book?.titleEn ?? audio?.titleEn ?? pb.title;
 
@@ -161,15 +177,7 @@ function Contribute() {
       setTried(true);
       return;
     }
-    const id = addContribution({
-      kind: type,
-      title: title || `Review of ${itemTitle}`,
-      status: draft ? "Draft" : "Pending Review",
-      ...(book ? { bookId: book.id } : {}),
-      ...(type === "review" ? { bookTitle: itemTitle, rating } : {}),
-    });
-    setSent({ id, draft });
-    window.scrollTo(0, 0);
+    onSoon(); // coming soon: nothing is created or sent
   };
   const nextStep = () => {
     setTried(true);
@@ -178,64 +186,6 @@ function Contribute() {
     setStep(step + 1);
     window.scrollTo(0, 0);
   };
-
-  if (sent) {
-    return (
-      <div className="max-w-2xl py-6">
-        <div className="grid h-14 w-14 place-items-center rounded-full bg-foreground text-background">
-          <Check className="h-6 w-6" />
-        </div>
-        <h1 className="mt-8 text-5xl leading-tight">
-          {sent.draft
-            ? "Draft saved."
-            : type === "review"
-              ? "Your review has been submitted for moderation."
-              : "Thank you — submitted for review."}
-        </h1>
-        <p className="mt-3 text-muted-foreground">
-          {sent.draft
-            ? "Your draft is private. Open My Contributions whenever you're ready to finish it."
-            : "A Noholi editor will read it before anything is published. You'll see the decision in My Contributions."}
-        </p>
-        <dl className="mt-8 divide-y divide-border border-y border-border text-sm">
-          <div className="grid grid-cols-[120px_minmax(0,1fr)] py-3">
-            <dt className="text-muted-foreground">
-              {type === "review" ? "Review ID" : "Reference"}
-            </dt>
-            <dd className="font-mono">{sent.id}</dd>
-          </div>
-          {type === "review" && (
-            <div className="grid grid-cols-[120px_minmax(0,1fr)] py-3">
-              <dt className="text-muted-foreground">Book</dt>
-              <dd>{itemTitle}</dd>
-            </div>
-          )}
-          {type === "review" && rating > 0 && (
-            <div className="grid grid-cols-[120px_minmax(0,1fr)] py-3">
-              <dt className="text-muted-foreground">Rating</dt>
-              <dd>
-                <Stars n={rating} />
-              </dd>
-            </div>
-          )}
-          <div className="grid grid-cols-[120px_minmax(0,1fr)] py-3">
-            <dt className="text-muted-foreground">Status</dt>
-            <dd>
-              <StatusBadge status={sent.draft ? "Draft" : "Pending Review"} />
-            </dd>
-          </div>
-        </dl>
-        <div className="mt-10 flex gap-3">
-          <Button asChild>
-            <Link to="/account/contributions">My contributions</Link>
-          </Button>
-          <Button variant="outline" asChild>
-            <Link to="/writeups">Back to Write Ups</Link>
-          </Button>
-        </div>
-      </div>
-    );
-  }
 
   const typeTabs = (
     <div className="mt-6 inline-flex border border-border p-0.5" role="tablist" aria-label="Type">
@@ -580,12 +530,15 @@ function Contribute() {
                     />
                   </fieldset>
                   <div className="max-w-[200px]">
-                    <IdentityUpload
-                      kind="photo"
-                      label="Book cover"
-                      value={cover}
-                      onChange={setCover}
-                    />
+                    <fieldset disabled aria-label={t("forms.soon.upload")} className="opacity-60">
+                      <IdentityUpload
+                        kind="photo"
+                        label="Book cover"
+                        value={cover}
+                        onChange={setCover}
+                      />
+                      <p className="mt-2 text-xs text-muted-foreground">{t("forms.soon.upload")}</p>
+                    </fieldset>
                   </div>
                 </div>
               </More>
@@ -713,7 +666,7 @@ function Contribute() {
                 <Stars n={rating} />
                 <h3 className="mt-2 font-display text-3xl">{title}</h3>
                 <div className="mt-1 text-sm text-muted-foreground">
-                  by {user.name}
+                  by {display || member?.name || ""}
                   {readDate && ` · read ${readDate}`}
                   {recommend[0] &&
                     ` · ${recommend[0] === "Yes" ? "Recommends" : "Doesn't recommend"}`}
@@ -955,9 +908,9 @@ function Contribute() {
                   Related book
                   <Opt />
                 </Label>
-                {relatedBook && getBook(relatedBook) ? (
+                {related ? (
                   <div className="flex items-center justify-between border border-border px-4 py-3 text-sm">
-                    <span className="font-display text-lg">{getBook(relatedBook)!.titleEn}</span>
+                    <span className="font-display text-lg">{related.titleEn}</span>
                     <button
                       type="button"
                       onClick={() => setRelatedBook(null)}
@@ -976,13 +929,16 @@ function Contribute() {
               </div>
             )}
             <div className="max-w-md">
-              <IdentityUpload
-                kind="nid"
-                label="Cover image"
-                hint="Landscape images work best."
-                value={cover}
-                onChange={setCover}
-              />
+              <fieldset disabled aria-label={t("forms.soon.upload")} className="opacity-60">
+                <IdentityUpload
+                  kind="nid"
+                  label="Cover image"
+                  hint="Landscape images work best."
+                  value={cover}
+                  onChange={setCover}
+                />
+                <p className="mt-2 text-xs text-muted-foreground">{t("forms.soon.upload")}</p>
+              </fieldset>
             </div>
           </div>
         </More>

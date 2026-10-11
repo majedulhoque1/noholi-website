@@ -39,7 +39,7 @@ function EbookRow({ b }: { b: Book }) {
   const { lang } = useApp();
   return (
     <div className="grid grid-cols-[88px_minmax(0,1fr)] gap-5 border-b border-border py-6">
-      <Link to="/book/$id" params={{ id: b.id }}>
+      <Link to="/read/$id" params={{ id: b.id }}>
         <BookCover book={b} size="sm" />
       </Link>
       <div className="flex min-w-0 flex-col">
@@ -47,7 +47,7 @@ function EbookRow({ b }: { b: Book }) {
           {b.language} · {b.genre}
         </div>
         <Link
-          to="/book/$id"
+          to="/read/$id"
           params={{ id: b.id }}
           className="mt-1 font-display text-xl leading-tight hover:text-accent"
         >

@@ -1,6 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { Button } from "@/components/ui/button";
 import { Empty, fmtDate, StatusBadge } from "@/components/noholi";
+import { ComingSoonBanner } from "@/components/contribution-list";
 import { DetailsLink } from "@/components/record-view";
 import { useApp } from "@/lib/store";
 
@@ -26,7 +27,7 @@ export const Route = createFileRoute("/account/recommendations")({
 });
 
 function Recommendations() {
-  const { recommendations } = useApp();
+  const { recommendations, t } = useApp();
   return (
     <>
       <div className="mb-8 grid gap-3 sm:grid-cols-[minmax(0,1fr)_auto] sm:items-end">
@@ -45,11 +46,9 @@ function Recommendations() {
           <Link to="/account/recommend">Recommend a Book</Link>
         </Button>
       </div>
+      <ComingSoonBanner className="mb-8" />
       {recommendations.length === 0 ? (
-        <Empty
-          title="You haven't recommended a book yet."
-          body="Your suggestions will appear here with their status."
-        />
+        <Empty title={t("forms.soon.list")} body={t("forms.soon.listBody")} />
       ) : (
         <ul className="divide-y divide-border border-y border-border">
           <li className="hidden grid-cols-[100px_minmax(0,1fr)_130px_120px_120px_100px] gap-5 py-3 text-xs text-muted-foreground md:grid">
@@ -83,9 +82,6 @@ function Recommendations() {
           ))}
         </ul>
       )}
-      <p className="mt-6 text-xs text-muted-foreground">
-        Statuses: Submitted → Under Review → Considering → Acquired or Not Planned.
-      </p>
     </>
   );
 }

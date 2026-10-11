@@ -2,27 +2,25 @@ import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import type { ReactNode } from "react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Switch } from "@/components/ui/switch";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { MemberAvatar } from "@/components/noholi";
-import { user } from "@/lib/data";
+import { MemberLoadState } from "@/components/member-ui";
+import { PasswordForm } from "@/components/password-form";
+import { useAuth } from "@/lib/auth";
 import { useApp } from "@/lib/store";
 import { cn } from "@/lib/utils";
 
 export const Route = createFileRoute("/account/settings")({
   head: () => ({
     meta: [
-      { title: "Account settings \u2014 My Noholi" },
+      { title: "Account settings — My Noholi" },
       {
         name: "description",
-        content: "Manage your Noholi language, appearance and account preferences.",
+        content: "Manage your Noholi language, appearance and account security.",
       },
-      { property: "og:title", content: "Account settings \u2014 My Noholi" },
+      { property: "og:title", content: "Account settings — My Noholi" },
       {
         property: "og:description",
-        content: "Manage your Noholi language, appearance and account preferences.",
+        content: "Manage your Noholi language, appearance and account security.",
       },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
@@ -38,7 +36,7 @@ function Row({ title, desc, children }: { title: string; desc?: string; children
         <div className="font-medium">{title}</div>
         {desc && <div className="mt-1 text-sm text-muted-foreground">{desc}</div>}
       </div>
-      <div>{children}</div>
+      <div className="min-w-0">{children}</div>
     </div>
   );
 }
@@ -57,7 +55,9 @@ function Seg<T extends string>({
       {options.map(([v, l]) => (
         <button
           key={v}
+          type="button"
           onClick={() => onChange(v)}
+          aria-pressed={value === v}
           className={cn(
             "h-9 px-4 text-sm",
             value === v ? "bg-foreground text-background" : "text-muted-foreground",
@@ -71,17 +71,20 @@ function Seg<T extends string>({
 }
 
 function Settings() {
-  const { theme, setTheme, lang, setLang, logout } = useApp();
+  const { t, theme, setTheme, lang, setLang, logout } = useApp();
+  const { member } = useAuth();
   const nav = useNavigate();
+  if (!member) return <MemberLoadState />;
+  const none = t("auth.settings.notOnRecord");
   return (
     <div className="max-w-3xl">
-      <h1 className="mb-6 text-4xl">Account settings</h1>
+      <h1 className="mb-6 text-4xl">{t("auth.settings.title")}</h1>
       <Tabs defaultValue="general">
         <TabsList className="h-auto w-full justify-start gap-6 rounded-none border-b border-border bg-transparent p-0">
           {[
-            ["general", "General"],
-            ["account", "Account"],
-            ["security", "Security"],
+            ["general", t("auth.settings.tabGeneral")],
+            ["account", t("auth.settings.tabAccount")],
+            ["security", t("auth.settings.tabSecurity")],
           ].map(([v, l]) => (
             <TabsTrigger
               key={v}
@@ -93,7 +96,7 @@ function Settings() {
           ))}
         </TabsList>
         <TabsContent value="general">
-          <Row title="Language" desc="Applies across the whole website.">
+          <Row title={t("auth.settings.language")} desc={t("auth.settings.languageDesc")}>
             <Seg
               value={lang}
               options={[
@@ -103,74 +106,50 @@ function Settings() {
               onChange={setLang}
             />
           </Row>
-          <Row title="Theme">
+          <Row title={t("auth.settings.theme")}>
             <Seg
               value={theme}
               options={[
-                ["light", "Light"],
-                ["dark", "Dark"],
+                ["light", t("auth.settings.light")],
+                ["dark", t("auth.settings.dark")],
               ]}
               onChange={setTheme}
             />
           </Row>
-          {[
-            ["Due-date reminders", "Two days before a book is due back", true],
-            ["Borrow request updates", "When a request is approved or ready for pickup", true],
-            ["Contribution decisions", "When editors review your writing", true],
-            ["New Noholi Books", "A short note when we publish", false],
-          ].map(([t, d, on]) => (
-            <Row key={t as string} title={t as string} desc={d as string}>
-              <Switch defaultChecked={on as boolean} aria-label={t as string} />
-            </Row>
-          ))}
         </TabsContent>
         <TabsContent value="account">
-          <Row title="Profile photo" desc="Shown to the librarian when you borrow.">
-            <div className="flex items-center gap-4">
-              <MemberAvatar className="h-16 w-16" textClass="text-2xl" />
-              <Button variant="outline" size="sm" asChild>
-                <Link to="/account/profile">Change photo</Link>
-              </Button>
-            </div>
-          </Row>
-          <Row title="Full name">
-            <Input defaultValue={user.name} className="h-11" />
-          </Row>
-          <Row title="Email address" desc="Used for reminders and request updates.">
-            <Input defaultValue={user.email} className="h-11" />
-          </Row>
-          <Row title="Phone" desc="We send pickup alerts by SMS.">
-            <Input defaultValue={user.phone} className="h-11" />
-          </Row>
-          <Row title="Address">
-            <Input defaultValue={user.address} className="h-11" />
-          </Row>
-          <div className="mt-8">
-            <Button onClick={() => toast("Changes saved")}>Save changes</Button>
+          <dl className="divide-y divide-border border-b border-border">
+            {(
+              [
+                [t("auth.settings.fullName"), member.name],
+                [t("auth.settings.memberId"), member.id],
+                [t("auth.settings.email"), member.email || none],
+                [t("auth.settings.phone"), member.phone || none],
+              ] as const
+            ).map(([k, v]) => (
+              <div
+                key={k}
+                className="grid grid-cols-[120px_minmax(0,1fr)] gap-4 py-4 sm:grid-cols-[160px_minmax(0,1fr)]"
+              >
+                <dt className="text-sm text-muted-foreground">{k}</dt>
+                <dd className="break-words">{v}</dd>
+              </div>
+            ))}
+          </dl>
+          <p className="mt-4 text-sm text-muted-foreground">{t("auth.settings.deskNote")}</p>
+          <div className="mt-6">
+            <Button variant="outline" asChild>
+              <Link to="/account/profile" search={{ edit: true }}>
+                {t("auth.settings.editContact")}
+              </Link>
+            </Button>
           </div>
         </TabsContent>
         <TabsContent value="security">
-          <Row title="Change password">
-            <div className="grid gap-3">
-              <Label className="sr-only" htmlFor="cp">
-                Current password
-              </Label>
-              <Input id="cp" type="password" placeholder="Current password" className="h-11" />
-              <Input
-                type="password"
-                placeholder="New password"
-                aria-label="New password"
-                className="h-11"
-              />
-              <Button variant="outline" className="w-fit" onClick={() => toast("Password updated")}>
-                Update password
-              </Button>
-            </div>
+          <Row title={t("auth.settings.changePassword")}>
+            <PasswordForm forced={false} onDone={() => toast(t("auth.pw.updated"))} />
           </Row>
-          <Row title="Keep reading history" desc="Used for Continue Reading and listening history.">
-            <Switch defaultChecked aria-label="Reading history" />
-          </Row>
-          <Row title="Sign out" desc="Ends your session on this device.">
+          <Row title={t("auth.settings.signOut")} desc={t("auth.settings.signOutDesc")}>
             <Button
               variant="outline"
               onClick={() => {
@@ -178,7 +157,7 @@ function Settings() {
                 nav({ to: "/" });
               }}
             >
-              Log out
+              {t("logout")}
             </Button>
           </Row>
         </TabsContent>

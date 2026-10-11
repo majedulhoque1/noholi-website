@@ -120,16 +120,18 @@ export function Stepper({
   steps,
   current,
   className,
+  ariaLabel = "Progress",
 }: {
   steps: string[];
   current: number;
   className?: string;
+  ariaLabel?: string;
 }) {
   return (
     <ol
       className={cn("grid gap-0", className)}
       style={{ gridTemplateColumns: `repeat(${steps.length}, minmax(0,1fr))` }}
-      aria-label="Progress"
+      aria-label={ariaLabel}
     >
       {steps.map((s, i) => (
         <li
@@ -156,10 +158,12 @@ export function SummaryBlock({
   title,
   children,
   onEdit,
+  editLabel = "Edit",
 }: {
   title: string;
   children: ReactNode;
   onEdit?: () => void;
+  editLabel?: string;
 }) {
   return (
     <section className="border-t border-border py-6">
@@ -171,7 +175,7 @@ export function SummaryBlock({
             onClick={onEdit}
             className="text-sm underline underline-offset-4 hover:text-accent"
           >
-            Edit
+            {editLabel}
           </button>
         )}
       </div>

@@ -929,6 +929,12 @@ export const gallery = [
 ];
 
 export const library = {
+  /**
+   * Set to true only once Noholi has confirmed the address, phone, email, opening hours and map
+   * pin below (the legacy site had only "[Address]" / "[Phone]" / "[Hours — to confirm]"
+   * placeholders). While false, the footer, contact page and map show "coming soon" instead.
+   */
+  confirmed: false,
   name: "Noholi Library",
   nameBn: "নহলি পাঠাগার",
   address: ["House 808, Road 11 Avenue 6", "Pallabi, Dhaka 1216", "Bangladesh"],

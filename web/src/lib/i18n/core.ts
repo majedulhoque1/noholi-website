@@ -87,7 +87,7 @@ const bn: Record<keyof typeof en, string> = {
   play: "চালান",
   reserve: "সংরক্ষণ করুন",
   membershipTitle: "নহলির অংশ হোন।",
-  membershipBody: "একটি কার্ড। সব তাক, সব রেকর্ডিং, সব পাঠসন্ধ্যা। সদস্যপদ মাসে ৳৩০০ থেকে শুরু।",
+  membershipBody: "একটি কার্ড। সব তাক, সব রেকর্ডিং, সব পাঠসন্ধ্যা। সদস্যপদ বিনামূল্যে।",
   learnMore: "আরও জানুন",
   latestWriteups: "পাঠকক্ষ থেকে",
   language: "ভাষা",
