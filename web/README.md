@@ -32,4 +32,4 @@ Vercel project `noholi-website`, root directory `web`. The build uses the Nitro 
 
 - Member pages live under `/account` and render client-side only (the session is kept in localStorage).
 - Translations are in `src/lib/i18n/` (one module per area, merged in `index.ts`).
-- `../web-legacy/` is the previous Vite app, kept only as a porting reference.
+- The previous Vite app (v1) is in git history at `ae6d945` (`git show ae6d945:web/src/...`).

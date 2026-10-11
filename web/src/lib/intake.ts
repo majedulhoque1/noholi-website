@@ -1,5 +1,5 @@
 // Shared helpers for the `public-intake` edge function (supabase/CONTRACT.md §5):
-// the join application and the contact form. Ported from web-legacy BecomeMember.jsx / Contact.jsx.
+// the join application and the contact form. Ported from v1 BecomeMember.jsx / Contact.jsx.
 // Browser-only: call from event handlers, never during SSR.
 import { supabase, describeError, isNetworkError } from "./supabase";
 import { translate } from "./i18n";

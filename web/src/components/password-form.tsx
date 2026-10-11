@@ -8,7 +8,7 @@ import { useApp } from "@/lib/store";
 import { describeError, supabase } from "@/lib/supabase";
 
 // Change-password form shared by /account/password and Settings > Security.
-// Ported from web-legacy/src/pages/ChangePassword.jsx: confirm the current password first
+// Ported from v1 web/src/pages/ChangePassword.jsx: confirm the current password first
 // (updateUser alone would accept any signed-in session), then auth.updateUser({ password }),
 // then rpc('complete_password_change'), then refresh the member row. Success is reported only
 // after every step has succeeded.

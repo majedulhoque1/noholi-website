@@ -1,6 +1,6 @@
 // Join, contact, privacy, footer and coming-soon strings ("forms.*").
 // Add keys to BOTH `en` and `bn` (bn is typed to require every en key). Namespace keys, e.g. "forms.someKey".
-// Bangla is reused from web-legacy/src/i18n/bn.js where the meaning matches; the rest needs a native proofread.
+// Bangla is reused from v1 web/src/i18n/bn.js where the meaning matches; the rest needs a native proofread.
 const en = {
   // ---- Coming soon (features with no backend yet) ----
   "forms.soon.badge": "Coming soon",

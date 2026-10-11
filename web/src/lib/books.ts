@@ -1,7 +1,7 @@
 import type { SupabaseClient } from "@supabase/supabase-js";
 import { supabasePublic } from "./supabase";
 
-// Ported from web-legacy/src/lib/books.js. Every function takes an optional client and defaults
+// Ported from v1 web/src/lib/books.js. Every function takes an optional client and defaults
 // to `supabasePublic` (anon, no stored session), so they work in SSR route loaders and in the
 // browser. Errors are thrown as-is: callers show `describeError(err)`.
 

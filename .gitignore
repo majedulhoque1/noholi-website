@@ -15,12 +15,6 @@ web/design-export/raw-export.json
 web/design-export/locofy-samples
 web/noholi-design-export.json
 
-# web-legacy (old Vite app, porting reference only): same scratch artefacts
-web-legacy/tools/out
-web-legacy/tools/vite.log
-web-legacy/design-export/raw-export.json
-web-legacy/design-export/locofy-samples
-web-legacy/noholi-design-export.json
 
 # supabase local
 supabase/.branches

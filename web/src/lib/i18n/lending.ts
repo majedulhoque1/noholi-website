@@ -1,6 +1,6 @@
 // Borrow request, requests, loans and fines strings ("lending.*").
 // Add keys to BOTH `en` and `bn` (bn is typed to require every en key). Namespace keys, e.g. "lending.someKey".
-// Bangla reuses web-legacy/src/i18n/bn.js wording where the meaning matches (ধার, ফেরত, জরিমানা, জামিনদার).
+// Bangla reuses v1 web/src/i18n/bn.js wording where the meaning matches (ধার, ফেরত, জরিমানা, জামিনদার).
 const en = {
   // ---- shared
   "lending.loading": "Loading…",

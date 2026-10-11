@@ -1,7 +1,7 @@
 import { createClient, type SupabaseClient } from "@supabase/supabase-js";
 import { translate } from "./i18n";
 
-// Ported from web-legacy/src/lib/supabase.js.
+// Ported from v1 web/src/lib/supabase.js.
 // Public (anon) key only — safe to ship. What anon can read is limited by the database itself
 // (see supabase/CONTRACT.md); never put a service key here.
 const url = import.meta.env.VITE_SUPABASE_URL;

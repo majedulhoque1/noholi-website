@@ -1,5 +1,5 @@
 // Login / session / password / account-area strings. Keys are namespaced ("auth.*") so modules never collide.
-// Bangla reused from web-legacy/src/i18n/bn.js (login, mprofile, medit, mpass) where the meaning matches.
+// Bangla reused from v1 web/src/i18n/bn.js (login, mprofile, medit, mpass) where the meaning matches.
 const en = {
   "auth.genericLoginError": "Incorrect membership number or password.",
   "auth.staffLoginError": "Staff accounts use Noholi OS.",

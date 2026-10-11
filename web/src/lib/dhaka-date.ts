@@ -1,6 +1,6 @@
 // Dhaka calendar helpers. The library runs on Asia/Dhaka time (UTC+6, no DST);
 // never derive "today" from toISOString(), which is UTC and lags Dhaka by 6 hours.
-// Ported from web-legacy/src/lib/dhakaDate.js (mirror of admin/src/lib/dhaka-date.ts).
+// Ported from v1 web/src/lib/dhakaDate.js (mirror of admin/src/lib/dhaka-date.ts).
 
 export const DHAKA_TZ = "Asia/Dhaka";
 

@@ -1,6 +1,6 @@
 // Catalog, search, book detail, home shelves and library rules strings ("catalog.*").
 // Add keys to BOTH `en` and `bn` (bn is typed to require every en key). Namespace keys, e.g. "catalog.someKey".
-// Bangla wording reused from web-legacy/src/i18n/bn.js where the meaning matches.
+// Bangla wording reused from v1 web/src/i18n/bn.js where the meaning matches.
 const en = {
   // --- catalogue page ---
   "catalog.title": "The printed collection.",

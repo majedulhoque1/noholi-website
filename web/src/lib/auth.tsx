@@ -13,7 +13,7 @@ import { describeError, isNetworkError, supabase } from "./supabase";
 import { translate } from "./i18n";
 
 // Member session backed by Supabase Auth (see supabase/CONTRACT.md section 6). Ported from
-// web-legacy/src/auth.jsx.
+// v1 web/src/auth.jsx.
 // Sign-in: identifier -> rpc('resolve_login') -> signInWithPassword -> rpc('my_role').
 // Only role 'member' may use the website; staff/admin accounts are signed straight out again.
 

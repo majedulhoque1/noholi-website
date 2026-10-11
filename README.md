@@ -4,7 +4,7 @@ One repo, one database.
 
 | Path | What |
 |---|---|
-| `web/` | Public website + member area (TanStack Start + TypeScript + Tailwind 4 + shadcn, SSR). Wired to Supabase — see `web/README.md`. Run tools from inside `web/`. `web-legacy/` is the previous Vite JS app, kept only as a porting reference. |
+| `web/` | Public website + member area (TanStack Start + TypeScript + Tailwind 4 + shadcn, SSR). Wired to Supabase — see `web/README.md`. Run tools from inside `web/`. The previous Vite JS site (v1) is in git history at commit `ae6d945`. |
 | `admin/` | **Noholi OS** — staff console (React + TS + Tailwind + shadcn). Originally built in Lovable, now detached and maintained here. |
 | `supabase/` | The backend: versioned migrations, RPCs, edge functions, seed/import, `CONTRACT.md` (the API contract). |
 | `ops/` | Backup workflow, pre-deploy dump script, deploy notes. |
