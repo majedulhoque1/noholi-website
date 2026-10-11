@@ -7,7 +7,10 @@ export const Route = createFileRoute("/writeups/blogs")({
   head: () => ({
     meta: [
       { title: "Blogs — Noholi Library" },
-      { name: "description", content: "Library news, essays and notes on reading culture from Noholi." },
+      {
+        name: "description",
+        content: "Library news, essays and notes on reading culture from Noholi.",
+      },
       { property: "og:title", content: "Noholi Blogs" },
       { property: "og:description", content: "Essays and library news from Noholi." },
       { property: "og:type", content: "website" },
@@ -18,10 +21,17 @@ export const Route = createFileRoute("/writeups/blogs")({
     const list = articles.filter((a) => a.kind === "blog");
     return (
       <>
-        <PageIntro eyebrow="Write Ups / Blogs" title="The Noholi blog.">News from the library, essays on reading, and the occasional complaint about load-shedding.</PageIntro>
+        <PageIntro eyebrow="Write Ups / Blogs" title="The Noholi blog.">
+          News from the library, essays on reading, and the occasional complaint about
+          load-shedding.
+        </PageIntro>
         <WriteupNav />
-        <section className="container-page"><FeatureArticle a={list[0]} /></section>
-        <section className="container-page mt-20"><ArticleList list={list.slice(1)} /></section>
+        <section className="container-page">
+          <FeatureArticle a={list[0]} />
+        </section>
+        <section className="container-page mt-20">
+          <ArticleList list={list.slice(1)} />
+        </section>
       </>
     );
   },

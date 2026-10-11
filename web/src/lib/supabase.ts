@@ -9,7 +9,9 @@ const anonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
 
 if (!url || !anonKey) {
   // Fail loudly in dev; in a prod build this means the Vercel env vars are missing.
-  console.error("Missing VITE_SUPABASE_URL / VITE_SUPABASE_ANON_KEY — see web/.env.development.example");
+  console.error(
+    "Missing VITE_SUPABASE_URL / VITE_SUPABASE_ANON_KEY — see web/.env.development.example",
+  );
 }
 
 // createClient() throws on an empty URL, which would take the whole site down (even pages that
@@ -25,7 +27,13 @@ const TIMEOUT_MS = 15000;
 const UPLOAD_TIMEOUT_MS = 60000;
 
 // Read-only RPCs (POST on the wire, but repeating them changes nothing).
-const READ_ONLY_RPCS = ["resolve_login", "my_role", "search_books", "catalog_facets", "get_public_settings"];
+const READ_ONLY_RPCS = [
+  "resolve_login",
+  "my_role",
+  "search_books",
+  "catalog_facets",
+  "get_public_settings",
+];
 
 function hrefOf(input: RequestInfo | URL): string {
   return typeof input === "string" ? input : input instanceof URL ? input.href : input.url;
@@ -38,7 +46,10 @@ function isRepeatable(input: RequestInfo | URL, init?: RequestInit): boolean {
   return READ_ONLY_RPCS.some((name) => href.includes(`/rest/v1/rpc/${name}`));
 }
 
-async function fetchWithDeadline(input: RequestInfo | URL, init: RequestInit = {}): Promise<Response> {
+async function fetchWithDeadline(
+  input: RequestInfo | URL,
+  init: RequestInit = {},
+): Promise<Response> {
   const limit = hrefOf(input).includes("/storage/v1/object") ? UPLOAD_TIMEOUT_MS : TIMEOUT_MS;
   const attempts = isRepeatable(input, init) ? 2 : 1;
   for (let attempt = 1; ; attempt += 1) {
@@ -84,19 +95,34 @@ export const supabase: SupabaseClient =
  * Anonymous client, no stored session: safe for SSR route loaders and any public read
  * (books, search_books, catalog_facets, get_public_settings). Also uses the deadline fetch.
  */
-export const supabasePublic: SupabaseClient = createClient(url || PLACEHOLDER_URL, anonKey || "missing-anon-key", {
-  auth: { persistSession: false, autoRefreshToken: false },
-  global: { fetch: fetchWithDeadline },
-});
+export const supabasePublic: SupabaseClient = createClient(
+  url || PLACEHOLDER_URL,
+  anonKey || "missing-anon-key",
+  {
+    auth: { persistSession: false, autoRefreshToken: false },
+    global: { fetch: fetchWithDeadline },
+  },
+);
 
-type ErrorLike = { name?: string; message?: string; status?: number; details?: string; hint?: string };
+type ErrorLike = {
+  name?: string;
+  message?: string;
+  status?: number;
+  details?: string;
+  hint?: string;
+};
 
 /** True when a request never reached the server (offline, timed out, connection dropped). */
 export function isNetworkError(err: unknown): boolean {
   if (!err) return false;
   const e = err as ErrorLike;
   const text = `${e.name || ""} ${e.message || ""}`;
-  return e.status === 0 || /AuthRetryableFetchError|Failed to fetch|NetworkError|Load failed|AbortError|aborted/i.test(text);
+  return (
+    e.status === 0 ||
+    /AuthRetryableFetchError|Failed to fetch|NetworkError|Load failed|AbortError|aborted/i.test(
+      text,
+    )
+  );
 }
 
 // Getter (not a plain string): a plain constant would freeze in whatever language was active

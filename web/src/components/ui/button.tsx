@@ -11,7 +11,8 @@ const buttonVariants = cva(
       variant: {
         default: "cta-base cta-primary",
         accent: "cta-base cta-primary",
-        destructive: "rounded-full transition-colors focus-visible:ring-2 focus-visible:ring-ring bg-destructive text-destructive-foreground hover:bg-destructive/90",
+        destructive:
+          "rounded-full transition-colors focus-visible:ring-2 focus-visible:ring-ring bg-destructive text-destructive-foreground hover:bg-destructive/90",
         outline: "cta-base cta-secondary",
         secondary: "cta-base cta-secondary",
         ghost: "cta-icon",

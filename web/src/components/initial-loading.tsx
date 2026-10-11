@@ -64,16 +64,24 @@ export function InitialLoading({ children }: { children: ReactNode }) {
           <div className="noholi-loading-inner">
             {/* TODO: the original animated loading GIF is awaited from the client; until it arrives the static logo pulses gently (CSS only, disabled for prefers-reduced-motion). */}
             <img className="noholi-loading-logo" src={logo} alt="Noholi" width={294} height={192} />
-            <div className="noholi-loading-status" role="status" aria-live="polite">Loading Noholi…</div>
+            <div className="noholi-loading-status" role="status" aria-live="polite">
+              Loading Noholi…
+            </div>
             <div className="noholi-loading-recovery" role="alert">
               <h1>Noholi couldn’t finish loading</h1>
               <p>Please check your connection and reload to try again.</p>
-              <Button asChild className="noholi-loading-retry"><a href="">Reload page</a></Button>
+              <Button asChild className="noholi-loading-retry">
+                <a href="">Reload page</a>
+              </Button>
             </div>
           </div>
         </div>
       )}
-      <div className="noholi-loading-content" data-loading={state !== "ready"} inert={state !== "ready"}>
+      <div
+        className="noholi-loading-content"
+        data-loading={state !== "ready"}
+        inert={state !== "ready"}
+      >
         {children}
       </div>
     </>
@@ -89,13 +97,19 @@ export function InitialReady({ pending }: { pending: boolean }) {
     // Font delivery must not strand an otherwise usable page. This is a maximum
     // budget, never a minimum display duration.
     let fontTimer: ReturnType<typeof setTimeout> | undefined;
-    const fontBudget = new Promise<void>((resolve) => { fontTimer = setTimeout(resolve, 4000); });
+    const fontBudget = new Promise<void>((resolve) => {
+      fontTimer = setTimeout(resolve, 4000);
+    });
     void Promise.race([document.fonts?.ready ?? Promise.resolve(), fontBudget]).then(() => {
       if (cancelled) return;
       if (fontTimer) clearTimeout(fontTimer);
       frame = requestAnimationFrame(() => window.__noholiLoading?.ready());
     });
-    return () => { cancelled = true; if (fontTimer) clearTimeout(fontTimer); cancelAnimationFrame(frame); };
+    return () => {
+      cancelled = true;
+      if (fontTimer) clearTimeout(fontTimer);
+      cancelAnimationFrame(frame);
+    };
   }, [pending]);
   return null;
 }

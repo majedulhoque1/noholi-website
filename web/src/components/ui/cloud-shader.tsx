@@ -275,11 +275,7 @@ export const CloudShader = ({
 
     const buffer = gl.createBuffer();
     gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
-    gl.bufferData(
-      gl.ARRAY_BUFFER,
-      new Float32Array([-1, -1, 3, -1, -1, 3]),
-      gl.STATIC_DRAW,
-    );
+    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1, -1, 3, -1, -1, 3]), gl.STATIC_DRAW);
     gl.enableVertexAttribArray(0);
     gl.vertexAttribPointer(0, 2, gl.FLOAT, false, 0, 0);
 
@@ -294,9 +290,7 @@ export const CloudShader = ({
 
     let frame = 0;
     let running = true;
-    const reduceMotion = window.matchMedia(
-      "(prefers-reduced-motion: reduce)",
-    ).matches;
+    const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
     const resize = () => {
       const dpr = Math.min(window.devicePixelRatio || 1, 2);
@@ -348,16 +342,8 @@ export const CloudShader = ({
   }, []);
 
   return (
-    <div
-      className={cn(
-        "relative h-full min-h-80 w-full overflow-hidden",
-        className,
-      )}
-    >
-      <canvas
-        ref={canvasRef}
-        className="pointer-events-none absolute inset-0 h-full w-full"
-      />
+    <div className={cn("relative h-full min-h-80 w-full overflow-hidden", className)}>
+      <canvas ref={canvasRef} className="pointer-events-none absolute inset-0 h-full w-full" />
       {children ? (
         <div className="relative z-10 flex h-full w-full items-center justify-center">
           {children}

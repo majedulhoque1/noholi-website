@@ -19,9 +19,19 @@ export default defineConfig({
     // Pre-bundle UI deps so first visits to pages don't trigger a re-optimize + stale chunk reload.
     optimizeDeps: {
       include: [
-        "@radix-ui/react-tabs", "@radix-ui/react-switch", "@radix-ui/react-dialog", "@radix-ui/react-dropdown-menu",
-        "@radix-ui/react-select", "@radix-ui/react-checkbox", "@radix-ui/react-collapsible", "@radix-ui/react-slider",
-        "@radix-ui/react-label", "@radix-ui/react-slot", "sonner", "lucide-react", "class-variance-authority",
+        "@radix-ui/react-tabs",
+        "@radix-ui/react-switch",
+        "@radix-ui/react-dialog",
+        "@radix-ui/react-dropdown-menu",
+        "@radix-ui/react-select",
+        "@radix-ui/react-checkbox",
+        "@radix-ui/react-collapsible",
+        "@radix-ui/react-slider",
+        "@radix-ui/react-label",
+        "@radix-ui/react-slot",
+        "sonner",
+        "lucide-react",
+        "class-variance-authority",
       ],
     },
   },

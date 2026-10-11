@@ -21,7 +21,9 @@ export type TVars = Record<string, string | number>;
 
 function interpolate(str: string, vars?: TVars) {
   if (!vars) return str;
-  return str.replace(/\{(\w+)\}/g, (m, k: string) => (Object.prototype.hasOwnProperty.call(vars, k) ? String(vars[k]) : m));
+  return str.replace(/\{(\w+)\}/g, (m, k: string) =>
+    Object.prototype.hasOwnProperty.call(vars, k) ? String(vars[k]) : m,
+  );
 }
 
 /** Translate for a given language, falling back to English. */

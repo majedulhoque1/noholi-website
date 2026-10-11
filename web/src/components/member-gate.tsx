@@ -10,14 +10,31 @@ export function MemberPromptHost() {
   return (
     <Dialog open={!!memberPrompt} onOpenChange={(o) => !o && closeMemberPrompt()}>
       <DialogContent className="rounded-sm sm:max-w-md">
-        <div className="mb-2 flex gap-1.5" aria-hidden>{[0, 2, 5].map((t) => <span key={t} className="h-10 w-2 rounded-[1px]" style={{ background: `var(--cover-${t})` }} />)}</div>
+        <div className="mb-2 flex gap-1.5" aria-hidden>
+          {[0, 2, 5].map((t) => (
+            <span
+              key={t}
+              className="h-10 w-2 rounded-[1px]"
+              style={{ background: `var(--cover-${t})` }}
+            />
+          ))}
+        </div>
         <div className="eyebrow">Members only</div>
-        <DialogTitle className="font-display text-3xl font-normal leading-tight">Become part of Noholi</DialogTitle>
+        <DialogTitle className="font-display text-3xl font-normal leading-tight">
+          Become part of Noholi
+        </DialogTitle>
         <DialogDescription className="text-base">{memberPrompt}</DialogDescription>
-        <p className="text-sm text-muted-foreground">A free membership lets you borrow books, write reviews, contribute your writing and recommend books to the library.</p>
+        <p className="text-sm text-muted-foreground">
+          A free membership lets you borrow books, write reviews, contribute your writing and
+          recommend books to the library.
+        </p>
         <div className="mt-2 grid grid-cols-2 gap-2">
-          <Button variant="outline" asChild onClick={closeMemberPrompt}><Link to="/login">Log In</Link></Button>
-          <Button variant="accent" asChild onClick={closeMemberPrompt}><Link to="/join">Become a Member</Link></Button>
+          <Button variant="outline" asChild onClick={closeMemberPrompt}>
+            <Link to="/login">Log In</Link>
+          </Button>
+          <Button variant="accent" asChild onClick={closeMemberPrompt}>
+            <Link to="/join">Become a Member</Link>
+          </Button>
         </div>
         <p className="text-center text-xs font-medium">Membership is free.</p>
       </DialogContent>
@@ -26,7 +43,11 @@ export function MemberPromptHost() {
 }
 
 /** A button for a member-only action: runs onAllowed for members, shows the prompt for visitors. */
-export function MemberButton({ reason, onAllowed, ...props }: Omit<ComponentProps<typeof Button>, "onClick"> & { reason: string; onAllowed: () => void }) {
+export function MemberButton({
+  reason,
+  onAllowed,
+  ...props
+}: Omit<ComponentProps<typeof Button>, "onClick"> & { reason: string; onAllowed: () => void }) {
   const { requireMember } = useApp();
   return <Button {...props} onClick={() => requireMember(reason, onAllowed)} />;
 }

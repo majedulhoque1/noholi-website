@@ -20,7 +20,12 @@ import { SiteFooter } from "@/components/site-footer";
 import { AudioPlayer } from "@/components/audio-player";
 import { MemberPromptHost } from "@/components/member-gate";
 import { Toaster } from "@/components/ui/sonner";
-import { InitialLoading, InitialReady, initialLoadingCss, initialLoadingScript } from "@/components/initial-loading";
+import {
+  InitialLoading,
+  InitialReady,
+  initialLoadingCss,
+  initialLoadingScript,
+} from "@/components/initial-loading";
 
 function NotFoundComponent() {
   return (
@@ -88,9 +93,16 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
       { title: "Noholi Library — Stories live here" },
-      { name: "description", content: "Noholi is a library and literary home in Dhaka: books, e-books, audio books and writing." },
+      {
+        name: "description",
+        content:
+          "Noholi is a library and literary home in Dhaka: books, e-books, audio books and writing.",
+      },
       { property: "og:title", content: "Noholi Library" },
-      { property: "og:description", content: "Books, e-books, audio books and writing from a library in Dhaka." },
+      {
+        property: "og:description",
+        content: "Books, e-books, audio books and writing from a library in Dhaka.",
+      },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
     ],
@@ -99,7 +111,10 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { rel: "icon", href: "/favicon.png", type: "image/png" },
       { rel: "preconnect", href: "https://fonts.googleapis.com" },
       { rel: "preconnect", href: "https://fonts.gstatic.com", crossOrigin: "anonymous" },
-      { rel: "stylesheet", href: "https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;500;600;700&family=Noto+Sans+Bengali:wght@400;500;600;700&family=Noto+Serif+Bengali:wght@400;500;600&display=swap" },
+      {
+        rel: "stylesheet",
+        href: "https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;500;600;700&family=Noto+Sans+Bengali:wght@400;500;600;700&family=Noto+Serif+Bengali:wght@400;500;600&display=swap",
+      },
     ],
   }),
   shellComponent: RootShell,
@@ -114,7 +129,9 @@ function RootShell({ children }: { children: ReactNode }) {
       <head>
         <HeadContent />
         <style dangerouslySetInnerHTML={{ __html: initialLoadingCss }} />
-        <noscript><style>{`.noholi-loading-status{display:none!important}.noholi-loading-recovery{display:block!important}`}</style></noscript>
+        <noscript>
+          <style>{`.noholi-loading-status{display:none!important}.noholi-loading-recovery{display:block!important}`}</style>
+        </noscript>
       </head>
       <body>
         <InitialLoading>{children}</InitialLoading>
@@ -135,18 +152,18 @@ function RootComponent() {
     <QueryClientProvider client={queryClient}>
       <InitialReady pending={pending} />
       <AuthProvider>
-      <AppProvider>
-        <SiteSky />
-        {!bare && <SiteHeader />}
-        <main className="min-h-[60vh]">
-          {/* Required: nested routes render here. Removing <Outlet /> breaks all child routes. */}
-          <Outlet />
-        </main>
-        {!bare && <SiteFooter />}
-        {!path.startsWith("/read/") && <AudioPlayer />}
-        <MemberPromptHost />
-        <Toaster position="bottom-right" />
-      </AppProvider>
+        <AppProvider>
+          <SiteSky />
+          {!bare && <SiteHeader />}
+          <main className="min-h-[60vh]">
+            {/* Required: nested routes render here. Removing <Outlet /> breaks all child routes. */}
+            <Outlet />
+          </main>
+          {!bare && <SiteFooter />}
+          {!path.startsWith("/read/") && <AudioPlayer />}
+          <MemberPromptHost />
+          <Toaster position="bottom-right" />
+        </AppProvider>
       </AuthProvider>
     </QueryClientProvider>
   );

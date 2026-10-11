@@ -1,4 +1,13 @@
-import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState, type ReactNode } from "react";
+import {
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+  type ReactNode,
+} from "react";
 import type { Session, User } from "@supabase/supabase-js";
 import { describeError, isNetworkError, supabase } from "./supabase";
 import { translate } from "./i18n";
@@ -68,9 +77,18 @@ async function loadMember(): Promise<{ role: Role; row: MemberRow | null }> {
   if (roleErr) throw roleErr;
   const info = data as RoleInfo;
   if (info?.role !== "member") return { role: info?.role || "none", row: null };
-  const { data: row, error } = await supabase.from("member_summary_v").select("*").eq("id", info.member_id).maybeSingle();
+  const { data: row, error } = await supabase
+    .from("member_summary_v")
+    .select("*")
+    .eq("id", info.member_id)
+    .maybeSingle();
   if (error) throw error;
-  return { role: "member", row: row ? ({ ...row, must_change_password: Boolean(info.must_change_password) } as MemberRow) : null };
+  return {
+    role: "member",
+    row: row
+      ? ({ ...row, must_change_password: Boolean(info.must_change_password) } as MemberRow)
+      : null,
+  };
 }
 
 export function AuthProvider({ children }: { children: ReactNode }) {
@@ -125,7 +143,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
           setSession(current);
           setRole(null);
           setMemberRow(null);
-          setMemberError(isNetworkError(err) ? translate("supabaseLib.networkError") : describeError(err));
+          setMemberError(
+            isNetworkError(err) ? translate("supabaseLib.networkError") : describeError(err),
+          );
         }
         return null;
       }
@@ -160,7 +180,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       const { data: email, error: rErr } = await supabase.rpc("resolve_login", { identifier: id });
       if (rErr && isNetworkError(rErr)) throw new Error(translate("supabaseLib.networkError"));
       if (rErr || !email) throw new Error(GENERIC_LOGIN_ERROR());
-      let { error: sErr } = await supabase.auth.signInWithPassword({ email: email as string, password });
+      let { error: sErr } = await supabase.auth.signInWithPassword({
+        email: email as string,
+        password,
+      });
       // A staff email isn't a member login, so resolve_login maps it elsewhere. Try the address as
       // typed (any anon client can do this) so staff get the "use Noholi OS" answer below, and
       // only when their password is right.
@@ -175,7 +198,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         result = await loadMember();
       } catch (err) {
         await supabase.auth.signOut();
-        throw new Error(isNetworkError(err) ? translate("supabaseLib.networkError") : GENERIC_LOGIN_ERROR());
+        throw new Error(
+          isNetworkError(err) ? translate("supabaseLib.networkError") : GENERIC_LOGIN_ERROR(),
+        );
       }
       if (result.role === "staff" || result.role === "admin") {
         await supabase.auth.signOut();
