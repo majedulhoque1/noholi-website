@@ -72,7 +72,11 @@ export function SiteFooter() {
       <div className="container-page flex flex-col gap-4 border-t border-border py-6 text-xs text-muted-foreground sm:flex-row sm:items-center sm:justify-between">
         <span>{t("forms.footer.copyright")}</span>
         <div className="flex items-center gap-3">
-          <a href={ADMIN_URL} rel="nofollow" className="hover:text-foreground">
+          <a
+            href={ADMIN_URL}
+            rel="nofollow"
+            className="rounded-full border border-foreground px-4 py-1.5 font-medium text-foreground transition-colors hover:bg-foreground hover:text-background focus-visible:bg-foreground focus-visible:text-background"
+          >
             {t("forms.footer.staff")}
           </a>
           <LangToggle />
