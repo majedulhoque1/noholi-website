@@ -11,10 +11,7 @@ import {
 import { toast } from "sonner";
 import {
   audiobooks,
-  user,
-  initialBorrowRequests,
   type Audio,
-  type BorrowRequest,
   type Contribution,
   type Recommendation,
 } from "./data";
@@ -42,14 +39,6 @@ type Ctx = {
   wishlist: string[];
   toggleWish: (id: string) => void;
   inWish: (id: string) => boolean;
-  borrowRequests: BorrowRequest[];
-  addBorrowRequest: (
-    r: Omit<
-      BorrowRequest,
-      "id" | "submitted" | "updated" | "status" | "member" | "timeline" | "guarantor"
-    > & { guarantor: { name: string; relation: string; phone: string } },
-  ) => string;
-  cancelBorrowRequest: (id: string) => void;
   contributions: Contribution[];
   addContribution: (c: Omit<Contribution, "id" | "updated" | "submitted" | "timeline">) => string;
   recommendations: Recommendation[];
@@ -75,8 +64,6 @@ type Ctx = {
   prev: () => void;
   closePlayer: () => void;
 };
-
-const today = () => new Date().toISOString().slice(0, 10);
 
 // Stable empty lists for the features that are "coming soon" (wishlist, contributions, recommendations).
 const NO_IDS: string[] = [];
@@ -116,7 +103,6 @@ export function AppProvider({ children }: { children: ReactNode }) {
   const [memberPrompt, setMemberPrompt] = useState<string | null>(null);
   // Wishlist, contributions and recommendations have no backend yet: always empty, never mock records.
   const wishlist = NO_IDS;
-  const [borrowRequests, setBorrowRequests] = useState<BorrowRequest[]>(initialBorrowRequests);
   const contributions = NO_CONTRIBUTIONS;
   const recommendations = NO_RECOMMENDATIONS;
   const [player, setPlayer] = useState<Ctx["player"]>({
@@ -191,49 +177,6 @@ export function AppProvider({ children }: { children: ReactNode }) {
         }
         toast(t("forms.soon.wish"));
       },
-      borrowRequests,
-      addBorrowRequest: (r) => {
-        const id = `BR-26-0${420 + borrowRequests.length}`,
-          d = today();
-        // Snapshot member + guarantor onto the record so later profile edits never rewrite history.
-        setBorrowRequests((x) => [
-          {
-            ...r,
-            id,
-            submitted: d,
-            updated: d,
-            status: "Pending Review",
-            member: {
-              name: user.name,
-              memberId: user.memberId,
-              phone: user.phone,
-              email: user.email,
-              address: user.address,
-              verification: "NID verified",
-            },
-            guarantor: { ...r.guarantor, status: "Submitted — awaiting librarian check" },
-            timeline: [{ date: d, label: "Request submitted" }],
-          },
-          ...x,
-        ]);
-        return id;
-      },
-      cancelBorrowRequest: (id) => {
-        const d = today();
-        setBorrowRequests((x) =>
-          x.map((r) =>
-            r.id === id && r.status === "Pending Review"
-              ? {
-                  ...r,
-                  status: "Cancelled",
-                  updated: d,
-                  timeline: [...r.timeline, { date: d, label: "Cancelled by member" }],
-                }
-              : r,
-          ),
-        );
-        toast("Borrow request cancelled", { description: id });
-      },
       contributions,
       // Coming soon: nothing is created. Returns "" (no record id); callers must not show success.
       addContribution: () => {
@@ -289,7 +232,6 @@ export function AppProvider({ children }: { children: ReactNode }) {
       signOut,
       memberPrompt,
       wishlist,
-      borrowRequests,
       contributions,
       recommendations,
       player,
