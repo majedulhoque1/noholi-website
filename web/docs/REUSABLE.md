@@ -20,7 +20,7 @@ Building something new on the public site? Check these first.
 | Old v1 URL → new URL | | `src/lib/legacy-redirects.ts` |
 | Password change form (current → new → confirm) | `PasswordForm` | `src/components/password-form.tsx` |
 | Account page shells, status pills, empty states | | `src/components/member-ui.tsx` |
-| "Check your details" review step before submitting | `Verify` (`editLabel`, `ariaLabel`) | `src/components/verify.tsx` |
+| Multi-step form stepper, "check your details" review block, ID upload | `Stepper`, `SummaryBlock` (`editLabel`, `ariaLabel`), `IdentityUpload` | `src/components/verify.tsx` |
 | Coming-soon behaviour (wishlist, recommendations, contributions) | no-op actions + toasts | `src/lib/store.tsx` |
 
 ## Rules that come with them
