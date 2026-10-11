@@ -1,0 +1,2 @@
+- [x] Implement initial-only branded loading with the supplied GIF and still-frame fallback.
+- [x] Verify initial display, readiness, internal navigation, reduced motion, and failure recovery.

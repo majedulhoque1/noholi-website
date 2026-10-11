@@ -1,44 +1,35 @@
-# Noholi Library & Press — website
+# Noholi Library website
 
-React + Vite build of the Noholi Figma design (file `ypNuhn7wG5u1P1J8kLhsAV`).
-Desktop (1280px) matches the Figma frames pixel-for-pixel within ~0.4–3.3% (the remainder is
-Bengali glyphs Figma could not draw and text anti-aliasing). Below 1280px the layout adapts for
-tablets and phones (320px and up) — the Figma file is desktop-only, so that part is derived.
+Public website and member area for Noholi Library (Dhaka).
 
-## Run
+**Stack:** TanStack Start (React 19, SSR) + TypeScript + Tailwind CSS 4 + shadcn/ui, with Supabase as the backend (see `../supabase/CONTRACT.md`).
 
-```bash
+## Environment
+
+Copy `.env.development.example` to `.env.development` and fill in:
+
+| Variable | Purpose |
+|---|---|
+| `VITE_SUPABASE_URL` | Supabase project URL |
+| `VITE_SUPABASE_ANON_KEY` | Supabase anon (publishable) key |
+| `VITE_ADMIN_URL` | URL of the staff console (Noholi OS), linked from the footer |
+
+## Commands
+
+```sh
 npm install
-npm run dev      # http://localhost:5173 (or the port Vite prints)
-npm run build    # static site in dist/
+npm run dev     # dev server
+npm run build   # production build
+npm run lint
+npm test
 ```
 
-Member login is real (Supabase Auth, see `supabase/CONTRACT.md` §6): MEM-#### or email →
-`resolve_login` → password → `my_role`. Staff accounts are refused; a temporary password forces
-`/member/password` first. Local test member: `MEM-TEST-1` / `NoholiMember#2026`
-(`node supabase/seed/dev-accounts.mjs`). Studio and Wishlist forms have no backend yet and say "coming soon".
+## Deploy
 
-## Structure
+Vercel project `noholi-website`, root directory `web`. The build uses the Nitro Vercel preset (`VERCEL=1 npm run build` writes `.vercel/output`).
 
-| Path | What |
-|---|---|
-| `src/App.jsx` | Public routes (pages load lazily, with their CSS) |
-| `src/routes/memberRoutes.jsx` | Member-only routes, wrapped in `RequireMember` (→ /login when logged out) |
-| `src/components/SiteHeader.*` | Header: dropdowns, account menu, guest/member state, mobile menu (< 1180px) |
-| `src/components/SiteFooter.*` | Shared footer |
-| `src/pages/*.jsx/.css` | 31 pages, generated from Figma then hand-wired (links, forms, state) — **edit by hand, don't regenerate** |
-| `src/styles/tokens.css` | Colours and font stacks |
-| `src/styles/responsive/<page>.css` | **Generated** small-screen rules, one file per page (see tools) |
-| `src/styles/responsive.overrides.css` | Hand-written small-screen fixes the generator can't infer |
-| `src/fitBoxes.js` | Scales fixed Figma artwork (book covers, illustrations) to fit narrow screens |
-| `src/auth.jsx` | Member session (Supabase) |
-| `design-export/` | Figma export: `design-tree.json`, SVGs, images, 1x renders (the ground truth) |
-| `figma-export-plugin/` | Read-only Figma dev plugin that produced `design-export/` |
-| `tools/` | Generators and checkers — see `tools/README.md` |
+## Notes
 
-## Known content gaps (need real material)
-
-- "Download … PDF" links (Audio Book Details, Creative Writings, Book Reviews) — no PDFs yet; shown as "available soon".
-- Blogs pagination pages 2–4 / Next — only one page of posts exists.
-- Member form dropdown options (category, genre, cadence, format…) are placeholders; Figma shows one value each.
-- Placeholder copy from the design stays as is ("Author Name", "[Hours — to confirm]", "[Member Name]"…).
+- Member pages live under `/account` and render client-side only (the session is kept in localStorage).
+- Translations are in `src/lib/i18n/` (one module per area, merged in `index.ts`).
+- `../web-legacy/` is the previous Vite app, kept only as a porting reference.
