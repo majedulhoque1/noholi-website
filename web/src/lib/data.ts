@@ -951,7 +951,7 @@ export const library = {
   mapsUrl:
     "https://www.google.com/maps/search/?api=1&query=Noholi%20Library&query_place_id=ChIJM8Rqm57BVTcRKEtREEFChO0",
   /**
-   * Official profiles shown in the top bar. An entry with an empty `url` is not rendered, so a
+   * Official profiles shown in the top bar. An entry with an empty `url` shows an inert icon, so a
    * profile appears the moment its real address is filled in here; never guess a URL.
    */
   social: [
