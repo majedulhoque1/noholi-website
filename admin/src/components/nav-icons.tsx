@@ -8,6 +8,7 @@ import {
   BarChart3,
   Settings,
   Mail,
+  Inbox,
 } from "lucide-react";
 
 /** Icon for each NAV_ITEMS title, shared by the desktop sidebar and the mobile drawer/tab bar. */
@@ -18,6 +19,7 @@ export const NAV_ICON_MAP: Record<string, React.ElementType> = {
   Members: Users,
   "Book Donations": Gift,
   Messages: Mail,
+  Submissions: Inbox,
   Fines: BadgeDollarSign,
   Reports: BarChart3,
   Settings: Settings,

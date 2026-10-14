@@ -12,7 +12,6 @@ import { LiveAvailability, LiveBookCard, LiveCover } from "@/components/catalog-
 import { MemberButton, reasons } from "@/components/member-gate";
 import { WishButton } from "@/components/noholi";
 import { BookReviewsSection } from "@/components/reviews";
-import { SoonTag } from "@/components/soon-tag";
 import {
   altAuthor,
   altTitle,
@@ -266,13 +265,16 @@ function BookPage() {
             )}
             <span className="ml-2 inline-flex items-center gap-2">
               <WishButton id={book.id} label />
-              <SoonTag />
             </span>
           </div>
           <div className="mt-4 flex flex-wrap gap-x-5 gap-y-1 text-sm">
             <button
               type="button"
-              onClick={() => requireMember(reasons.review, () => nav({ to: "/account/reviews" }))}
+              onClick={() =>
+                requireMember(reasons.review, () =>
+                  nav({ to: "/account/contribute", search: { type: "review", book: book.id } }),
+                )
+              }
               className="underline underline-offset-4 hover:text-accent"
             >
               {t("ux.book.writeReview")}
@@ -311,7 +313,7 @@ function BookPage() {
         </div>
       </section>
 
-      <BookReviewsSection />
+      <BookReviewsSection bookId={book.id} />
 
       {(related.length > 0 || relatedError) && (
         <section className="container-page mt-10">

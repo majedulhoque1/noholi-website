@@ -950,6 +950,15 @@ export const library = {
   placeId: "ChIJM8Rqm57BVTcRKEtREEFChO0",
   mapsUrl:
     "https://www.google.com/maps/search/?api=1&query=Noholi%20Library&query_place_id=ChIJM8Rqm57BVTcRKEtREEFChO0",
+  /**
+   * Official profiles shown in the top bar. An entry with an empty `url` is not rendered, so a
+   * profile appears the moment its real address is filled in here; never guess a URL.
+   */
+  social: [
+    { key: "facebook", label: "Facebook", url: "https://www.facebook.com/groups/Noholi" },
+    { key: "instagram", label: "Instagram", url: "" },
+    { key: "youtube", label: "YouTube", url: "" },
+  ] as { key: "facebook" | "instagram" | "youtube"; label: string; url: string }[],
   directionsUrl: "https://www.google.com/maps/dir/?api=1&destination=ChIJM8Rqm57BVTcRKEtREEFChO0",
   embedUrl:
     "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3649.442266633703!2d90.36902767442658!3d23.838424085393076!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3755c19e9b6ac433%3A0xed84424110514b28!2sNoholi%20Library!5e0!3m2!1sen!2sbd!4v1791544446148!5m2!1sen!2sbd",

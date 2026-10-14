@@ -1,6 +1,6 @@
 import { useEffect, useState, type ReactNode } from "react";
 import { Button } from "@/components/ui/button";
-import logo from "@/assets/noholi-logo.png";
+import logo from "@/assets/noholi-loading.gif";
 
 type BootState = "loading" | "ready" | "error";
 declare global {
@@ -65,9 +65,7 @@ export const initialLoadingCss = `
 :root{--loading-paper:oklch(0.975 0.008 85);--loading-ink:oklch(0.21 0.015 60);--loading-muted:oklch(0.48 0.018 65)}
 #noholi-initial-loading{position:fixed;inset:0;z-index:10000;display:grid;place-items:center;background:var(--loading-paper);color:var(--loading-ink);font-family:"Open Sans","Noto Sans Bengali",sans-serif;padding:24px;box-sizing:border-box}
 .noholi-loading-inner{width:100%;max-width:360px;text-align:center}
-.noholi-loading-logo{display:block;width:180px;height:auto;aspect-ratio:294/192;object-fit:contain;margin:0 auto 24px;animation:noholi-loading-pulse 2s ease-in-out infinite}
-@keyframes noholi-loading-pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.55;transform:scale(.97)}}
-@media (prefers-reduced-motion:reduce){.noholi-loading-logo{animation:none}}
+.noholi-loading-logo{display:block;width:min(240px,60vw);height:auto;aspect-ratio:1099/1228;object-fit:contain;margin:0 auto 8px}
 .noholi-loading-status{font-size:14px;line-height:1.6;color:var(--loading-muted)}
 .noholi-loading-recovery{display:none}
 #noholi-initial-loading[data-state=error] .noholi-loading-status{display:none}
@@ -95,8 +93,13 @@ export function InitialLoading({ children }: { children: ReactNode }) {
       {state !== "ready" && (
         <div id="noholi-initial-loading" data-state={state} aria-label="Noholi initial loading">
           <div className="noholi-loading-inner">
-            {/* TODO: the original animated loading GIF is awaited from the client; until it arrives the static logo pulses gently (CSS only, disabled for prefers-reduced-motion). */}
-            <img className="noholi-loading-logo" src={logo} alt="Noholi" width={294} height={192} />
+            <img
+              className="noholi-loading-logo"
+              src={logo}
+              alt="Noholi"
+              width={1099}
+              height={1228}
+            />
             <div className="noholi-loading-status" role="status" aria-live="polite">
               Loading Noholi…
             </div>

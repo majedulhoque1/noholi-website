@@ -13,6 +13,7 @@ export const NAV_ITEMS: NavItem[] = [
   { title: "Members", href: "/members", roles: ["admin", "staff"] },
   { title: "Book Donations", href: "/donations", roles: ["admin", "staff"] },
   { title: "Messages", href: "/messages", roles: ["admin", "staff"] },
+  { title: "Submissions", href: "/submissions", roles: ["admin", "staff"] },
   { title: "Fines", href: "/fines", roles: ["admin", "staff"] },
   { title: "Reports", href: "/reports", roles: ["admin", "manager"] },
   // Staff see Policy read-only, their Account and the Activity log; admin-only parts unlock after MFA.

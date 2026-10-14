@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Logo } from "@/components/noholi";
+import { buildSections, useRuleSettings } from "@/components/library-rules";
 import { compressPhoto, EMAIL_RE, isAllowedPhoto, submitIntake } from "@/lib/intake";
 import { describeError, supabase } from "@/lib/supabase";
 import { useApp } from "@/lib/store";
@@ -51,7 +52,9 @@ const empty = {
 type Done = { name: string; phone: string; ref: string | null; photoFailed: boolean };
 
 function Join() {
-  const { t } = useApp();
+  const { t, lang } = useApp();
+  const rules = useRuleSettings();
+  const [agreed, setAgreed] = useState(false);
   const [step, setStep] = useState(0);
   const [done, setDone] = useState<Done | null>(null);
   const [d, setD] = useState(empty);
@@ -69,6 +72,7 @@ function Join() {
       if (d.phone.replace(/\D/g, "").length < 7) return t("forms.join.errPhone");
     }
     if (step === 1 && !d.street.trim()) return t("forms.join.errStreet");
+    if (step === 3 && !agreed) return t("forms.join.errRules");
     return "";
   };
 
@@ -233,6 +237,63 @@ function Join() {
                 style={{ width: `${((step + 1) / 4) * 100}%` }}
               />
             </div>
+            {step === 0 && (
+              <section
+                aria-labelledby="join-rules-h"
+                className="mb-10 border border-foreground bg-muted/30"
+              >
+                <div className="flex flex-wrap items-baseline justify-between gap-2 border-b border-foreground px-5 py-3">
+                  <h2 id="join-rules-h" className="text-2xl">
+                    {t("forms.join.rulesTitle")}
+                  </h2>
+                  <Link
+                    to="/library/rules"
+                    target="_blank"
+                    className="text-sm underline underline-offset-4 hover:text-accent"
+                  >
+                    {t("forms.join.rulesOpen")}
+                  </Link>
+                </div>
+                <p className="px-5 pt-3 text-sm text-muted-foreground">
+                  {t("forms.join.rulesIntro")}
+                </p>
+                <div
+                  tabIndex={0}
+                  role="region"
+                  aria-label={t("forms.join.rulesTitle")}
+                  className="max-h-72 overflow-y-auto px-5 py-4"
+                >
+                  {rules.error && (
+                    <p role="alert" className="mb-3 text-sm text-destructive">
+                      {t("catalog.rulesLoadError", { error: rules.error })}
+                    </p>
+                  )}
+                  <ol className="space-y-5">
+                    {buildSections(t, lang, rules.settings).map((s, i) => (
+                      <li key={s.id} className="grid grid-cols-[2rem_minmax(0,1fr)] gap-2">
+                        <span className="font-display tabular-nums text-accent">
+                          {String(i + 1).padStart(2, "0")}
+                        </span>
+                        <div>
+                          <h3 className="font-display text-lg leading-tight">{s.title}</h3>
+                          {s.body.map((p) => (
+                            <p
+                              key={p}
+                              className={cn(
+                                "mt-1.5 text-sm leading-relaxed",
+                                s.pending && "italic text-muted-foreground",
+                              )}
+                            >
+                              {p}
+                            </p>
+                          ))}
+                        </div>
+                      </li>
+                    ))}
+                  </ol>
+                </div>
+              </section>
+            )}
             <h2 className="mb-8 text-3xl">
               {t("forms.join.stepHeading", { n: step + 1, name: t(stepKeys[step]) })}
             </h2>
@@ -400,6 +461,25 @@ function Join() {
                       </div>
                     ))}
                   </dl>
+                  <label className="mt-6 flex items-start gap-3 text-sm">
+                    <input
+                      type="checkbox"
+                      checked={agreed}
+                      onChange={(e) => setAgreed(e.target.checked)}
+                      className="mt-0.5 h-4 w-4 accent-[var(--accent)]"
+                    />
+                    <span>
+                      {t("forms.join.rulesAgree")}{" "}
+                      <Link
+                        to="/library/rules"
+                        target="_blank"
+                        className="underline underline-offset-2 hover:text-accent"
+                      >
+                        {t("forms.join.rulesTitle")}
+                      </Link>
+                      .
+                    </span>
+                  </label>
                   <p className="mt-6 text-sm text-muted-foreground">
                     {t("forms.join.consent")}{" "}
                     <Link to="/privacy" className="underline underline-offset-2 hover:text-accent">
