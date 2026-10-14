@@ -554,12 +554,12 @@ export function SiteHeader() {
             {library.email}
           </a>
           <ul className="ml-auto flex items-center gap-3" aria-label="Social media">
-            {library.social
-              .filter((s) => s.url)
-              .map((s) => {
-                const Icon = { facebook: Facebook, instagram: Instagram, youtube: Youtube }[s.key];
-                return (
-                  <li key={s.key}>
+            {library.social.map((s) => {
+              const Icon = { facebook: Facebook, instagram: Instagram, youtube: Youtube }[s.key];
+              // No address yet: the icon is shown but inert until the real link is set in data.ts.
+              return (
+                <li key={s.key}>
+                  {s.url ? (
                     <a
                       href={s.url}
                       target="_blank"
@@ -569,9 +569,19 @@ export function SiteHeader() {
                     >
                       <Icon className="h-4 w-4" />
                     </a>
-                  </li>
-                );
-              })}
+                  ) : (
+                    <span
+                      role="img"
+                      aria-label={`${s.label} (link coming soon)`}
+                      title="Coming soon"
+                      className="inline-flex cursor-default opacity-40"
+                    >
+                      <Icon className="h-4 w-4" />
+                    </span>
+                  )}
+                </li>
+              );
+            })}
           </ul>
         </div>
       </div>
