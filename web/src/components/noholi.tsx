@@ -4,6 +4,7 @@ import { useEffect, useRef, useState, type ReactNode } from "react";
 import logo from "@/assets/noholi-logo.png";
 import { availability, type Book } from "@/lib/data";
 import { useAuth } from "@/lib/auth";
+import { useMemberPhotoUrl } from "@/lib/member-photo";
 import { useApp } from "@/lib/store";
 import { cn } from "@/lib/utils";
 
@@ -415,14 +416,31 @@ export function Initials({ name, className }: { name: string; className?: string
   );
 }
 
-/** The signed-in member as an initial in a circle (profile photos are not available online yet). */
+/**
+ * The signed-in member's profile photo, or their initial in a circle when there is none.
+ * `src` overrides the stored photo (an unsaved preview); pass null to force the initial.
+ */
 export function MemberAvatar({
   className,
   textClass = "text-base",
+  src,
 }: {
   className?: string;
   textClass?: string;
+  src?: string | null;
 }) {
   const { member } = useAuth();
+  const stored = useMemberPhotoUrl(src === undefined ? (member?.avatar ?? null) : null);
+  const url = src === undefined ? stored : src;
+  if (url) {
+    return (
+      <img
+        src={url}
+        alt=""
+        className={cn("shrink-0 rounded-full object-cover", className)}
+        aria-hidden
+      />
+    );
+  }
   return <Initials name={member?.name ?? ""} className={cn(className, textClass)} />;
 }

@@ -2,10 +2,12 @@ import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import type { ReactNode } from "react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
+import { Switch } from "@/components/ui/switch";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { MemberLoadState } from "@/components/member-ui";
 import { PasswordForm } from "@/components/password-form";
 import { useAuth } from "@/lib/auth";
+import { useMyPrefs, type Prefs } from "@/lib/member-prefs";
 import { useApp } from "@/lib/store";
 import { cn } from "@/lib/utils";
 
@@ -74,6 +76,7 @@ function Settings() {
   const { t, theme, setTheme, lang, setLang, logout } = useApp();
   const { member } = useAuth();
   const nav = useNavigate();
+  const { prefs, setPref } = useMyPrefs(member?.id ?? null);
   if (!member) return <MemberLoadState />;
   const none = t("auth.settings.notOnRecord");
   return (
@@ -116,6 +119,37 @@ function Settings() {
               onChange={setTheme}
             />
           </Row>
+          {(
+            [
+              [
+                "due_date_reminders",
+                "auth.settings.notifyDueDate",
+                "auth.settings.notifyDueDateDesc",
+              ],
+              [
+                "borrow_request_updates",
+                "auth.settings.notifyRequests",
+                "auth.settings.notifyRequestsDesc",
+              ],
+              [
+                "contribution_decisions",
+                "auth.settings.notifyContrib",
+                "auth.settings.notifyContribDesc",
+              ],
+              ["new_noholi_books", "auth.settings.notifyBooks", "auth.settings.notifyBooksDesc"],
+            ] as const satisfies readonly (readonly [keyof Prefs, string, string])[]
+          ).map(([key, title, desc]) => (
+            <Row key={key} title={t(title)} desc={t(desc)}>
+              <Switch
+                checked={prefs?.[key] ?? false}
+                disabled={!prefs}
+                aria-label={t(title)}
+                onCheckedChange={(on) =>
+                  setPref(key, on).catch(() => toast.error(t("auth.settings.prefsFailed")))
+                }
+              />
+            </Row>
+          ))}
         </TabsContent>
         <TabsContent value="account">
           <dl className="divide-y divide-border border-b border-border">

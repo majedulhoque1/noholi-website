@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import { User, Pencil, History, Phone, Mail, KeyRound, Loader2 } from "lucide-react";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetDescription } from "@/components/ui/sheet";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -7,6 +8,35 @@ import { formatTaka } from "@/lib/currency";
 import { formatDhaka } from "@/lib/dhaka-date";
 import type { Member } from "@/hooks/use-members";
 import { useMemberHistory } from "@/components/members/use-member-history";
+import { supabase } from "@/integrations/supabase/client";
+
+const PREF_LABELS: [string, string][] = [
+  ["due_date_reminders", "Due-date reminders"],
+  ["borrow_request_updates", "Borrow request updates"],
+  ["contribution_decisions", "Contribution decisions"],
+  ["new_noholi_books", "New Noholi Books"],
+];
+
+/** The member's website notification choices (public.member_prefs). No row = the defaults. */
+function useMemberPrefs(memberId: string | null) {
+  const [prefs, setPrefs] = useState<Record<string, boolean> | null>(null);
+  useEffect(() => {
+    setPrefs(null);
+    if (!memberId) return;
+    let live = true;
+    // member_prefs is newer than the generated types, so query it through a narrow local type.
+    const prefsTable = (supabase as unknown as {
+      from: (t: string) => { select: (c: string) => { eq: (c: string, v: string) => { maybeSingle: () => PromiseLike<{ data: unknown }> } } };
+    }).from("member_prefs");
+    prefsTable.select("*").eq("member_id", memberId).maybeSingle().then(({ data }) => {
+      if (!live) return;
+      const row = (data ?? {}) as Record<string, unknown>;
+      setPrefs(Object.fromEntries(PREF_LABELS.map(([k]) => [k, typeof row[k] === "boolean" ? (row[k] as boolean) : k !== "new_noholi_books"])));
+    });
+    return () => { live = false; };
+  }, [memberId]);
+  return prefs;
+}
 
 const STATUS_VARIANT: Record<Member["status"], BadgeVariant> = { Active: "success", Suspended: "destructive", Expired: "warning" };
 const LOAN_VARIANT: Record<string, BadgeVariant> = { Active: "accent", Overdue: "destructive", Returned: "success", Cancelled: "muted", Lost: "destructive" };
@@ -50,6 +80,7 @@ interface Props {
 
 export function MemberViewDrawer({ member, tab, onTabChange, onClose, onEdit, onLogin, canWrite = true }: Props) {
   const { history, loading, error } = useMemberHistory(member?.memberId ?? null);
+  const prefs = useMemberPrefs(member?.memberId ?? null);
   const address = member ? [member.addressLine, member.city, member.district, member.postalCode].some(Boolean) : false;
   const g = member?.guarantor;
   const hasGuarantor = g ? Object.values(g).some(Boolean) : false;
@@ -129,6 +160,11 @@ export function MemberViewDrawer({ member, tab, onTabChange, onClose, onEdit, on
                       ? member.mustChangePassword ? "Created · temporary password not changed yet" : "Active"
                       : "No login yet"}
                   </Row>
+                </Section>
+                <Section title="Notifications (website)">
+                  {PREF_LABELS.map(([k, label]) => (
+                    <Row key={k} label={label}>{prefs ? (prefs[k] ? "On" : "Off") : "…"}</Row>
+                  ))}
                 </Section>
                 <Section title="Current Library Activity">
                   <Row label="Active Loans">{String(member.activeLoans)}</Row>

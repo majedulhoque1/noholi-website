@@ -195,6 +195,7 @@ Call with `supabase.rpc(name, args)`. Argument names are exactly as listed. Ever
 | `cancel_my_request` | `p_request_id` | request row (Cancelled) | NH003, NH008 (not Pending). Releases the copy. |
 | `renew_my_loan` | `p_loan_id` | loan (new `due_date`, `renewal_count + 1`) | NH003 (not yours), NH013 (not Active / already renewed `renewals_allowed` times / past due / title has 0 available and a hold waits), NH007 (blocked: another overdue loan, unpaid fine, non-Active status). New due = next open day of `due_date + renewal_days`. Allowed up to and including the due date. |
 | `update_my_profile` | `p_phone?`, `p_address_line?`, `p_city?`, `p_district?`, `p_postal_code?`, `p_avatar?` | member row | null = unchanged, `''` = clear. NH004 (bad phone / too long). Name, email, NID, status are staff-only. |
+| `update_my_prefs` | `p_due_date_reminders?`, `p_borrow_request_updates?`, `p_contribution_decisions?`, `p_new_noholi_books?` | `member_prefs` row | Upserts the caller's notification choices; null = unchanged. Read own row from `member_prefs` (staff read all). |
 | `complete_password_change` | – | `{ member_id, must_change_password: false }` | Call **after** `supabase.auth.updateUser({ password })`. NH008 while the password is still the temporary one. |
 
 Member blocked (`NH007`) when: status ≠ Active, any Active loan past due (Dhaka), or unpaid fine balance > 0.
@@ -272,7 +273,7 @@ Use `supabase.functions.invoke(name, { body })`; the client adds the user's JWT.
 | bucket | public | limits | read | write |
 |---|---|---|---|---|
 | `covers` | yes (public URL) | 2 MB; webp/jpeg/png | anyone via `/object/public/covers/<path>` | staff (insert/update/delete); path `BK-0001.webp` stored in `books.thumbnail` |
-| `member-photos` | no | 5 MB; webp/jpeg/png | staff via `createSignedUrl` | only through signed upload URLs from `public-intake` |
+| `member-photos` | no | 5 MB; webp/jpeg/png | staff via `createSignedUrl` | only through signed upload URLs from `public-intake`; members read/write own folder `members/<member id>/` (path then saved with `update_my_profile(p_avatar)`) |
 
 ## 8. Scheduled jobs (pg_cron, UTC)
 - `noholi-expire-holds` `5 18 * * *` (00:05 Dhaka) → `expire_holds()`.
