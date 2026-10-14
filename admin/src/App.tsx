@@ -16,6 +16,7 @@ import FinesPage from "@/pages/Fines";
 import ReportsPage from "@/pages/Reports";
 import NotificationsPage from "@/pages/Notifications";
 import MessagesPage from "@/pages/Messages";
+import SubmissionsPage from "@/pages/Submissions";
 import Login from "@/pages/Login";
 import NotFound from "./pages/NotFound";
 
@@ -47,6 +48,7 @@ const App = () => (
                 <Route path="/reports" element={<ReportsPage />} />
                 <Route path="/notifications" element={<NotificationsPage />} />
                 <Route path="/messages" element={<MessagesPage />} />
+                <Route path="/submissions" element={<SubmissionsPage />} />
                 <Route path="/settings" element={<SettingsPage />} />
               </Route>
             </Route>

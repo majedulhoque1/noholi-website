@@ -1,7 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { Button } from "@/components/ui/button";
 import { Empty, fmtDate, StatusBadge } from "@/components/noholi";
-import { ComingSoonBanner } from "@/components/contribution-list";
 import { DetailsLink } from "@/components/record-view";
 import { useApp } from "@/lib/store";
 
@@ -27,7 +26,7 @@ export const Route = createFileRoute("/account/recommendations")({
 });
 
 function Recommendations() {
-  const { recommendations, t } = useApp();
+  const { recommendations, collections, t } = useApp();
   return (
     <>
       <div className="mb-8 grid gap-3 sm:grid-cols-[minmax(0,1fr)_auto] sm:items-end">
@@ -46,9 +45,11 @@ function Recommendations() {
           <Link to="/account/recommend">Recommend a Book</Link>
         </Button>
       </div>
-      <ComingSoonBanner className="mb-8" />
       {recommendations.length === 0 ? (
-        <Empty title={t("forms.soon.list")} body={t("forms.soon.listBody")} />
+        <Empty
+          title={collections.loading ? t("auth.loadingAccount") : "No recommendations yet"}
+          body="Books you suggest to the library will appear here with their status."
+        />
       ) : (
         <ul className="divide-y divide-border border-y border-border">
           <li className="hidden grid-cols-[100px_minmax(0,1fr)_130px_120px_120px_100px] gap-5 py-3 text-xs text-muted-foreground md:grid">

@@ -75,7 +75,7 @@ const More = ({ to, children }: { to: string; children: ReactNode }) => (
 );
 
 function Dashboard() {
-  const { t, lang } = useApp();
+  const { t, lang, wishlist, recommendations, contributions } = useApp();
   const { ready, member, memberError } = useAuth();
   const fmt = useFmt();
   const { data, error, loading, reload } = useLoad(
@@ -206,6 +206,40 @@ function Dashboard() {
           label={t("lending.dash.statOverdue")}
         />
         <Stat to="/account/fines" n={fmt.taka(owed)} label={t("lending.dash.statFines")} />
+      </div>
+
+      <div className="grid border-y border-border sm:grid-cols-2 lg:grid-cols-4">
+        <Stat to="/account/wishlist" n={wishlist.length} label={t("auth.nav.wishlist")} />
+        <Stat
+          to="/account/recommendations"
+          n={recommendations.length}
+          label={t("auth.nav.recommendations")}
+          note={
+            recommendations.some((r) => r.status === "Acquired")
+              ? `${recommendations.filter((r) => r.status === "Acquired").length} acquired`
+              : undefined
+          }
+        />
+        <Stat
+          to="/account/contributions"
+          n={contributions.filter((c) => c.kind !== "review").length}
+          label={t("auth.nav.contributions")}
+          note={
+            contributions.some((c) => c.kind !== "review" && c.status === "Needs Revision")
+              ? "Needs your revision"
+              : undefined
+          }
+        />
+        <Stat
+          to="/account/reviews"
+          n={contributions.filter((c) => c.kind === "review").length}
+          label={t("auth.nav.reviews")}
+          note={
+            contributions.some((c) => c.kind === "review" && c.status === "Needs Revision")
+              ? "Needs your revision"
+              : undefined
+          }
+        />
       </div>
 
       {loading ? (

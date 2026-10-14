@@ -59,6 +59,11 @@ const en = {
   "forms.join.photoNone": "Not attached",
   "forms.join.reviewMembership": "Membership",
   "forms.join.reviewFree": "Free",
+  "forms.join.rulesTitle": "Library Rules",
+  "forms.join.rulesIntro": "Please read these before you register. Scroll to see them all.",
+  "forms.join.rulesOpen": "Open in a new tab",
+  "forms.join.rulesAgree": "I have read and agree to follow the Noholi",
+  "forms.join.errRules": "Please confirm that you have read the library rules.",
   "forms.join.consent":
     "By submitting, you agree that library staff may keep these details and your photograph to process your application. Read the",
   "forms.join.consentLink": "privacy notice",
@@ -219,6 +224,11 @@ const bn: Record<keyof typeof en, string> = {
   "forms.join.photoNone": "সংযুক্ত নেই",
   "forms.join.reviewMembership": "সদস্যপদ",
   "forms.join.reviewFree": "বিনামূল্যে",
+  "forms.join.rulesTitle": "পাঠাগারের নিয়মাবলি",
+  "forms.join.rulesIntro": "নিবন্ধনের আগে নিয়মগুলো পড়ে নিন। সবটুকু দেখতে স্ক্রল করুন।",
+  "forms.join.rulesOpen": "নতুন ট্যাবে খুলুন",
+  "forms.join.rulesAgree": "আমি নহলির নিয়মগুলো পড়েছি এবং মেনে চলতে সম্মত:",
+  "forms.join.errRules": "অনুগ্রহ করে নিশ্চিত করুন যে আপনি নিয়মাবলি পড়েছেন।",
   "forms.join.consent":
     "আবেদন জমা দিয়ে আপনি সম্মত হচ্ছেন যে লাইব্রেরি স্টাফ আপনার আবেদন প্রক্রিয়াকরণের জন্য এই তথ্য ও ছবি সংরক্ষণ করতে পারবে। দেখুন",
   "forms.join.consentLink": "গোপনীয়তা নীতি",

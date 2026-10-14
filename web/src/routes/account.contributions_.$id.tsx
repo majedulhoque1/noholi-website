@@ -1,4 +1,4 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { FileText } from "lucide-react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
@@ -12,6 +12,7 @@ import {
   Section,
   Timeline,
 } from "@/components/record-view";
+import { describeError } from "@/lib/supabase";
 import { useApp } from "@/lib/store";
 
 export const Route = createFileRoute("/account/contributions_/$id")({
@@ -48,6 +49,7 @@ const statusNote: Record<string, string> = {
 function ContributionDetail() {
   const { id } = Route.useParams();
   const { contributions, removeContribution } = useApp();
+  const nav = useNavigate();
   const c = contributions.find((x) => x.id === id);
   const back = (
     <BackLink
@@ -56,7 +58,7 @@ function ContributionDetail() {
     />
   );
   if (!c) return <NotFoundRecord what="Submission" back={back} />;
-  const edit = { type: c.kind, ...(c.bookId ? { book: c.bookId } : {}) };
+  const edit = { type: c.kind, edit: c.id };
 
   return (
     <article className="max-w-5xl">
@@ -165,7 +167,14 @@ function ContributionDetail() {
             <Button
               variant="ghost"
               className="text-destructive"
-              onClick={() => removeContribution(c.id)} // coming soon: shows a notice, deletes nothing
+              onClick={() => {
+                removeContribution(c.id)
+                  .then(() => {
+                    toast("Draft deleted.");
+                    void nav({ to: "/account/contributions" });
+                  })
+                  .catch((err) => toast.error(describeError(err)));
+              }}
             >
               Delete Draft
             </Button>

@@ -1,5 +1,5 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { BookMarked, Check, Library, Star, X } from "lucide-react";
 import { z } from "zod";
 import { Button } from "@/components/ui/button";
@@ -11,6 +11,9 @@ import { SearchBox } from "@/components/search-box";
 import { Chips, More, Opt, Req } from "@/components/form-bits";
 import { IdentityUpload, Stepper, SummaryBlock, type DocState } from "@/components/verify";
 import { audiobooks, getBook } from "@/lib/data";
+import { getBook as getRealBook, displayAuthor, displayTitle } from "@/lib/books";
+import { describeError } from "@/lib/supabase";
+import { toast } from "sonner";
 import { useAuth } from "@/lib/auth";
 import { useApp } from "@/lib/store";
 import { cn } from "@/lib/utils";
@@ -23,12 +26,15 @@ import {
   type SubmitMethod,
   type UploadedDoc,
 } from "@/components/doc-upload";
-import { ComingSoonBanner, ComingSoonDialog } from "@/components/contribution-list";
 
 const types = ["blog", "creative", "review"] as const;
 
 export const Route = createFileRoute("/account/contribute")({
-  validateSearch: z.object({ type: z.enum(types).optional(), book: z.string().optional() }),
+  validateSearch: z.object({
+    type: z.enum(types).optional(),
+    book: z.string().optional(),
+    edit: z.string().optional(),
+  }),
   head: () => ({
     meta: [
       { title: "Submit writing — My Noholi" },
@@ -66,21 +72,15 @@ function Err({ m }: { m?: string }) {
   return m ? <p className="text-xs text-destructive">{m}</p> : null;
 }
 
-// Writing submissions have no backend yet: the form stays explorable, but nothing is saved or sent,
-// and "Submit" / "Save draft" only open the Coming soon dialog (never a success state).
 function Contribute() {
-  const [soon, setSoon] = useState(false);
-  return (
-    <>
-      <ComingSoonBanner className="mb-8" />
-      <ContributeForm onSoon={() => setSoon(true)} />
-      <ComingSoonDialog open={soon} onOpenChange={setSoon} />
-    </>
-  );
+  return <ContributeForm />;
 }
 
-function ContributeForm({ onSoon }: { onSoon: () => void }) {
-  const { type = "blog", book: preBook } = Route.useSearch();
+function ContributeForm() {
+  const { type: typeParam = "blog", book: preBook, edit: editId } = Route.useSearch();
+  const { contributions, addContribution, collections } = useApp();
+  const existing = editId ? contributions.find((c) => c.id === editId) : undefined;
+  const type = existing?.kind ?? typeParam;
   const nav = useNavigate({ from: "/account/contribute" });
   const { t } = useApp();
   const { member } = useAuth();
@@ -94,7 +94,11 @@ function ContributeForm({ onSoon }: { onSoon: () => void }) {
   const [cat, setCat] = useState<string[]>([]);
   const [tags, setTags] = useState("");
   const [display, setDisplay] = useState(member?.name ?? "");
-  const [relatedBook, setRelatedBook] = useState<string | null>(null);
+  const [relatedBook, setRelatedBook] = useState<{ id: string; title: string } | null>(null);
+  const [picked, setPicked] = useState<{ id: string; title: string; author: string } | null>(null);
+  const [busy, setBusy] = useState(false);
+  const [saveErr, setSaveErr] = useState("");
+  const prefilled = useRef(false);
   const [topic, setTopic] = useState("");
   const [lang, setLang] = useState<string[]>(["Bangla"]);
   const [contentNote, setContentNote] = useState("");
@@ -122,9 +126,50 @@ function ContributeForm({ onSoon }: { onSoon: () => void }) {
   const [tried, setTried] = useState(false);
 
   const book = itemId ? getBook(itemId) : undefined;
-  const related = relatedBook ? getBook(relatedBook) : undefined;
+  const related = relatedBook;
   const audio = itemId ? audiobooks.find((a) => a.id === itemId) : undefined;
-  const itemTitle = book?.titleEn ?? audio?.titleEn ?? pb.title;
+  const itemTitle = picked?.title ?? book?.titleEn ?? audio?.titleEn ?? pb.title;
+
+  // Opened from a book page: look the real catalogue record up so the review knows its book.
+  useEffect(() => {
+    if (!preBook || existing) return;
+    let live = true;
+    getRealBook(preBook)
+      .then((b) => {
+        if (!live || !b) return;
+        setPicked({ id: b.id, title: displayTitle(b, "en"), author: displayAuthor(b, "en") });
+      })
+      .catch(() => undefined);
+    return () => {
+      live = false;
+    };
+  }, [preBook, existing]);
+
+  // Editing a draft / returned piece: fill the form from the saved record once.
+  useEffect(() => {
+    if (!existing || prefilled.current) return;
+    prefilled.current = true;
+    setTitle(existing.title);
+    setBody(existing.content ?? "");
+    setExcerpt(existing.excerpt ?? "");
+    if (existing.category) setCat(existing.category.split(", ").filter(Boolean));
+    if (existing.language) setLang(existing.language.split(", ").filter(Boolean));
+    if (existing.kind === "review") {
+      setRating(existing.rating ?? 0);
+      setRtags(existing.tags ?? []);
+      if (existing.bookSource === "catalog" && existing.bookId) {
+        setSource("catalog");
+        setItemId(existing.bookId);
+        setPicked({ id: existing.bookId, title: existing.bookTitle ?? "", author: "" });
+      } else {
+        setSource("personal");
+        setPb((x) => ({ ...x, title: existing.bookTitle ?? "" }));
+      }
+      setStep(2);
+    } else {
+      setTags((existing.tags ?? []).join(", "));
+    }
+  }, [existing]);
 
   const errs: Partial<
     Record<
@@ -169,15 +214,53 @@ function ContributeForm({ onSoon }: { onSoon: () => void }) {
   const e = tried ? errs : {};
   const hasErr = Object.values(errs).some(Boolean);
 
-  const finish = (draft: boolean) => {
+  const nav2 = nav;
+  const finish = async (draft: boolean) => {
+    if (busy) return;
     if (!draft) {
       setTried(true);
       if (hasErr) return;
-    } else if (!title.trim() && !itemTitle) {
+    } else if (!title.trim()) {
       setTried(true);
       return;
     }
-    onSoon(); // coming soon: nothing is created or sent
+    setBusy(true);
+    setSaveErr("");
+    try {
+      const isReview = type === "review";
+      const saved = await addContribution(
+        {
+          kind: type,
+          title: title.trim(),
+          content: body.trim() || undefined,
+          excerpt: excerpt.trim() || undefined,
+          language: lang.join(", ") || undefined,
+          category: cat.join(", ") || undefined,
+          tags: isReview
+            ? rtags
+            : tags
+                .split(",")
+                .map((x) => x.trim())
+                .filter(Boolean),
+          rating: isReview ? rating || undefined : undefined,
+          bookId: isReview
+            ? source === "catalog"
+              ? (picked?.id ?? itemId ?? undefined)
+              : undefined
+            : (related?.id ?? undefined),
+          bookTitle: isReview ? itemTitle || undefined : (related?.title ?? undefined),
+          bookSource: isReview ? (source ?? undefined) : undefined,
+        },
+        !draft,
+        existing?.id,
+      );
+      toast(draft ? "Draft saved." : "Sent to the editors. We'll update the status here.");
+      void nav2({ to: "/account/contributions/$id", params: { id: saved.id } });
+    } catch (err) {
+      setSaveErr(describeError(err));
+    } finally {
+      setBusy(false);
+    }
   };
   const nextStep = () => {
     setTried(true);
@@ -328,9 +411,11 @@ function ContributeForm({ onSoon }: { onSoon: () => void }) {
                 Find the book in Noholi's catalog
                 <Req />
               </Label>
-              {itemId && (book || audio) ? (
+              {itemId && (picked || book || audio) ? (
                 <div className="grid grid-cols-[72px_minmax(0,1fr)_auto] gap-5 border border-foreground p-4">
-                  {book ? (
+                  {picked ? (
+                    <div className="aspect-[2/3] w-[72px] bg-muted" aria-hidden="true" />
+                  ) : book ? (
                     <BookCover book={book} size="sm" />
                   ) : (
                     <Cover title={audio!.titleBn} author="" tone={audio!.tone} size="sm" />
@@ -338,21 +423,23 @@ function ContributeForm({ onSoon }: { onSoon: () => void }) {
                   <div className="min-w-0">
                     <div className="font-display text-xl">{itemTitle}</div>
                     <div className="text-sm text-muted-foreground">
-                      {book?.authorEn ?? audio?.authorEn}
+                      {picked?.author ?? book?.authorEn ?? audio?.authorEn}
                     </div>
                     <dl className="mt-3 grid grid-cols-2 gap-x-6 gap-y-1 text-xs sm:grid-cols-3">
-                      {(book
-                        ? [
-                            ["Publication", `${book.publisher}, ${book.year}`],
-                            ["Language", book.language],
-                            ["Genre", book.genre],
-                            ["ISBN", book.isbn],
-                          ]
-                        : [
-                            ["Format", "Audio Book"],
-                            ["Narrator", audio!.narrator],
-                            ["Language", audio!.language],
-                          ]
+                      {(picked
+                        ? [["Catalogue id", picked.id]]
+                        : book
+                          ? [
+                              ["Publication", `${book.publisher}, ${book.year}`],
+                              ["Language", book.language],
+                              ["Genre", book.genre],
+                              ["ISBN", book.isbn],
+                            ]
+                          : [
+                              ["Format", "Audio Book"],
+                              ["Narrator", audio!.narrator],
+                              ["Language", audio!.language],
+                            ]
                       ).map(([k, v]) => (
                         <div key={k}>
                           <dt className="text-muted-foreground">{k}</dt>
@@ -363,7 +450,10 @@ function ContributeForm({ onSoon }: { onSoon: () => void }) {
                   </div>
                   <button
                     type="button"
-                    onClick={() => setItemId(null)}
+                    onClick={() => {
+                      setItemId(null);
+                      setPicked(null);
+                    }}
                     aria-label="Change book"
                     className="h-fit p-2 text-muted-foreground hover:text-foreground"
                   >
@@ -372,9 +462,14 @@ function ContributeForm({ onSoon }: { onSoon: () => void }) {
                 </div>
               ) : (
                 <SearchBox
-                  groups={["Books", "Noholi Books", "E-Books", "Audio Books"]}
+                  groups={["Books"]}
                   placeholder="Search by title, author, ISBN or publisher…"
-                  onPick={(it) => setItemId(it.bookId ?? it.audioId ?? null)}
+                  realBooks
+                  onPick={(it) => {
+                    if (it.link.to !== "/book/$id") return;
+                    setItemId(it.link.params.id);
+                    setPicked({ id: it.link.params.id, title: it.title, author: it.sub });
+                  }}
                   autoFocus
                 />
               )}
@@ -654,7 +749,7 @@ function ContributeForm({ onSoon }: { onSoon: () => void }) {
                   <div>
                     <div className="font-display text-xl">{itemTitle}</div>
                     <div className="text-sm text-muted-foreground">
-                      {book?.authorEn ?? audio?.authorEn ?? pb.author} ·{" "}
+                      {picked?.author ?? book?.authorEn ?? audio?.authorEn ?? pb.author} ·{" "}
                       {source === "catalog"
                         ? "Noholi Stacks Catalog"
                         : `Personal collection · ${pb.format}`}
@@ -707,6 +802,11 @@ function ContributeForm({ onSoon }: { onSoon: () => void }) {
             Please complete the highlighted fields — everything you've written is kept.
           </p>
         )}
+        {saveErr && (
+          <p className="mt-4 text-sm text-destructive" role="alert">
+            {saveErr}
+          </p>
+        )}
         <div className="mt-10 flex flex-wrap items-center gap-3 border-t border-border pt-6">
           <Button
             variant="ghost"
@@ -720,7 +820,7 @@ function ContributeForm({ onSoon }: { onSoon: () => void }) {
           </Button>
           <div className="ml-auto flex gap-3">
             {step >= 1 && (
-              <Button variant="outline" onClick={() => finish(true)}>
+              <Button variant="outline" onClick={() => void finish(true)} disabled={busy}>
                 Save draft
               </Button>
             )}
@@ -729,7 +829,7 @@ function ContributeForm({ onSoon }: { onSoon: () => void }) {
                 Continue
               </Button>
             ) : (
-              <Button size="lg" variant="accent" onClick={() => finish(false)}>
+              <Button size="lg" variant="accent" onClick={() => void finish(false)} disabled={busy}>
                 Submit review
               </Button>
             )}
@@ -910,7 +1010,7 @@ function ContributeForm({ onSoon }: { onSoon: () => void }) {
                 </Label>
                 {related ? (
                   <div className="flex items-center justify-between border border-border px-4 py-3 text-sm">
-                    <span className="font-display text-lg">{related.titleEn}</span>
+                    <span className="font-display text-lg">{related.title}</span>
                     <button
                       type="button"
                       onClick={() => setRelatedBook(null)}
@@ -921,9 +1021,13 @@ function ContributeForm({ onSoon }: { onSoon: () => void }) {
                   </div>
                 ) : (
                   <SearchBox
-                    groups={["Books", "Noholi Books", "E-Books"]}
+                    groups={["Books"]}
+                    realBooks
                     placeholder="Link a book from the catalog…"
-                    onPick={(it) => it.bookId && setRelatedBook(it.bookId)}
+                    onPick={(it) =>
+                      it.link.to === "/book/$id" &&
+                      setRelatedBook({ id: it.link.params.id, title: it.title })
+                    }
                   />
                 )}
               </div>
@@ -948,11 +1052,16 @@ function ContributeForm({ onSoon }: { onSoon: () => void }) {
           Please complete the highlighted fields — everything you've written is kept.
         </p>
       )}
+      {saveErr && (
+        <p className="mt-4 text-sm text-destructive" role="alert">
+          {saveErr}
+        </p>
+      )}
       <div className="sticky bottom-0 mt-10 flex flex-wrap justify-end gap-3 border-t border-border bg-background py-4">
-        <Button variant="ghost" onClick={() => finish(true)}>
+        <Button variant="ghost" onClick={() => void finish(true)} disabled={busy}>
           Save draft
         </Button>
-        <Button size="lg" variant="accent" onClick={() => finish(false)}>
+        <Button size="lg" variant="accent" onClick={() => void finish(false)} disabled={busy}>
           Submit for review
         </Button>
       </div>

@@ -10,6 +10,17 @@ import {
 } from "react";
 import { toast } from "sonner";
 import { audiobooks, type Audio, type Contribution, type Recommendation } from "./data";
+import {
+  deleteContributionRecord,
+  loadContributions,
+  loadRecommendations,
+  loadWishlist,
+  saveContributionRecord,
+  sendRecommendation,
+  toggleWishlistItem,
+  type ContributionInput,
+} from "./collections";
+import { describeError } from "./supabase";
 import { setActiveLang, translateFor, type Lang, type TKey, type TVars } from "./i18n";
 import { useAuth, type MemberRow } from "./auth";
 
@@ -30,16 +41,20 @@ type Ctx = {
   closeMemberPrompt: () => void;
   /** Runs fn for members; otherwise opens the Member Access prompt with the given reason. */
   requireMember: (reason: string, fn: () => void) => void;
-  removeContribution: (id: string) => void;
+  /** Deletes a draft / returned piece. Rejects with the server's reader-facing message. */
+  removeContribution: (id: string) => Promise<void>;
   wishlist: string[];
   toggleWish: (id: string) => void;
   inWish: (id: string) => boolean;
   contributions: Contribution[];
-  addContribution: (c: Omit<Contribution, "id" | "updated" | "submitted" | "timeline">) => string;
+  /** Saves a draft (submit=false) or sends to the editors (submit=true). Rejects on failure. */
+  addContribution: (c: ContributionInput, submit: boolean, id?: string) => Promise<Contribution>;
   recommendations: Recommendation[];
   addRecommendation: (
     r: Omit<Recommendation, "id" | "date" | "status" | "updated" | "timeline">,
-  ) => string;
+  ) => Promise<Recommendation>;
+  /** Load state of wishlist / recommendations / contributions for the signed-in member. */
+  collections: { loading: boolean; error: string | null; reload: () => void };
   player: {
     track: Audio | null;
     playing: boolean;
@@ -59,11 +74,6 @@ type Ctx = {
   prev: () => void;
   closePlayer: () => void;
 };
-
-// Stable empty lists for the features that are "coming soon" (wishlist, contributions, recommendations).
-const NO_IDS: string[] = [];
-const NO_CONTRIBUTIONS: Contribution[] = [];
-const NO_RECOMMENDATIONS: Recommendation[] = [];
 
 // Keep one context instance across hot reloads; otherwise an edit to this file creates a new
 // context while the mounted provider still uses the old one ("useApp outside provider").
@@ -96,10 +106,39 @@ export function AppProvider({ children }: { children: ReactNode }) {
   const loggedIn = !!auth.session;
   const { signIn, signOut } = auth;
   const [memberPrompt, setMemberPrompt] = useState<string | null>(null);
-  // Wishlist, contributions and recommendations have no backend yet: always empty, never mock records.
-  const wishlist = NO_IDS;
-  const contributions = NO_CONTRIBUTIONS;
-  const recommendations = NO_RECOMMENDATIONS;
+  // Wishlist, recommendations and contributions/reviews: real member data (see collections.ts).
+  const memberId = auth.member?.id ?? null;
+  const [wishlist, setWishlist] = useState<string[]>([]);
+  const [contributions, setContributions] = useState<Contribution[]>([]);
+  const [recommendations, setRecommendations] = useState<Recommendation[]>([]);
+  const [colState, setColState] = useState<{ loading: boolean; error: string | null }>({
+    loading: false,
+    error: null,
+  });
+  const [colNonce, setColNonce] = useState(0);
+  useEffect(() => {
+    if (!memberId) {
+      setWishlist([]);
+      setContributions([]);
+      setRecommendations([]);
+      setColState({ loading: false, error: null });
+      return;
+    }
+    let live = true;
+    setColState({ loading: true, error: null });
+    Promise.all([loadWishlist(), loadRecommendations(), loadContributions()])
+      .then(([w, r, c]) => {
+        if (!live) return;
+        setWishlist(w);
+        setRecommendations(r);
+        setContributions(c);
+        setColState({ loading: false, error: null });
+      })
+      .catch((err) => live && setColState({ loading: false, error: describeError(err) }));
+    return () => {
+      live = false;
+    };
+  }, [memberId, colNonce]);
   const [player, setPlayer] = useState<Ctx["player"]>({
     track: null,
     playing: false,
@@ -159,29 +198,50 @@ export function AppProvider({ children }: { children: ReactNode }) {
         if (loggedIn) fn();
         else setMemberPrompt(reason);
       },
-      // Coming soon: no backend yet, so these never create, remove or "save" anything.
-      removeContribution: () => {
-        toast(t("forms.soon.contribute"));
+      removeContribution: async (id) => {
+        await deleteContributionRecord(id);
+        setContributions((l) => l.filter((c) => c.id !== id));
       },
       wishlist,
-      inWish: () => false,
-      toggleWish: () => {
+      inWish: (id) => wishlist.includes(id),
+      toggleWish: (id) => {
         if (!loggedIn) {
           setMemberPrompt("Log in or become a free member to save books to your wishlist.");
           return;
         }
-        toast(t("forms.soon.wish"));
+        // Optimistic: flip now, undo if the server refuses.
+        const had = wishlist.includes(id);
+        setWishlist((l) => (had ? l.filter((x) => x !== id) : [id, ...l]));
+        toggleWishlistItem(id)
+          .then((on) => {
+            toast(on ? t("ux.wish.added") : t("ux.wish.removed"));
+            setWishlist((l) =>
+              on ? (l.includes(id) ? l : [id, ...l]) : l.filter((x) => x !== id),
+            );
+          })
+          .catch((err) => {
+            setWishlist((l) =>
+              had ? [id, ...l.filter((x) => x !== id)] : l.filter((x) => x !== id),
+            );
+            toast.error(describeError(err));
+          });
       },
       contributions,
-      // Coming soon: nothing is created. Returns "" (no record id); callers must not show success.
-      addContribution: () => {
-        toast(t("forms.soon.contribute"));
-        return "";
+      addContribution: async (c, submit, id) => {
+        const saved = await saveContributionRecord(c, submit, id);
+        setContributions((l) => [saved, ...l.filter((x) => x.id !== saved.id)]);
+        return saved;
       },
       recommendations,
-      addRecommendation: () => {
-        toast(t("forms.soon.recommend"));
-        return "";
+      addRecommendation: async (r) => {
+        const saved = await sendRecommendation(r);
+        setRecommendations((l) => [saved, ...l]);
+        return saved;
+      },
+      collections: {
+        loading: colState.loading,
+        error: colState.error,
+        reload: () => setColNonce((n) => n + 1),
       },
       player,
       play: (id) => {
@@ -229,6 +289,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
       wishlist,
       contributions,
       recommendations,
+      colState,
       player,
     ],
   );

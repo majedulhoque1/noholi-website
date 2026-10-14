@@ -5,12 +5,12 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { ComingSoonBanner, ComingSoonDialog } from "@/components/contribution-list";
 import { Empty, fmtDate, StatusBadge } from "@/components/noholi";
 import { Chips, More, Opt, Req } from "@/components/form-bits";
 import { SearchBox } from "@/components/search-box";
 import { IdentityUpload, Stepper, SummaryBlock, type DocState } from "@/components/verify";
 import type { Recommendation } from "@/lib/data";
+import { describeError } from "@/lib/supabase";
 import { useApp } from "@/lib/store";
 import { cn } from "@/lib/utils";
 
@@ -58,14 +58,16 @@ function Err({ m }: { m?: string | false }) {
 }
 
 function Recommend() {
-  const { recommendations, t } = useApp();
+  const { recommendations, addRecommendation, collections, t } = useApp();
   const [step, setStep] = useState(0);
   const [format, setFormat] = useState<Format | null>(null);
   const [d, setD] = useState(empty);
   const [cover, setCover] = useState<DocState>(null);
   const [tried, setTried] = useState(false);
-  const [soon, setSoon] = useState(false);
   const [held, setHeld] = useState<string | null>(null);
+  const [busy, setBusy] = useState(false);
+  const [sendErr, setSendErr] = useState("");
+  const [sentId, setSentId] = useState<string | null>(null);
   const set =
     (k: keyof typeof empty) => (x: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) =>
       setD({ ...d, [k]: x.target.value });
@@ -85,8 +87,41 @@ function Recommend() {
     setTried(false);
     setStep(step + 1);
   };
-  // Coming soon: recommendations have no backend yet, so submit only explains that. Nothing is created.
-  const submit = () => setSoon(true);
+  const submit = async () => {
+    if (busy || !format) return;
+    setBusy(true);
+    setSendErr("");
+    try {
+      const saved = await addRecommendation({
+        format,
+        title: d.title.trim(),
+        author: d.author.trim(),
+        language: d.language as "Bangla" | "English",
+        reason: d.reason.trim(),
+        publisher: d.publisher.trim() || undefined,
+        isbn: d.isbn.trim() || undefined,
+        year: d.year.trim() || undefined,
+        edition: d.edition.trim() || undefined,
+        genre: d.genre.trim() || undefined,
+        category: d.category.trim() || undefined,
+        narrator: d.narrator.trim() || undefined,
+        source: d.source.trim() || undefined,
+        notes:
+          [d.discovered && `Found via: ${d.discovered}`, d.link && `Link: ${d.link}`]
+            .filter(Boolean)
+            .join(" · ") || undefined,
+      });
+      setSentId(saved.id);
+      setD(empty);
+      setFormat(null);
+      setStep(0);
+      window.scrollTo(0, 0);
+    } catch (err) {
+      setSendErr(describeError(err));
+    } finally {
+      setBusy(false);
+    }
+  };
   const kind = format === "E-Book" ? "e-book" : format === "Audio Book" ? "audio book" : "book";
 
   return (
@@ -99,7 +134,16 @@ function Recommend() {
           who uses Noholi.
         </p>
 
-        <ComingSoonBanner className="mt-8" />
+        {sentId && (
+          <div role="status" className="mt-8 border-l-2 border-success pl-5 text-sm">
+            Thank you. Your recommendation <span className="font-mono">{sentId}</span> has been sent
+            to the library team.{" "}
+            <Link to="/account/recommendations" className="underline underline-offset-2">
+              Track it here
+            </Link>
+            .
+          </div>
+        )}
 
         <Stepper steps={steps} current={step} className="mt-10" />
         <div className="mt-10 min-h-[280px] space-y-6">
@@ -364,9 +408,11 @@ function Recommend() {
               <SummaryBlock title="Reason" onEdit={() => setStep(3)}>
                 <p className="whitespace-pre-line">{d.reason}</p>
               </SummaryBlock>
-              <p className="border-t border-border pt-5 text-sm text-muted-foreground">
-                Submitting recommendations is coming soon — nothing is sent from here yet.
-              </p>
+              {sendErr && (
+                <p className="text-sm text-destructive" role="alert">
+                  {sendErr}
+                </p>
+              )}
             </>
           )}
         </div>
@@ -387,18 +433,13 @@ function Recommend() {
             Back
           </Button>
           <div className="ml-auto flex gap-3">
-            {step >= 1 && (
-              <Button variant="outline" onClick={() => setSoon(true)}>
-                Save draft
-              </Button>
-            )}
             {step < 4 ? (
               <Button size="lg" onClick={next}>
                 {step === 2 ? "Continue" : "Continue"}
               </Button>
             ) : (
-              <Button size="lg" variant="accent" onClick={submit}>
-                Submit Recommendation
+              <Button size="lg" variant="accent" onClick={submit} disabled={busy}>
+                {busy ? "Sending…" : "Submit Recommendation"}
               </Button>
             )}
           </div>
@@ -408,7 +449,10 @@ function Recommend() {
         <h2 className="rule-top pt-5 text-2xl">Your recommendations</h2>
         {recommendations.length === 0 ? (
           <div className="mt-6">
-            <Empty title={t("forms.soon.list")} body={t("forms.soon.listBody")} />
+            <Empty
+              title={collections.loading ? t("auth.loadingAccount") : "No recommendations yet"}
+              body="Suggestions you send will appear here with their status."
+            />
           </div>
         ) : (
           <ul className="mt-2 divide-y divide-border">
@@ -441,7 +485,6 @@ function Recommend() {
           </ul>
         )}
       </aside>
-      <ComingSoonDialog open={soon} onOpenChange={setSoon} />
     </div>
   );
 }

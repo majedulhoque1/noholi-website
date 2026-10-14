@@ -31,16 +31,15 @@ export const Route = createFileRoute("/account")({
   component: AccountLayout,
 });
 
-// `soon` marks sections with no backend this round: the link stays, the page shows a coming-soon state.
 const tabs = [
   { to: "/account", k: "auth.nav.dashboard" },
   { to: "/account/borrowed", k: "auth.nav.borrowed" },
   { to: "/account/requests", k: "auth.nav.requests" },
   { to: "/account/fines", k: "auth.nav.fines" },
-  { to: "/account/wishlist", k: "auth.nav.wishlist", soon: true },
-  { to: "/account/recommendations", k: "auth.nav.recommendations", soon: true },
-  { to: "/account/contributions", k: "auth.nav.contributions", soon: true },
-  { to: "/account/reviews", k: "auth.nav.reviews", soon: true },
+  { to: "/account/wishlist", k: "auth.nav.wishlist" },
+  { to: "/account/recommendations", k: "auth.nav.recommendations" },
+  { to: "/account/contributions", k: "auth.nav.contributions" },
+  { to: "/account/reviews", k: "auth.nav.reviews" },
   { to: "/account/profile", k: "auth.nav.profile" },
   { to: "/account/settings", k: "auth.nav.settings" },
 ] as const;
@@ -128,11 +127,6 @@ function AccountLayout() {
                 className="-mb-px inline-flex items-center gap-1.5 whitespace-nowrap border-b-2 border-transparent pb-3 text-sm text-muted-foreground hover:text-foreground data-[status=active]:border-foreground data-[status=active]:text-foreground"
               >
                 {t(tab.k)}
-                {"soon" in tab && (
-                  <span className="rounded-sm border border-border px-1 py-px text-[0.625rem] font-medium uppercase leading-none tracking-wide text-muted-foreground">
-                    {t("auth.soon")}
-                  </span>
-                )}
               </Link>
             ))}
           </nav>

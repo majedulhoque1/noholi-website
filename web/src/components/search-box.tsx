@@ -23,6 +23,11 @@ type Props = {
    * searches the local sample index only, because the callers look the picked id up in it.
    */
   onPick?: (item: SearchItem) => void;
+  /**
+   * With `onPick`: search the real catalogue (server) instead of the local sample index. The picked
+   * item's `link.params.id` is a real book id.
+   */
+  realBooks?: boolean;
   /** Controlled text, for pages that also filter a list as you type. */
   value?: string;
   onValueChange?: (v: string) => void;
@@ -56,6 +61,7 @@ export function SearchBox({
   groups = groupOrder,
   placeholder,
   onPick,
+  realBooks,
   value,
   onValueChange,
   onSubmit,
@@ -82,8 +88,12 @@ export function SearchBox({
   const trimmed = q.trim();
 
   // Public pages: books from the server, the rest from the local index (no sample books).
-  const remoteOn = suggest && !onPick && groups.includes("Books");
-  const localGroups = onPick ? groups : groups.filter((g) => publicLocalGroups.includes(g));
+  const remoteOn = suggest && (!onPick || !!realBooks) && groups.includes("Books");
+  const localGroups = realBooks
+    ? []
+    : onPick
+      ? groups
+      : groups.filter((g) => publicLocalGroups.includes(g));
 
   const [remote, setRemote] = useState<Remote | null>(null);
   useEffect(() => {

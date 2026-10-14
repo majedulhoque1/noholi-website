@@ -1,5 +1,18 @@
 import { Link, useNavigate } from "@tanstack/react-router";
-import { ChevronDown, Mail, MapPin, Menu, Moon, Phone, Search, Sun, User } from "lucide-react";
+import {
+  ChevronDown,
+  Facebook,
+  Instagram,
+  Mail,
+  MapPin,
+  Menu,
+  Moon,
+  Phone,
+  Search,
+  Sun,
+  User,
+  Youtube,
+} from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
 import {
@@ -137,21 +150,6 @@ function GlobalSearch() {
   );
 }
 
-/** Small "Soon" tag for account sections that have no backend yet. */
-function SoonTag({ className }: { className?: string }) {
-  const { t } = useApp();
-  return (
-    <span
-      className={cn(
-        "rounded-sm border border-border px-1 py-px text-[0.625rem] font-medium uppercase leading-none tracking-wide text-muted-foreground",
-        className,
-      )}
-    >
-      {t("auth.soon")}
-    </span>
-  );
-}
-
 function WishlistMenu() {
   const { t } = useApp();
   return (
@@ -160,7 +158,6 @@ function WishlistMenu() {
         className={cn(navCls, "inline-flex items-center gap-1.5 px-2 outline-none")}
       >
         {t("wishlist")}
-        <SoonTag />
         <ChevronDown className="h-3.5 w-3.5 opacity-60" />
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="w-52 rounded-sm p-1.5">
@@ -255,20 +252,17 @@ function AccountMenu() {
               <DropdownMenuItem asChild className={subCls}>
                 <Link to="/account/wishlist" className="flex items-center gap-2">
                   {t("wishlist")}
-                  <SoonTag />
                 </Link>
               </DropdownMenuItem>
               <DropdownMenuItem asChild className={subCls}>
                 <Link to="/account/recommendations" className="flex items-center gap-2">
                   {t("auth.menu.recommendations")}
-                  <SoonTag />
                 </Link>
               </DropdownMenuItem>
-              <div className={cn(groupCls, "mt-1 flex items-center gap-2")}>
+              <div className={cn(groupCls, "mt-1")}>
                 <Link to="/account/contributions" className="hover:text-foreground">
                   {t("auth.menu.contributions")}
                 </Link>
-                <SoonTag />
               </div>
               <DropdownMenuItem asChild className={subCls}>
                 <Link to="/account/contributions" search={{ f: "Blogs" }}>
@@ -283,7 +277,6 @@ function AccountMenu() {
               <DropdownMenuItem asChild className={subCls}>
                 <Link to="/account/reviews" className="flex items-center gap-2">
                   {t("auth.menu.reviews")}
-                  <SoonTag />
                 </Link>
               </DropdownMenuItem>
             </div>
@@ -295,7 +288,6 @@ function AccountMenu() {
               >
                 <Link to="/account/recommend" className="flex items-center gap-2">
                   {t("auth.menu.recommend")}
-                  <SoonTag />
                 </Link>
               </DropdownMenuItem>
             </div>
@@ -449,7 +441,6 @@ function MobileNav() {
                       className="inline-flex items-center gap-1.5 underline underline-offset-4"
                     >
                       {label}
-                      <SoonTag />
                     </Link>
                   ))}
                 </>
@@ -461,14 +452,14 @@ function MobileNav() {
           <Link to="/" onClick={close} className="block py-3 font-display text-2xl">
             {t("home")}
           </Link>
-          <Link to="/about" onClick={close} className="block py-3 font-display text-2xl">
-            {t("about")}
-          </Link>
           <Group label={t("library")} items={libraryLinks} />
           <Group
             label={t("writeups")}
             items={[{ to: "/writeups", k: "writeups" }, ...writeLinks]}
           />
+          <Link to="/about" onClick={close} className="block py-3 font-display text-2xl">
+            {t("about")}
+          </Link>
           <Link to="/contact" onClick={close} className="block py-3 font-display text-2xl">
             {t("contact")}
           </Link>
@@ -562,6 +553,26 @@ export function SiteHeader() {
             <Mail className="h-3.5 w-3.5 opacity-70" />
             {library.email}
           </a>
+          <ul className="ml-auto flex items-center gap-3" aria-label="Social media">
+            {library.social
+              .filter((s) => s.url)
+              .map((s) => {
+                const Icon = { facebook: Facebook, instagram: Instagram, youtube: Youtube }[s.key];
+                return (
+                  <li key={s.key}>
+                    <a
+                      href={s.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      aria-label={`Noholi on ${s.label}`}
+                      className="inline-flex hover:opacity-80"
+                    >
+                      <Icon className="h-4 w-4" />
+                    </a>
+                  </li>
+                );
+              })}
+          </ul>
         </div>
       </div>
       <div className="container-page flex h-16 items-center gap-4 md:h-[72px]">
@@ -575,14 +586,14 @@ export function SiteHeader() {
           <Link to="/" className={navCls} activeOptions={{ exact: true }}>
             {t("home")}
           </Link>
-          <Link to="/about" className={navCls}>
-            {t("about")}
-          </Link>
           <NavDrop label={t("library")} items={libraryLinks} />
           <NavDrop
             label={t("writeups")}
             items={[{ to: "/writeups", k: "writeups" }, ...writeLinks]}
           />
+          <Link to="/about" className={navCls}>
+            {t("about")}
+          </Link>
           <Link to="/contact" className={navCls}>
             {t("contact")}
           </Link>
