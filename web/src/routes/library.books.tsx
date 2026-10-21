@@ -415,7 +415,6 @@ function BooksPage() {
               value={draft}
               onValueChange={setDraft}
               onSubmit={commit}
-              suggest={false}
               placeholder={t("search")}
               inputClassName="border-foreground/30 text-base"
             />

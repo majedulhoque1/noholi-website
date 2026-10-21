@@ -271,7 +271,7 @@ export function PageIntro({
       >
         <div className="max-w-3xl">
           <div className="eyebrow mb-5">{eyebrow}</div>
-          <h1 className="text-5xl leading-[0.98] md:text-7xl">{title}</h1>
+          <h1 className="text-4xl leading-[1.05] md:text-5xl lg:text-6xl">{title}</h1>
           {children && (
             <p className="mt-6 max-w-xl text-lg leading-relaxed text-muted-foreground">
               {children}

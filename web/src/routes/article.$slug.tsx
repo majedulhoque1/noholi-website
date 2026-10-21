@@ -59,7 +59,7 @@ function ArticlePage() {
         </div>
         <h1
           className={cn(
-            "mx-auto mt-5 max-w-3xl text-5xl leading-[1.05] md:text-7xl",
+            "mx-auto mt-5 max-w-3xl text-4xl leading-[1.1] md:text-5xl lg:text-6xl",
             a.bangla && "font-bangla leading-tight",
           )}
         >

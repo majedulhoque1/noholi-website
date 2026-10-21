@@ -28,7 +28,7 @@ function About() {
     <>
       <section className="container-page pb-16 pt-16 md:pt-24">
         <div className="eyebrow mb-8">About Noholi · আমাদের কথা</div>
-        <h1 className="max-w-5xl text-5xl leading-[0.98] md:text-8xl">
+        <h1 className="max-w-4xl text-4xl leading-[1.08] md:text-5xl lg:text-6xl">
           It began with one shelf, <em className="text-accent">and a promise to bring it back.</em>
         </h1>
       </section>

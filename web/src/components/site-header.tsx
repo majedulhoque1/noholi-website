@@ -7,7 +7,6 @@ import {
   MapPin,
   Menu,
   Moon,
-  Phone,
   Search,
   Sun,
   User,
@@ -453,10 +452,7 @@ function MobileNav() {
             {t("home")}
           </Link>
           <Group label={t("library")} items={libraryLinks} />
-          <Group
-            label={t("writeups")}
-            items={[{ to: "/writeups", k: "writeups" }, ...writeLinks]}
-          />
+          <Group label={t("writeups")} items={writeLinks} />
           <Link to="/about" onClick={close} className="block py-3 font-display text-2xl">
             {t("about")}
           </Link>
@@ -527,10 +523,7 @@ export function SiteHeader() {
   const { t, loggedIn } = useApp();
   const ref = useHeaderHeightVar();
   return (
-    <header
-      ref={ref}
-      className="sticky top-0 z-40 border-b border-border bg-background/92 backdrop-blur"
-    >
+    <>
       <div className="bg-foreground text-background">
         <div className="container-page flex h-9 items-center gap-5 text-xs">
           <a
@@ -542,13 +535,9 @@ export function SiteHeader() {
             <MapPin className="h-3.5 w-3.5 opacity-70" />
             {library.addressShort}
           </a>
-          <a href={library.phoneHref} className="inline-flex items-center gap-1.5 hover:opacity-80">
-            <Phone className="h-3.5 w-3.5 opacity-70" />
-            {library.phoneDisplay}
-          </a>
           <a
             href={`mailto:${library.email}`}
-            className="hidden items-center gap-1.5 hover:opacity-80 sm:inline-flex"
+            className="inline-flex items-center gap-1.5 hover:opacity-80"
           >
             <Mail className="h-3.5 w-3.5 opacity-70" />
             {library.email}
@@ -585,63 +574,65 @@ export function SiteHeader() {
           </ul>
         </div>
       </div>
-      <div className="container-page flex h-16 items-center gap-4 md:h-[72px]">
-        <Link to="/" aria-label="Noholi home" className="shrink-0">
-          <Logo />
-        </Link>
-        <nav
-          className="hidden min-w-0 flex-1 items-center justify-center gap-5 whitespace-nowrap lg:flex xl:gap-7"
-          aria-label="Main"
-        >
-          <Link to="/" className={navCls} activeOptions={{ exact: true }}>
-            {t("home")}
+      <header
+        ref={ref}
+        className="sticky top-0 z-40 border-b border-border bg-nav/95 backdrop-blur"
+      >
+        <div className="container-page flex h-16 items-center gap-4 md:h-[72px]">
+          <Link to="/" aria-label="Noholi home" className="shrink-0">
+            <Logo />
           </Link>
-          <NavDrop label={t("library")} items={libraryLinks} />
-          <NavDrop
-            label={t("writeups")}
-            items={[{ to: "/writeups", k: "writeups" }, ...writeLinks]}
-          />
-          <Link to="/about" className={navCls}>
-            {t("about")}
-          </Link>
-          <Link to="/contact" className={navCls}>
-            {t("contact")}
-          </Link>
-        </nav>
-        <div className="ml-auto flex shrink-0 items-center gap-1.5 lg:ml-0">
-          <GlobalSearch />
-          <LangToggle className="hidden md:inline-flex" />
-          <span className="hidden md:inline-flex">
-            <ThemeToggle />
-          </span>
-          {loggedIn ? (
-            <>
-              <span className="hidden xl:block">
-                <WishlistMenu />
-              </span>
-              <span className="hidden lg:block">
-                <AccountMenu />
-              </span>
-              <Button variant="ghost" size="icon" asChild className="lg:hidden">
-                <Link to="/account" aria-label="Account">
-                  <User />
-                </Link>
-              </Button>
-            </>
-          ) : (
-            <div className="hidden items-center gap-2 lg:flex">
-              <Button variant="ghost" asChild>
-                <Link to="/login">{t("login")}</Link>
-              </Button>
-              <Button variant="accent" asChild>
-                <Link to="/join">{t("become")}</Link>
-              </Button>
-            </div>
-          )}
-          <MobileNav />
+          <nav
+            className="hidden min-w-0 flex-1 items-center justify-center gap-5 whitespace-nowrap lg:flex xl:gap-7"
+            aria-label="Main"
+          >
+            <Link to="/" className={navCls} activeOptions={{ exact: true }}>
+              {t("home")}
+            </Link>
+            <NavDrop label={t("library")} items={libraryLinks} />
+            <NavDrop label={t("writeups")} items={writeLinks} />
+            <Link to="/about" className={navCls}>
+              {t("about")}
+            </Link>
+            <Link to="/contact" className={navCls}>
+              {t("contact")}
+            </Link>
+          </nav>
+          <div className="ml-auto flex shrink-0 items-center gap-1.5 lg:ml-0">
+            <GlobalSearch />
+            <LangToggle className="hidden md:inline-flex" />
+            <span className="hidden md:inline-flex">
+              <ThemeToggle />
+            </span>
+            {loggedIn ? (
+              <>
+                <span className="hidden xl:block">
+                  <WishlistMenu />
+                </span>
+                <span className="hidden lg:block">
+                  <AccountMenu />
+                </span>
+                <Button variant="ghost" size="icon" asChild className="lg:hidden">
+                  <Link to="/account" aria-label="Account">
+                    <User />
+                  </Link>
+                </Button>
+              </>
+            ) : (
+              <div className="hidden items-center gap-2 lg:flex">
+                <Button variant="ghost" asChild>
+                  <Link to="/login">{t("login")}</Link>
+                </Button>
+                <Button variant="accent" asChild>
+                  <Link to="/join">{t("become")}</Link>
+                </Button>
+              </div>
+            )}
+            <MobileNav />
+          </div>
         </div>
-      </div>
-    </header>
+      </header>
+    </>
   );
 }
 

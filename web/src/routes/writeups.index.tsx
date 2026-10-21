@@ -1,5 +1,5 @@
-import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
-import { MemberButton, reasons } from "@/components/member-gate";
+import { createFileRoute, Link } from "@tanstack/react-router";
+import { ContributePanel } from "@/components/contribute-panel";
 import { PageIntro } from "@/components/noholi";
 import { ArticleList, FeatureArticle, WriteupNav } from "@/components/writeups";
 import { articles } from "@/lib/data";
@@ -26,9 +26,6 @@ export const Route = createFileRoute("/writeups/")({
 
 function Writeups() {
   const sorted = [...articles].sort((a, b) => b.date.localeCompare(a.date));
-  const nav = useNavigate();
-  const go = (type: "blog" | "creative" | "review") => () =>
-    nav({ to: "/account/contribute", search: { type } });
   return (
     <>
       <PageIntro
@@ -37,42 +34,6 @@ function Writeups() {
           <>
             Writing from <em className="text-accent">the reading room.</em>
           </>
-        }
-        aside={
-          <div className="border-l-2 border-accent pl-6 md:w-[320px]" aria-labelledby="share-h">
-            <div className="eyebrow">Contribute to Noholi</div>
-            <h2 id="share-h" className="mt-2 text-2xl leading-snug">
-              Become part of the community.
-            </h2>
-            <p className="mt-2 text-sm text-muted-foreground">
-              Members can share essays, poems, stories and reviews. Editors read every piece first.
-            </p>
-            <div className="mt-5 grid gap-2">
-              <MemberButton
-                reason={reasons.contribute}
-                onAllowed={go("blog")}
-                className="justify-start"
-              >
-                Submit a Blog
-              </MemberButton>
-              <MemberButton
-                reason={reasons.contribute}
-                onAllowed={go("creative")}
-                variant="outline"
-                className="justify-start"
-              >
-                Submit Creative Writing
-              </MemberButton>
-              <MemberButton
-                reason={reasons.review}
-                onAllowed={go("review")}
-                variant="outline"
-                className="justify-start"
-              >
-                Write a Book Review
-              </MemberButton>
-            </div>
-          </div>
         }
       >
         Read what the Noholi community writes — blogs by our librarians, poems and stories from
@@ -99,6 +60,7 @@ function Writeups() {
       <section className="container-page mt-16">
         <ArticleList list={sorted.slice(1)} />
       </section>
+      <ContributePanel />
     </>
   );
 }

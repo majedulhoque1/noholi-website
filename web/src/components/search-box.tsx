@@ -31,7 +31,10 @@ type Props = {
   /** Controlled text, for pages that also filter a list as you type. */
   value?: string;
   onValueChange?: (v: string) => void;
-  /** Called on Enter when `suggest` is off (the page applies the text itself). */
+  /**
+   * Called on Enter when `suggest` is off, or when it is on and no suggestion was picked with
+   * the arrow keys (the page applies the text itself).
+   */
   onSubmit?: (v: string) => void;
   /** Show the grouped autocomplete. Turn off on pages that already list the results themselves. */
   suggest?: boolean;
@@ -133,7 +136,12 @@ export function SearchBox({
   }, [q, groups, localGroups, perGroup, remote, remoteOn, suggest]);
   const flat = grouped.flatMap(([, l]) => l);
 
-  useEffect(() => setActive(0), [q]);
+  // True once the arrow keys have moved onto a suggestion, so Enter then opens it.
+  const [armed, setArmed] = useState(false);
+  useEffect(() => {
+    setActive(0);
+    setArmed(false);
+  }, [q]);
   useEffect(() => {
     const h = (e: MouseEvent) => {
       if (!wrap.current?.contains(e.target as Node)) setOpen(false);
@@ -159,15 +167,19 @@ export function SearchBox({
     if (e.key === "ArrowDown") {
       e.preventDefault();
       setOpen(true);
+      setArmed(true);
       setActive((a) => Math.min(flat.length - 1, a + 1));
     } else if (e.key === "ArrowUp") {
       e.preventDefault();
+      setArmed(true);
       setActive((a) => Math.max(0, a - 1));
     } else if (e.key === "Enter") {
       e.preventDefault();
       const it = flat[active];
-      if (!suggest && onSubmit) onSubmit(q);
-      else if (open && it) choose(it);
+      if (onSubmit && (!suggest || !(armed && open && it))) {
+        setOpen(false);
+        onSubmit(q);
+      } else if (open && it) choose(it);
       else if (!onPick && q.trim()) viewAll();
     } else if (e.key === "Escape") setOpen(false);
   };

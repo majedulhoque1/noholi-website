@@ -1,4 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
+import { ContributePanel } from "@/components/contribute-panel";
 import { PageIntro } from "@/components/noholi";
 import { WriteupNav } from "@/components/writeups";
 import { articles } from "@/lib/data";
@@ -88,6 +89,7 @@ function Creative() {
           </Link>
         ))}
       </section>
+      <ContributePanel />
     </>
   );
 }
