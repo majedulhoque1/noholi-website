@@ -48,7 +48,7 @@ export function WriteupNav() {
  * placeholder, never an empty box: a review shows its book on a lit backdrop, and other
  * pieces set their opening lines as type.
  */
-function ArticleMedia({
+export function ArticleMedia({
   a,
   className,
   feature,

@@ -30,6 +30,7 @@
   --color-destructive: var(--destructive);
   --color-destructive-foreground: var(--destructive-foreground);
   --color-border: var(--border);
+  --color-nav: var(--nav);
   --color-input: var(--input);
   --color-ring: var(--ring);
   --color-ink: var(--ink);
@@ -62,6 +63,8 @@
   --destructive: oklch(0.55 0.2 27);
   --destructive-foreground: oklch(0.985 0 0);
   --border: oklch(0.88 0.015 80);
+  /* Navbar surface: warm ivory/greige (~#F3EFE8), distinct from the page background. */
+  --nav: oklch(0.953 0.01 85);
   --input: oklch(0.86 0.015 80);
   --ring: oklch(0.56 0.16 35);
   --ink: oklch(0.21 0.015 60);
@@ -95,6 +98,7 @@
   --accent-foreground: oklch(0.16 0.01 60);
   --destructive: oklch(0.65 0.18 25);
   --border: oklch(0.31 0.012 65);
+  --nav: oklch(0.2 0.01 65);
   --input: oklch(0.34 0.012 65);
   --ring: oklch(0.7 0.13 42);
   --ink: oklch(0.92 0.014 85);

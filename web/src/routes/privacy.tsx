@@ -62,7 +62,7 @@ function Privacy() {
     <>
       <section className="container-page pb-12 pt-16 md:pt-24">
         <div className="eyebrow mb-8">{t("forms.privacy.eyebrow")}</div>
-        <h1 className="max-w-4xl text-5xl leading-[1] md:text-7xl">{t("forms.privacy.title")}</h1>
+        <h1 className="max-w-4xl text-4xl leading-[1.05] md:text-5xl lg:text-6xl">{t("forms.privacy.title")}</h1>
         <p className="mt-6 max-w-2xl font-display text-2xl leading-relaxed text-muted-foreground">
           {t("forms.privacy.lede")}
         </p>

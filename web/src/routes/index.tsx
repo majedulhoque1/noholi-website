@@ -104,8 +104,8 @@ function Home() {
             <h1
               className={
                 lang === "bn"
-                  ? "font-bangla text-6xl leading-[1.15] md:text-7xl"
-                  : "text-[4.2rem] leading-[0.92] md:text-[6rem]"
+                  ? "font-bangla text-5xl leading-[1.15] md:text-6xl"
+                  : "text-5xl leading-[1] md:text-6xl lg:text-[4.5rem]"
               }
             >
               {t("heroTitle")}
@@ -527,7 +527,7 @@ function Home() {
         <div className="relative overflow-hidden border border-foreground px-8 py-16 text-center md:py-24">
           <div className="eyebrow mb-6">Membership</div>
           <h2
-            className={lang === "bn" ? "font-bangla text-5xl md:text-6xl" : "text-5xl md:text-7xl"}
+            className={lang === "bn" ? "font-bangla text-4xl md:text-5xl" : "text-4xl md:text-5xl lg:text-6xl"}
           >
             {t("membershipTitle")}
           </h2>

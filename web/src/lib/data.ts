@@ -939,9 +939,10 @@ export const library = {
   nameBn: "নহলি পাঠাগার",
   address: ["House 808, Road 11 Avenue 6", "Pallabi, Dhaka 1216", "Bangladesh"],
   addressShort: "House 808, Road 11 Avenue 6, Pallabi, Dhaka 1216",
+  // Phone is kept for the contact page and footer only; the top bar no longer shows it.
   phoneDisplay: "+880 1730-591580",
   phoneHref: "tel:+8801730591580",
-  email: "hello@noholi.org",
+  email: "noholilib@gmail.com",
   hours: [
     ["Sunday – Friday", "10:00 – 18:00"],
     ["Saturday", "Closed"],

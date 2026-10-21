@@ -1,4 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
+import { ContributePanel } from "@/components/contribute-panel";
 import { BookCover, fmtDate, PageIntro, Stars } from "@/components/noholi";
 import { WriteupNav } from "@/components/writeups";
 import { articles, getBook } from "@/lib/data";
@@ -74,6 +75,7 @@ function Reviews() {
           );
         })}
       </section>
+      <ContributePanel />
     </>
   );
 }
